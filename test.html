@@ -5,27 +5,72 @@
     <meta name="viewport" content="width=device-width" />
     <link rel="stylesheet" href="styles/style.css" />
     <script src="scripts/script.js" defer></script>
-    <title>Hemsideprojekt</title>
+    <title> Ditt liv i siffror </title>
   </head>
   <body>
-    <h1> Rubrik </h1>
+    <h1> Ditt liv i siffror </h1>
     <nav>
       <ul>
-        <li><a href="#">Startsida</a></li>
-        <li>Testet</li>
+        <li><a href="#">Start</a></li>
+        <li>Gör testet</li>
+        <li><a href="#">Om statistiken</a></li>
       </ul>
-    <main>
-      <article>
-        <h2>Underrubrik</h2>
 
-        <p>
-          Här kommer det finnas ett test!
+    <main>
+          <form action="./submit_page" method="get">
+            <h2>Testet</h2>
+
+            <p>
+              <label for="namn">Ditt namn:</label>
+              <input type="text" name="name" id="name" required />
+            </p>
+
+            <p>
+              <label for="kön">Ditt kön:</label><br />
+              <input type="radio" name="kön" id="man" value="Man" required />
+              <label for="man">Man</label><br />
+              <input type="radio" name="kön" id="kvinna" value="Kvinna" required />
+              <label for="kvinna">Kvinna</label>
+            </p>
+
+            <p>
+              <label for="ålder">Din ålder:</label>
+              <input type="number" name="ålder" id="ålder" required />
+            </p>
+
+            <p>
+              <label for="längd">Din längd:</label>
+              <input type="number" name="längd" id="längd" required />
+            </p>
+
+            <p>
+              <label for="vikt">Din vikt:</label>
+              <input type="number" name="vikt" id="vikt" required />
+            </p>
+
+            <p>
+              <label for="sömn">Hur många timmar sömn får du per natt i genomsnitt?</label>
+              <input type="number" name="sömn" id="sömn" required />
+            </p>
+
+            <p>
+              <label for="träning">Hur många timmar i veckan tränar du i genomsnitt?</label>
+              <input type="number" name="träning" id="träning" required />
+            </p>
+
+
+              <button type="submit">Skicka in mina svar!</button>
+
+          </form>
         </p>
 
-      </article>
       <hr>
+      
       <footer>
-        <p>Sidan är skapad av William Lind.</p>
+        <p>
+          <em>Ditt liv i siffror</em> är ett hobbyprojekt skapat av William Lind. Senaste uppdateringen: ÅÅÅÅ-MM-DD.
+        </p>
       </footer>
+      
   </body>
 </html>
