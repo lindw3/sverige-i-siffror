@@ -4,18 +4,30 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="stylesheet" href="styles/style.css" />
+    <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    rel="stylesheet"
+  />
     <script src="scripts/script.js" defer></script>
     <title> Ditt liv i siffror </title>
   </head>
-  <body>
-    <h1> Ditt liv i siffror </h1>
+
+  <div class="header">
+    <div class="header-title">
+      <i class="fa-solid fa-chart-simple"></i>
+      <h1>Ditt liv i siffror</h1>
+    </div>
     <nav>
       <ul>
-        <li><a href="#">Start</a></li>
-        <li>Gör testet</li>
-        <li><a href="#">Om statistiken</a></li>
+        <li>Start</li>
+        <li><a href="test.html">Gör testet</a></li>
+        <li><a href="om-statistiken.html">Om statistiken</a></li>
       </ul>
+    </nav>
+  </div>
 
+  <body>
+    <div class="page-container"></div>
     <main>
           <form action="./submit_page" method="get">
             <h2>Testet</h2>
@@ -39,12 +51,12 @@
             </p>
 
             <p>
-              <label for="längd">Din längd:</label>
+              <label for="längd">Din längd (cm):</label>
               <input type="number" name="längd" id="längd" required />
             </p>
 
             <p>
-              <label for="vikt">Din vikt:</label>
+              <label for="vikt">Din vikt (kg):</label>
               <input type="number" name="vikt" id="vikt" required />
             </p>
 
@@ -59,10 +71,12 @@
             </p>
 
 
-              <button type="submit">Skicka in mina svar!</button>
+              <button type="submit">Skapa rapporten!</button>
 
           </form>
         </p>
+
+      </div>
 
       <hr>
       
@@ -71,6 +85,8 @@
           <em>Ditt liv i siffror</em> är ett hobbyprojekt skapat av William Lind. Senaste uppdateringen: ÅÅÅÅ-MM-DD.
         </p>
       </footer>
-      
+
+
+
   </body>
 </html>
