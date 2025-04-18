@@ -1,18 +1,26 @@
+    /*DOKUMENTET SOM HELHET*/
+/* BASICS */
 html {
     background-color: #ffffffe1;
     font-size: 1.2rem;
     line-height: 1.5;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
     color:#000000
   }
 
+  textarea {
+    overflow: auto;
+  }
 
 
+               /*HEADER OCH NAVBAR*/
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px;
+    position:sticky;
+    top: 0;
+    padding: 25px;
     background-color: #5a5a5a;
   }
   
@@ -28,27 +36,72 @@ html {
   .header i {
     font-size: 3rem; 
     color: rgb(228, 154, 43); /* Match the color of the header */
+    text-shadow:
+    1px 1px 1px white;
   }
 
   .header h1 {
     margin: 0;
   }
   
-  .header nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    /* Default för större skärm */
+.header nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 10px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: nowrap; /* Prevent wrapping by default */
+}
+
+.header nav ul li {
+  margin: 0;
+  flex: 1;
+}
+
+   /* Mindre skärmar */
+@media (max-width: 768px) {
+  .header {
+    flex-wrap: wrap; /* Allow the header to wrap its content */
+    padding: 15px; /* Adjust padding for smaller screens */
+    justify-content: center; /* Center all content horizontally */
+  }
+
+  .header-title {
+    width: 100%; /* Make the title take up the full width */
+    justify-content: center; /* Center the title */
+    margin-bottom: 10px; /* Add spacing below the title */
+  }
+
+  .header nav {
+    width: 100%; /* Make the nav take up the full width */
     display: flex;
-    gap: 15px;
+    justify-content: center; /* Center the navigation bar horizontally */
   }
-  
+
+  .header nav ul {
+    flex-direction: column; /* Stack the navigation items vertically */
+    gap: 10px; /* Adjust spacing between items */
+    align-items: center; /* Center the navigation items */
+    padding: 0; /* Remove extra padding */
+    margin: 0; /* Remove extra margin */
+  }
+
   .header nav ul li {
-    margin: 0;
+    flex: none; /* Remove flex-grow to prevent stretching */
+    text-align: center; /* Center-align the text */
   }
+}
+  /* Slut på kod för mindre skärmar */
+
+
 
   h1 {
     font-size: 2.5rem;
     color: rgb(228, 154, 43);
+    text-shadow:
+    1px 1px 1px white;
   }
 
   nav{
@@ -58,7 +111,7 @@ html {
     padding: 10px;
     display: flex;
     justify-content: space-between;
-    align-items: top;
+    align-items: center;
   }
 
   nav a {
@@ -66,6 +119,8 @@ html {
     font-size: 1.8rem;
     text-decoration: none;
     margin-right: 20px;
+    text-shadow:
+    1px 1px 1px black;
   }
 
   nav a:hover {
@@ -73,14 +128,28 @@ html {
   }
 
 
+/* FOOTER */
+  footer {
+    text-align: center;
+    padding: 10px;
+    font-size: 0.8rem;
+    font-family: Helvetica, Arial, sans-serif;
+    color:rgb(0, 0, 0)
+  }
+
+
+
+
+
+
+              /* STARTSIDAN */
+ /*BODY*/
+
 h2{
   font-size:1.5rem;
   color: rgb(228, 154, 43);
   margin: 0.5;
 }
-
-
-
 
 .content-container {
   display: flex;
@@ -90,31 +159,40 @@ h2{
   padding: 20px; /* Add some padding inside the content container */
 }
 
+  /* Bilden */
 .rapporten-image {
-  max-width: 20rem; 
+  flex: 1; /* Allow the image to take up available space */
+  max-width: 100%; /* Ensure the image doesn't exceed its container */
   margin-top: 30px;
   height: auto; 
   border-color: #000000;
-  border-width: 1px; /* Adjust the border width as needed */
-  border-style: solid; /* Add a solid border */
-  border-radius: 8px; /* Optional: Add rounded corners */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for styling */
+  border-width: 1px; 
+  border-style: solid; 
+  border-radius: 8px; 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
 }
+  
+  /* Ta bort bilden för mindre skärmar */
+  @media (max-width: 768px) {
+    .content-container {
+      flex-direction: column; /* Stack the article and image vertically */
+      align-items: center; /* Center the content */
+    }
+  
+    .rapporten-image {
+      max-width: 90%; /* Adjust the image width for smaller screens */
+      margin-top: 20px; /* Add some margin above the image */
+    }
+  }
 
 
-
-
-
-
-
-
-
+/*GÖR TESTET-KNAPPEN*/
 .test-button {
   background-color: rgb(228, 154, 43);
   color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 2rem;
+  border: black;
+  padding: 15px 30px;
+  font-size: 2.5rem;
   cursor: pointer;
   border-radius: 5px;
   margin-top: 20px;
@@ -125,8 +203,8 @@ h2{
 }
 
 .test-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
 }
 
 .test-button-container {
@@ -140,6 +218,14 @@ h2{
 
 
 
+           /* TESTSIDAN */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+}
 
 input[type="text"],
 input[type="email"]{
@@ -156,12 +242,18 @@ input[type="number"] {
   width: 10%;
 }
 
+     /* Skicka in svaren-knappen */
+  .submit-button-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+  }
+
 input[type="submit"] {
   border: 2px solid #333;
   background-color: rgb(228, 154, 43);
-  margin-left:10%;
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 2.5rem;
   border-radius: 5px;
   padding: 10px 2em;
   font-weight: bold;
@@ -179,11 +271,3 @@ input[type="submit"]:hover {
 
 
 
-
-  footer {
-    text-align: center;
-    padding: 10px;
-    font-size: 0.8rem;
-    font-family: Arial, Helvetica, sans-serif;
-    color:rgb(0, 0, 0)
-  }
