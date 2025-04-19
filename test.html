@@ -12,7 +12,7 @@
     <title> Ditt liv i siffror </title>
   </head>
 
-  <div class="header">
+  <div class="header no-sticky">
     <div class="header-title">
       <i class="fa-solid fa-chart-simple"></i>
       <h1>Ditt liv i siffror</h1>
@@ -34,10 +34,10 @@
           <form action="./submit_page" method="get">
             <h2>Del 1: Bakgrundsfakta</h2>
 
-            <p>
+            <div class="question-container">
               <label for="namn">Ditt namn:</label>
               <input type="text" name="name" id="name" required />
-            </p>
+            </div>
 
             <p>
               <label for="kön">Ditt kön:</label><br />
@@ -47,32 +47,32 @@
               <label for="kvinna">Kvinna</label>
             </p>
 
-            <p>
+            <div class="question-container">
               <label for="ålder">Din ålder:</label>
               <input type="number" name="ålder" id="ålder" required />
-            </p>
+            </div>
 
-            <p>
+            <div class="question-container">
               <label for="längd">Din längd (cm):</label>
               <input type="number" name="längd" id="längd" required />
-            </p>
+            </div>
 
-            <p>
+            <div class="question-container">
               <label for="vikt">Din vikt (kg):</label>
               <input type="number" name="vikt" id="vikt" required />
-            </p>
+            </div>
 
             <h2>Del 2: X</h2>
 
-            <p>
+            <div class="question-container">
               <label for="sömn">Hur många timmar sömn får du per natt i genomsnitt?</label>
               <input type="number" name="sömn" id="sömn" required />
-            </p>
+            </div>
 
-            <p>
+            <div class="question-container">
               <label for="träning">Hur många timmar i veckan tränar du i genomsnitt?</label>
               <input type="number" name="träning" id="träning" required />
-            </p>
+            </div>
 
             <h2>Del 3: Y</h2>
 
