@@ -130,12 +130,16 @@
               /* STARTSIDAN */
  /*BODY*/
  /* BASICS */
-index-body {
-  background-color: #ffffffe1;
+ .index-body {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(216, 215, 215, 0.925)), 
+              url("../images/bakgrund.jpg");
+  background-size: cover;
+  background-repeat: no-repeat; /* Prevent the background from repeating */
+  background-position: center; /* Center the background image */
   font-size: 1.2rem;
   line-height: 1.5;
   font-family: Helvetica, Arial, sans-serif;
-  color:#000000
+  color: #000000;
 }
 
 textarea {
