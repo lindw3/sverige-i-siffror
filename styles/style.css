@@ -1,18 +1,3 @@
-    /*DOKUMENTET SOM HELHET*/
-/* BASICS */
-html {
-    background-color: #ffffffe1;
-    font-size: 1.2rem;
-    line-height: 1.5;
-    font-family: Helvetica, Arial, sans-serif;
-    color:#000000
-  }
-
-  textarea {
-    overflow: auto;
-  }
-
-
                /*HEADER OCH NAVBAR*/
   .header {
     display: flex;
@@ -144,6 +129,18 @@ html {
 
               /* STARTSIDAN */
  /*BODY*/
+ /* BASICS */
+index-body {
+  background-color: #ffffffe1;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  font-family: Helvetica, Arial, sans-serif;
+  color:#000000
+}
+
+textarea {
+  overflow: auto;
+}
 
 h2{
   font-size:1.5rem;
@@ -218,7 +215,32 @@ h2{
 
 
 
-           /* TESTSIDAN */
+           /* GÖR TESTET-SIDAN */
+
+.test-body {
+  background-color: rgb(228, 154, 43);
+  line-height: 1.5;
+  font-family: Helvetica, Arial, sans-serif;
+  color: #000000;
+}
+
+.test-body p {
+  font-size: 1rem;
+  margin: 0.5em 0; /* Add some margin to the paragraphs */
+}
+
+
+.test-page-container{
+  background-color:#ffffff;
+  width: 75%;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  margin-top: 20px; /* Add some margin above the test page container */
+}
+
+
 button,
 input,
 select,
@@ -247,18 +269,31 @@ input[type="number"] {
     display: flex;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
+    flex-wrap: wrap; /* Allow the container to wrap its content */
+    max-width: 100%; /* Prevent the container from exceeding the parent width */
+    padding: 10px; /* Add some padding for spacing */
+    box-sizing: border-box; /* Include padding in the width calculation */
   }
 
 input[type="submit"] {
   border: 2px solid #333;
   background-color: rgb(228, 154, 43);
   cursor: pointer;
-  font-size: 2.5rem;
+  font-size: 2rem;
   border-radius: 5px;
-  padding: 10px 2em;
+  padding: 10px 1em;
   font-weight: bold;
   color: #fff;
+  max-width: 100%; /* Prevent the button from exceeding the container width */
+  box-sizing: border-box; /* Include padding in the width calculation */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  input[type="submit"] {
+    font-size: 1.5rem; /* Further reduce font size for smaller screens */
+    padding: 8px 1em; /* Adjust padding for smaller screens */
+  }
 }
 
 input[type="submit"]:hover {
