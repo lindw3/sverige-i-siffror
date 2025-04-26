@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="styles/style.css" />
+    <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <script src="scripts/script.js" defer></script>
+    <title> Ditt liv i siffror </title>
+  </head>
+
+  <div class="header no-sticky">
+    <div class="header-title">
+      <i class="fa-solid fa-chart-simple"></i>
+      <h1>Ditt liv i siffror</h1>
+    </div>
+
+    <nav>
+      <ul class="nav-list">
+        <li><a href="index.html">Start</a></li>
+        <li><a href="test.html" class="active">Gör testet</a></li>
+        <li><a href="om-statistiken.html">Om statistiken</a></li>
+      </ul>
+    </nav>
+  </div>
+
+
+  <body class = "report-body">
+    <div class="report-page-container">
+      <h2 id="header-report"></h2>
+
+      <p id="kön-report"></p>
+      <p id="ålder-report"></p>
+      <p id="längd-report"></p>
+      <p id="vikt-report"></p>
+      <p id="sömn-report"></p>
+      <p id="träning-report"></p>
+    </div>
+
+    <script>
+
+      // Retrieve data from localStorage
+      const namn = localStorage.getItem("namn");
+      const kön = localStorage.getItem("kön");
+      const ålder = localStorage.getItem("ålder");
+      const längd = localStorage.getItem("längd");
+      const vikt = localStorage.getItem("vikt");
+      const sömn = localStorage.getItem("sömn");
+      const träning = localStorage.getItem("träning");
+
+      // Display the report
+      document.getElementById("header-report").textContent = ` ${namn}s rapport`;
+      document.getElementById("kön-report").textContent = `Du är en ${kön}.`;
+      document.getElementById("ålder-report").textContent = `Du är ${ålder} år gammal.`;
+      document.getElementById("längd-report").textContent = `Du är ${längd} centimeter lång.`;
+      document.getElementById("vikt-report").textContent = `Du väger ${vikt} kilogram.`;
+      document.getElementById("sömn-report").textContent = `Du sover i genomsnitt ${sömn} timmar per natt.`;
+      document.getElementById("träning-report").textContent = `Du tränar i genomsnitt ${träning} timmar i veckan.`;
+
+    </script>
+
+
+
+<hr>
+      
+<footer>
+  <p>
+    <em>Ditt liv i siffror</em> är ett hobbyprojekt skapat av William Lind. Senaste uppdateringen: ÅÅÅÅ-MM-DD.
+  </p>
+</footer>
+
+  </body>
+</html>
