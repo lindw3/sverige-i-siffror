@@ -33,7 +33,7 @@
     <div class="test-page-container">
 
           <form id="test-input">
-            <h2>Del 1: Bakgrundsfakta</h2>
+            <h2>Del 1: Dina egenskaper</h2>
 
             <div class="question-container">
               <label for="namn">Ditt namn:</label>
@@ -63,7 +63,7 @@
               <input type="number" name="vikt" id="vikt" required />
             </div>
 
-            <h2>Del 2: X</h2>
+            <h2>Del 2: Dina vanor</h2>
 
             <div class="question-container">
               <label for="sömn">Hur många timmar sömn får du per natt i genomsnitt?</label>
@@ -75,10 +75,92 @@
               <input type="number" name="träning" id="träning" required />
             </div>
 
-            <h2>Del 3: Y</h2>
 
+            <div class="question-container">
+              <label for="läsning">Hur många minuter i veckan läser du i genomsnitt?</label>
+              <input type="number" name="läsning" id="läsning" required />
+            </div>
 
-            <h2>Del 4: Z</h2>
+            <h2>Del 3: Din ekonomi</h2>
+
+            <div class="question-container">
+              <label for="lön">Vad är din månadsinkomst innan skatt?</label>
+              <input type="number" name="lön" id="lön" required />
+            </div>
+
+            <div class="question-container">
+              <label for="besparingar">Hur mycket pengar har du i besparingar, alltså pengar i aktier/fonder eller på bankkonto?</label>
+              <input type="number" name="besparingar" id="besparingar" required />
+            </div>
+
+            <div class="question-container">
+              <label for="besparingar">Vad är summan av dina förmögenheter, alltså besparingar plus värdet i exempelvis bostad, bil och pension?</label>
+              <input type="number" name="besparingar" id="besparingar" required />
+            </div>
+
+            <div class="question-container">
+              <label for="besparingar">Vad har du för boendekostnader? Här räknas hyra, amortering, internet, el och andra avgifter kopplade till bostaden.</label>
+              <input type="number" name="besparingar" id="besparingar" required />
+            </div>
+
+            <h2>Del 4: Din utbildning</h2>
+            <div class="question-container">
+              <label for="högskoleprovet">Vad är ditt högsta resultat i högskoleprovet?</label>
+              <input type="number" name="högskoleprovet" id="högskoleprovet" required />
+            </div>
+
+            <p>
+              <label for="utbildning">Din utbildningsnivå:</label><br />
+              <input type="radio" name="utbildning" id="förgymnasial-9" value="Förgymnasial -9 år" required />
+              <label for="förgymnasial-9">Förgymnasial, -9 år</label><br />
+              <input type="radio" name="utbildning" id="förgymnasial9+" value="Förgymnasial 9+ år" required />
+              <label for="förgymnasial9+">Förgymnasial, 9+ år</label><br />
+              <input type="radio" name="utbildning" id="gymnasial-3" value="Gymnasial, -3 år" required />
+              <label for="gymnasial-3">Gymnasial, -3 år</label><br />
+              <input type="radio" name="utbildning" id="gymnasial3" value="Gymnasial, 3 år" required />
+              <label for="gymnasial3">Gymnasial, 3 år</label><br />
+              <input type="radio" name="utbildning" id="eftergymnasial-3" value="Eftergymnasial, -3 år" required />
+              <label for="eftergymnasial-3">Eftergymnasial, -3 år</label><br />
+              <input type="radio" name="utbildning" id="eftergymnasial3+" value="Eftergymnasial, 3+ år" required />
+              <label for="eftergymnasial3+">Eftergymnasial, 3+ år</label><br />
+              <input type="radio" name="utbildning" id="forskarutbildning" value="Forskarutbildning" required />
+              <label for="forskarutbildning">Forskarutbildning</label>
+            </p>
+
+            <h2>Del 5: Ja/Nej-frågor</h2>
+
+            <p>
+              <label for="kön">Är du gift?</label><br />
+              <input type="radio" name="gift" id="ja" value="Ja" required />
+              <label for="ja">Ja</label><br />
+              <input type="radio" name="gift" id="ja" value="Ja" required />
+              <label for="nej">Nej</label>
+            </p>
+
+            <p>
+              <label for="kön">Har du barn?</label><br />
+              <input type="radio" name="barn" id="ja" value="Ja" required />
+              <label for="ja">Ja</label><br />
+              <input type="radio" name="bostad" id="ja" value="Ja" required />
+              <label for="nej">Nej</label>
+            </p>
+
+            <p>
+              <label for="kön">Äger du din bostad?</label><br />
+              <input type="radio" name="bostad" id="ja" value="Ja" required />
+              <label for="ja">Ja</label><br />
+              <input type="radio" name="bostad" id="ja" value="Ja" required />
+              <label for="nej">Nej</label>
+            </p>
+
+            <p>
+              <label for="kön">Har du någon nära vän?</label><br />
+              <input type="radio" name="vän" id="ja" value="Ja" required />
+              <label for="ja">Ja</label><br />
+              <input type="radio" name="vän" id="ja" value="Ja" required />
+              <label for="nej">Nej</label>
+            </p>
+
 
             <div class="submit-button-container">
               <input type="submit" value="Skapa rapporten" />

@@ -402,6 +402,15 @@ input[type="submit"]:hover {
 
     /* Rapportsidan */
 
+h3 {
+  font-size: 1.2rem;
+  line-height: 1.5;
+  font-family: 'Open sans', sans-serif;
+  font-style: italic;
+  color: rgb(229, 173, 89);
+}
+
+
     .report-body {
       background: linear-gradient(to bottom,  rgba(229, 173, 89, 0.899), rgb(229, 173, 89)), 
       url("../images/bakgrund.jpg");
