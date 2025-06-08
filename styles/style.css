@@ -329,71 +329,75 @@ textarea {
     
     /* Frågorna */
 
+    button{
+  font-family: 'Open sans', sans-serif;
+  font-size: 1.2rem;
+  background-color: rgb(229, 173, 89);
+  color: rgb(255, 244, 239);
+  border: 2px solid #333;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-.question-container {
-  display: flex;
-  flex-direction: column; /* Stack the label and input vertically */
-  margin-bottom: 1em; /* Add spacing between form groups */
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.2);
 }
 
-.question-container label {
+.alternativ {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 3em;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 768px) {
+  .alternativ {
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+    width: 100%; 
+    max-width: none; 
+    padding: 10px; 
+    margin-left: 0; 
+    margin-right: 0;
+    gap:10px;
+  }
+}
+
+.alternativ label {
   font-size: 1.2rem;
   font-family: 'Open sans', sans-serif;
 }
 
-input[type="text"],
-input[type="email"]{
-  border: 2px solid #000;
-  margin: 0 0 1em 0;
-  padding: 10px;
-  width: 50%;
-  box-sizing: border-box;
+.btn {
+  margin-right: 10px; /* Add spacing between the button and the label */
+  cursor: pointer; /* Change cursor to pointer for buttons */
+  font-size: 1.2rem; /* Adjust font size for buttons */
+  padding: 10px 20px; /* Add padding for buttons */
 }
 
-input[type="number"] {
-  border: 2px solid #000;
-  margin: 0 0 1em 0;
-  padding: 10px;
-  width: 30%;
-  box-sizing: border-box;
+.nästa-fråga-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
 }
 
-     /* Skicka in svaren-knappen */
-  .submit-button-container {
-    display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    flex-wrap: wrap; /* Allow the container to wrap its content */
-    max-width: 100%; /* Prevent the container from exceeding the parent width */
-    padding: 10px; /* Add some padding for spacing */
-    box-sizing: border-box; /* Include padding in the width calculation */
-  }
 
-input[type="submit"] {
-  border: 2px solid #333;
-  background-color: rgb(229, 173, 89);
-  cursor: pointer;
-  font-size: 2rem;
-  border-radius: 5px;
-  padding: 10px 1em;
-  font-weight: bold;
-  color: rgb(255, 244, 239);
-  max-width: 100%; 
-  box-sizing: border-box;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
 
-@media (max-width: 768px) {
-  input[type="submit"] {
-    font-size: 1.5rem; /* Further reduce font size for smaller screens */
-    padding: 8px 1em; /* Adjust padding for smaller screens */
-  }
-}
 
-input[type="submit"]:hover {
-  transform: scale(1.05);
-  box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.2);
-}
+ 
+
+
 
 
 

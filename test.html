@@ -10,13 +10,13 @@
     />
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
     <script src="scripts/script.js" defer></script>
-    <title> Ditt liv i siffror </title>
+    <title> Sverige i siffror </title>
   </head>
 
   <div class="header no-sticky">
     <div class="header-title">
       <i class="fa-solid fa-chart-simple"></i>
-      <h1>Ditt liv i siffror</h1>
+      <h1>Sverige i siffror</h1>
     </div>
 
     <nav>
@@ -33,133 +33,22 @@
     <div class="test-page-container">
 
           <form id="test-input">
-            <h2>Del 1: Dina egenskaper</h2>
 
-            <div class="question-container">
-              <label for="namn">Ditt namn:</label>
-              <input type="text" name="namn" id="namn" required />
+            <h2 id="fråga">Fråga</h2>
+
+            <div class="alternativ"> 
+              <button class="btn"> Alternativ 1</button>
+              <button class="btn"> Alternativ 2</button>
+              <button class="btn"> Alternativ 3</button>
+              <button class="btn"> Alternativ 4</button>
             </div>
 
-            <p>
-              <label for="kön">Ditt kön:</label><br />
-              <input type="radio" name="kön" id="man" value="Man" required />
-              <label for="man">Man</label><br />
-              <input type="radio" name="kön" id="kvinna" value="Kvinna" required />
-              <label for="kvinna">Kvinna</label>
-            </p>
-
-            <div class="question-container">
-              <label for="ålder">Din ålder:</label>
-              <input type="number" name="ålder" id="ålder" required />
-            </div>
-
-            <div class="question-container">
-              <label for="längd">Din längd (cm):</label>
-              <input type="number" name="längd" id="längd" required />
-            </div>
-
-            <div class="question-container">
-              <label for="vikt">Din vikt (kg):</label>
-              <input type="number" name="vikt" id="vikt" required />
-            </div>
-
-            <h2>Del 2: Dina vanor</h2>
-
-            <div class="question-container">
-              <label for="sömn">Hur många timmar sömn får du per natt i genomsnitt?</label>
-              <input type="number" name="sömn" id="sömn" required />
-            </div>
-
-            <div class="question-container">
-              <label for="träning">Hur många timmar i veckan tränar du i genomsnitt?</label>
-              <input type="number" name="träning" id="träning" required />
+            <div class="nästa-fråga-container">
+              <button id="nästa-fråga" style="display:none;">Nästa fråga</button>
             </div>
 
 
-            <div class="question-container">
-              <label for="läsning">Hur många minuter i veckan läser du i genomsnitt, inklusive ljudböcker?</label>
-              <input type="number" name="läsning" id="läsning" required />
-            </div>
 
-            <h2>Del 3: Din ekonomi</h2>
-
-            <div class="question-container">
-              <label for="lön">Vad är din månadsinkomst innan skatt?</label>
-              <input type="number" name="lön" id="lön" required />
-            </div>
-
-            <div class="question-container">
-              <label for="besparingar">Hur mycket pengar har du i besparingar, alltså pengar i aktier/fonder eller på bankkonto?</label>
-              <input type="number" name="besparingar" id="besparingar" required />
-            </div>
-
-            <div class="question-container">
-              <label for="besparingar">Vad har du för boendekostnader? Här räknas hyra, amortering, internet, el och andra avgifter kopplade till bostaden.</label>
-              <input type="number" name="besparingar" id="besparingar" required />
-            </div>
-
-            <h2>Del 4: Din utbildning</h2>
-            <div class="question-container">
-              <label for="högskoleprovet">Vad är ditt högsta resultat i högskoleprovet?</label>
-              <input type="number" name="högskoleprovet" id="högskoleprovet" required />
-            </div>
-
-            <p>
-              <label for="utbildning">Din utbildningsnivå:</label><br />
-              <input type="radio" name="utbildning" id="förgymnasial-9" value="Förgymnasial -9 år" required />
-              <label for="förgymnasial-9">Förgymnasial, -9 år</label><br />
-              <input type="radio" name="utbildning" id="förgymnasial9+" value="Förgymnasial 9+ år" required />
-              <label for="förgymnasial9+">Förgymnasial, 9+ år</label><br />
-              <input type="radio" name="utbildning" id="gymnasial-3" value="Gymnasial, -3 år" required />
-              <label for="gymnasial-3">Gymnasial, -3 år</label><br />
-              <input type="radio" name="utbildning" id="gymnasial3" value="Gymnasial, 3 år" required />
-              <label for="gymnasial3">Gymnasial, 3 år</label><br />
-              <input type="radio" name="utbildning" id="eftergymnasial-3" value="Eftergymnasial, -3 år" required />
-              <label for="eftergymnasial-3">Eftergymnasial, -3 år</label><br />
-              <input type="radio" name="utbildning" id="eftergymnasial3+" value="Eftergymnasial, 3+ år" required />
-              <label for="eftergymnasial3+">Eftergymnasial, 3+ år</label><br />
-              <input type="radio" name="utbildning" id="forskarutbildning" value="Forskarutbildning" required />
-              <label for="forskarutbildning">Forskarutbildning</label>
-            </p>
-
-            <h2>Del 5: Ja/Nej-frågor</h2>
-
-            <p>
-              <label for="gift">Är du gift?</label><br />
-              <input type="radio" name="gift" id="ja" value="Ja" required />
-              <label for="ja">Ja</label><br />
-              <input type="radio" name="gift" id="ja" value="Ja" required />
-              <label for="nej">Nej</label>
-            </p>
-
-            <p>
-              <label for="barn">Har du barn?</label><br />
-              <input type="radio" name="barn" id="ja" value="Ja" required />
-              <label for="ja">Ja</label><br />
-              <input type="radio" name="barn" id="ja" value="Ja" required />
-              <label for="nej">Nej</label>
-            </p>
-
-            <p>
-              <label for="bostad">Äger du din bostad?</label><br />
-              <input type="radio" name="bostad" id="ja" value="Ja" required />
-              <label for="ja">Ja</label><br />
-              <input type="radio" name="bostad" id="ja" value="Ja" required />
-              <label for="nej">Nej</label>
-            </p>
-
-            <p>
-              <label for="vän">Har du någon nära vän?</label><br />
-              <input type="radio" name="vän" id="ja" value="Ja" required />
-              <label for="ja">Ja</label><br />
-              <input type="radio" name="vän" id="ja" value="Ja" required />
-              <label for="nej">Nej</label>
-            </p>
-
-
-            <div class="submit-button-container">
-              <input type="submit" value="Skapa rapporten" />
-            </div>
 
           </form>
 
@@ -170,7 +59,7 @@
       
       <footer>
         <p>
-          <em>Ditt liv i siffror</em> är ett hobbyprojekt skapat av William Lind. Senaste uppdateringen: ÅÅÅÅ-MM-DD.
+          <em>Sverige i siffror</em> är ett hobbyprojekt skapat av William Lind. Senaste uppdateringen: ÅÅÅÅ-MM-DD.
         </p>
       </footer>
 
