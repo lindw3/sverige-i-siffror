@@ -386,13 +386,41 @@ button:hover {
   padding: 10px 20px; /* Add padding for buttons */
 }
 
+.förklaring-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
+.förklaring-container.active {
+  opacity: 1; /* Visa förklaringen när den är aktiv */
+}
+
+.förklaring-bild-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
+.förklaring-bild-container.active {
+  opacity: 1; /* Visa bilden när den är aktiv */
+}
+
 .nästa-fråga-container {
   display: flex;
   justify-content: flex-end;
   width: 100%;
 }
-
-
 
 
  
