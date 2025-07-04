@@ -1,0 +1,14 @@
+
+ # Barnafödande i Sverige
+df <- read.csv("https://ourworldindata.org/grapher/children-born-per-woman.csv?v=1&csvType=full&useColumnShortNames=true")
+
+df %>% 
+  filter(Entity == "Sweden") %>% 
+  ggplot(aes(x = Year, y = fertility_rate_hist)) +
+  geom_line(color = "blue")
+
+
+ # Sverige i jämförelse med utvalda länder
+
+
+
