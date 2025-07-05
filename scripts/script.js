@@ -52,13 +52,25 @@ const frågor = [
     korrekt: "25 % mer",
     alternativ: [
       "De tjänar lika",
-      "10 % mer",
-      "25 % mer",
-      "50 % mer"
+      "10% mer",
+      "25% mer",
+      "50% mer"
     ],
     förklaring: "Genomsnittslönen ökar med ökad utbildningsnivå, med undantag för när man jämför de med gymnasial utbildning under 3 år med de som har 3-årig gymnasial utbildning. Män tjänar i genomsnitt mer än kvinnor i samtliga utbildningsnivåer. Könsskillnaderna är lägst för forskarutbildade, där män tjänar ca. 8% mer än kvinnor.  ",
     bild: "images/genomsnittslön-utbildning.png"
-}
+},
+{
+fråga: "Hur ser barnafödandet per kvinna ut i Sverige idag jämfört med 1900?",
+    korrekt: "Det har minskat med två tredjedelar",
+    alternativ: [
+      "Det har inte förändrats",
+      "Det har minskat med en tredjedel",
+      "Det har halverats",
+      "Det har minskat med två tredjedelar"
+    ],
+    förklaring: "Samma trend ses över världen i stort, med vissa skillnader mellan länder. Även om barnafödandet minskat över hela denna tidsperiod ser man att trenden från år till år kan fluktuera kraftigt. Det är även värt att notera att spädbarnsdödligheten och död under de första levnadsåren har minskat kraftigt under samma tidsperiod. Trots detta har dock den globala populationstillväxten mer än halverats under de senaste 60 åren.",
+    bild: <iframe src="barnafödande_sverige.html" frameborder="0"></iframe>
+  }
 ]
 
 
