@@ -416,6 +416,19 @@ button:hover {
   opacity: 1; /* Visa bilden när den är aktiv */
 }
 
+.iframe {  /* Stil för inbäddad iframe */
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  min-height: 200px;
+  max-height: 70vh; 
+  border: none;
+  display: block;
+}
+
+
+
+
 .nästa-fråga-container {
   display: flex;
   justify-content: flex-end;

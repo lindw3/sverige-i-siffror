@@ -49,7 +49,7 @@ const frågor = [
   },
 {
     fråga: "Hur mycket mer tjänar i genomsnitt de med eftergymnasial utbildning 3+ år jämfört med de med 3-årig gymnasial utbildning?",
-    korrekt: "25 % mer",
+    korrekt: "25% mer",
     alternativ: [
       "De tjänar lika",
       "10% mer",
@@ -58,7 +58,7 @@ const frågor = [
     ],
     förklaring: "Genomsnittslönen ökar med ökad utbildningsnivå, med undantag för när man jämför de med gymnasial utbildning under 3 år med de som har 3-årig gymnasial utbildning. Män tjänar i genomsnitt mer än kvinnor i samtliga utbildningsnivåer. Könsskillnaderna är lägst för forskarutbildade, där män tjänar ca. 8% mer än kvinnor.  ",
     bild: "images/genomsnittslön-utbildning.png"
-},
+} ,
 {
 fråga: "Hur ser barnafödandet per kvinna ut i Sverige idag jämfört med 1900?",
     korrekt: "Det har minskat med två tredjedelar",
@@ -69,7 +69,7 @@ fråga: "Hur ser barnafödandet per kvinna ut i Sverige idag jämfört med 1900?
       "Det har minskat med två tredjedelar"
     ],
     förklaring: "Samma trend ses över världen i stort, med vissa skillnader mellan länder. Även om barnafödandet minskat över hela denna tidsperiod ser man att trenden från år till år kan fluktuera kraftigt. Det är även värt att notera att spädbarnsdödligheten och död under de första levnadsåren har minskat kraftigt under samma tidsperiod. Trots detta har dock den globala populationstillväxten mer än halverats under de senaste 60 åren.",
-    bild: <iframe src="barnafödande_sverige.html" frameborder="0"></iframe>
+    bild: '<iframe src="images/barnafödande_sverige.html" class="iframe" frameborder="0"></iframe>'
   }
 ]
 
@@ -138,7 +138,29 @@ bildEl.classList.remove("active");
 
 // Sätt in ny text och bild
 förklaringEl.textContent = frågor[currentQuestion].förklaring;
-bildEl.innerHTML = `<img id="förklaring-bild-img" src="${frågor[currentQuestion].bild}" alt="Förklaring bild" style="max-width:100%;height:auto;cursor:pointer;">`;
+
+const bildData = frågor[currentQuestion].bild;
+
+// OM bildData är en iframe så = insert as HTML, om img = insert as img
+if (typeof bildData === "string" && bildData.trim().startsWith("<iframe")) {
+  bildEl.innerHTML = bildData;
+} else {
+  bildEl.innerHTML = `<img id="förklaring-bild-img" src="${bildData}" alt="Förklaring bild" style="max-width:100%;height:auto;cursor:pointer;">`;
+
+  // Fullskärm för img alternativt html
+  const img = document.getElementById("förklaring-bild-img");
+  if (img) {
+    img.addEventListener("click", () => {
+      if (img.requestFullscreen) {
+        img.requestFullscreen();
+      } else if (img.webkitRequestFullscreen) {
+        img.webkitRequestFullscreen();
+      } else if (img.msRequestFullscreen) {
+        img.msRequestFullscreen();
+      }
+    });
+  }
+}
 
 // Vänta ett kort ögonblick och lägg till klassen "visible" så att transition triggas
 setTimeout(() => {
@@ -146,18 +168,6 @@ setTimeout(() => {
   bildEl.classList.add("active");
 }, 10);
 
-const img = document.getElementById("förklaring-bild-img");
-if (img) {
-  img.addEventListener("click", () => {
-    if (img.requestFullscreen) {
-      img.requestFullscreen();
-    } else if (img.webkitRequestFullscreen) { // Safari
-      img.webkitRequestFullscreen();
-    } else if (img.msRequestFullscreen) { // IE11
-      img.msRequestFullscreen();
-    }
-  });
-}
 
       // Visa "Nästa fråga"-knappen
       nästaFrågaBtn.style.display = "block";

@@ -46,6 +46,22 @@ sis_theme <- theme(plot.background = element_rect(fill = "#e5ad59") ,
 
 
 
+   # SCB-data
+
+
+
+
+
+
+
+   ### FIGURERNA ###
+
+
+
+
+
+
+
 
 
  # Barnafödande i Sverige
