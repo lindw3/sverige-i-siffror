@@ -14,6 +14,7 @@ library(openxlsx)
 library(patchwork)
 library(ggthemes)
 library(plotly)
+library(htmlwidgets)
 library(reticulate)
 library(ggridges)
 library(forecast)
@@ -51,9 +52,9 @@ sis_theme <- theme(plot.background = element_rect(fill = "#e5ad59") ,
 df <- read.csv("https://ourworldindata.org/grapher/children-born-per-woman.csv?v=1&csvType=full&useColumnShortNames=true")
 
 df <- df %>% 
-  mutate(fertility_rate_hist = round(fertility_rate_hist, 1))
+  mutate(fertility_rate_hist = round(fertility_rate_hist, 2))
 
-df %>% 
+df <- df %>% 
   filter(Entity == "Sweden") %>% 
   ggplot(aes(x = Year, y = fertility_rate_hist  , group = 2,
              text = paste("År:" , Year , 
@@ -63,13 +64,12 @@ df %>%
   scale_x_continuous(breaks = c(1891, 1935, 2023)) +
   scale_y_continuous(limits = c(0 , 4.2) , 
                      breaks = 0:4) +
-  xlab("År") + ylab("Barn per kvinna") -> df
+  xlab("År") + ylab("Barn per kvinna")
 
 img <- ggplotly(df, tooltip = "text") %>% 
   config(displayModeBar = F)
   
-reticulate::py_run_string("import sys")
-save_image(img, file = "images/barnafödande.png")
+saveWidget(img, "images/barnafödande_sverige.html")
 
 
  # Sverige i jämförelse med utvalda länder
