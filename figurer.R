@@ -250,5 +250,3 @@ saveWidget(img, "images/barnafödande_sverige.html")
 
  # Sverige i jämförelse med utvalda länder
 
-
-
