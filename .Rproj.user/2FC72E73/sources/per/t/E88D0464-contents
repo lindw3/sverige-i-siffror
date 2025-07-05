@@ -167,7 +167,7 @@ p <- anställning_sektor %>%
          Sektor != "Samtliga") %>% 
   mutate(Andel = `Antal anställda` / sum(`Antal anställda`)) %>% 
   ggplot(aes(x = Sektor , y = `Antal anställda` , fill = Kön,
-             text = paste(Sektor , "\nAntal: ", comma(`Antal anställda`), 
+             text = paste(Kön, "\nSektor:" , Sektor , "\nAntal: ", comma(`Antal anställda`), 
                           "\nAndel: ", round(Andel, 2) * 100 , "%"))) +
   geom_col(position = "dodge") +
   sis_theme +
@@ -193,7 +193,6 @@ p <- lön_utbildningsnivå %>%
   scale_fill_manual(values = c("Kvinnor" = "#ffb1b1",
                                "Män" = "#5991E5")) +
   scale_y_continuous(labels = comma)
-
 
 img <- ggplotly(p, tooltip = "text") %>%
   config(displayModeBar = FALSE)
