@@ -190,7 +190,7 @@ p <- lön_utbildningsnivå %>%
   geom_col(position = "dodge") +
   sis_theme +
   ylab("Genomsnittslön") + xlab(NULL) +
-  scale_fill_manual(values = c("Kvinnor" = "#ffb1b1",
+  scale_fill_manual(values = c("Kvinnor" = "#E56759",
                                "Män" = "#5991E5")) +
   scale_y_continuous(labels = comma)
 
@@ -235,7 +235,7 @@ p <- df %>%
   ggplot(aes(x = Year, y = fertility_rate_hist  , group = 2,
              text = paste("År:" , Year , 
                           "\nBarn:" , fertility_rate_hist))) +
-  geom_line(linewidth = 1) +
+  geom_line(linewidth = 1 , colour = "#5991E5") +
   sis_theme +
   scale_x_continuous(breaks = c(1891, 1935, 2023)) +
   scale_y_continuous(limits = c(0 , 4.2) , 
