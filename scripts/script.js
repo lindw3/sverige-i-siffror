@@ -122,11 +122,11 @@ document.addEventListener("DOMContentLoaded", () => {
       // Kolla om svaret är rätt
       const korrektSvar = frågor[currentQuestion].korrekt;
       if (btn.textContent === korrektSvar) {
-        btn.style.backgroundColor = "green";
+        btn.style.backgroundColor = "#59E5AD";
       } else {
-        btn.style.backgroundColor = "red";
+        btn.style.backgroundColor = "#E56759";
         alternativKnappar.forEach(b => {
-          if (b.textContent === korrektSvar) b.style.backgroundColor = "green";
+          if (b.textContent === korrektSvar) b.style.backgroundColor = "#59E5AD";
         });
       }
 
