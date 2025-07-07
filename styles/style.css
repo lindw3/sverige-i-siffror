@@ -43,6 +43,12 @@ html, body {
     border-bottom: 0.4rem solid #5991E5;
   }
 
+@media (max-width: 768px) {
+    .nav-list a.active {
+      border-bottom: 0.25rem solid #5991E5;
+    }
+  }
+
   .header {
     display: flex;
     align-items: center;
@@ -107,49 +113,48 @@ html, body {
 @media (max-width: 768px) {
 
   h1{
-    font-size: 2.5rem; /* Reduce font size for smaller screens */
-    line-height: 3rem; /* Adjust line height for smaller screens */
+    font-size: 2.5rem;
+    line-height: 3rem; 
   }
 
   .header i {
-    font-size: 3rem; /* Reduce icon size for smaller screens */
+    font-size: 3rem;
   }
 
   .header {
-    flex-wrap: wrap; /* Allow the header to wrap its content */
-    padding: 0.5rem; /* Adjust padding for smaller screens */
+    flex-wrap: wrap; 
+    padding: 0.5rem;
     justify-content: space-evenly;
-    align-items: center; /* Center items vertically */
+    align-items: center; 
   }
   
   .header-title {
-    width: 100%; /* Make the title take up the full width */
-    justify-content: center; /* Center the title */
-    margin-bottom: 1px; /* Add spacing below the title */
+    width: 100%;
+    justify-content: center; 
+    margin-bottom: 1px; 
   }
 
   .header nav {
-    width: 50%; /* Make the nav take up the full width */
     padding: 0;
     display: flex;
-    justify-content: center; /* Center the navigation bar horizontally */
+    justify-content: center; 
   }
 
   .header nav ul {
-    flex-direction: column; /* Stack the navigation items vertically */
-    gap: 0px; /* Adjust spacing between items */
-    line-height: 2.5rem;
+    flex-direction: column; 
+    gap: 0px; 
+    line-height: 3rem;
     margin-top: 0px;
     margin-bottom: 0px; 
-    flex: none; /* Remove flex-grow to prevent stretching */
-    text-align: center; /* Center-align the text */
-    padding: 0; /* Remove extra padding */
-    margin: 0; /* Remove extra margin */
+    flex: none; 
+    text-align: center; 
+    padding: 0; 
+    margin: 0.5rem; 
   }
 
   .header nav ul li {
-    flex: none; /* Remove flex-grow to prevent stretching */
-    text-align: center; /* Center-align the text */
+    flex: none; 
+    text-align: center; 
   }
 
   .header nav a {
@@ -222,7 +227,8 @@ h2{
   font-family: 'Open sans', sans-serif;
   font-weight: bold;
   color: #5991E5;
-  margin: 0.5em 0;
+  margin-bottom: 1em;
+  margin-top: 2em;
 }
 
 .content-container {
@@ -251,15 +257,17 @@ h2{
   background-color: #5991E5;
   color: rgb(255, 244, 239);
   text-shadow: 1px 1px 1px #000000;
-  padding: 2rem 4rem;
-  line-height: 1.5;
-  font-size: 2.5rem;
-  max-width: 7.5rem;
-  max-height: 6rem;;
+  padding: 1rem 2.5rem;         /* Reduce padding for better centering */
+  line-height: 1;               /* Set line-height to 1 for vertical centering */
+  font-size: 2rem;              /* Adjust font size if needed */
+  min-width: 7.5rem;            /* Use min-width instead of max-width for flexibility */
+  min-height: 3.5rem;           /* Use min-height for vertical space */
   cursor: pointer;
   border-radius: 10%; 
   margin-top: 20px;
-  display: inline-block; /* Ensures the button behaves like a block for centering */
+  display: inline-flex;          /* Use flex for perfect centering */
+  align-items: center;           /* Vertically center text */
+  justify-content: center;       /* Horizontally center text */
   text-align: center;
   text-decoration: none;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -346,6 +354,7 @@ textarea {
 #nästa-fråga {
   background-color: #5991E5;
   font-size: 2rem;
+  border: none;
 }
 
 button:hover {
@@ -390,10 +399,10 @@ button:hover {
 }
 
 .btn {
-  margin-right: 10px; /* Add spacing between the button and the label */
-  cursor: pointer; /* Change cursor to pointer for buttons */
-  font-size: 1.2rem; /* Adjust font size for buttons */
-  padding: 10px 20px; /* Add padding for buttons */
+  margin-right: 10px;
+  cursor: pointer;
+  font-size: 1.2rem; 
+  padding: 10px 20px; 
 }
 
 .förklaring-container {
@@ -401,8 +410,8 @@ button:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 0em;
+  margin-bottom: 1.5em;
   padding: 10px;
   opacity: 0;
   transition: opacity 1.5s ease;
@@ -416,17 +425,17 @@ button:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 1.5em;
   cursor: pointer;
   opacity: 0;
   transition: opacity 1.5s ease;
 }
 
 .förklaring-bild-container.active {
-  opacity: 1; /* Visa bilden när den är aktiv */
+  opacity: 1; 
 }
 
-.iframe {  /* Stil för inbäddad iframe */
+.iframe {  
   width: 100%;
   aspect-ratio: 16 / 9;
   height: auto;
@@ -440,6 +449,7 @@ button:hover {
   display: flex;
   justify-content: flex-end;
   width: 100%;
+  margin-top:1em;
 }
 
 
