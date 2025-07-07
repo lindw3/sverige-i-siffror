@@ -1,3 +1,11 @@
+ // Uppdatera till senaste datum en uppdatering gjordes
+document.getElementById("last-updated").textContent = document.lastModified.split(' ')[0];
+
+
+
+
+ // Frågor, svar, alternativ, förklaringar och bilder
+
 const frågor = [
   {
     fråga: "Vilket parti är störst bland de inkomstgrupper som tjänar över genomsnittet?",
@@ -74,6 +82,10 @@ fråga: "Hur ser barnafödandet per kvinna ut i Sverige idag jämfört med 1900?
 ]
 
 
+
+
+
+
 let currentQuestion = 0;
 
   function visaFråga(index) {
@@ -136,18 +148,18 @@ const bildEl = document.getElementById("förklaring-bild");
 förklaringEl.classList.remove("active");
 bildEl.classList.remove("active");
 
-// Sätt in ny text och bild
+      // Sätt in ny text och bild
 förklaringEl.textContent = frågor[currentQuestion].förklaring;
 
 const bildData = frågor[currentQuestion].bild;
 
-// OM bildData är en iframe så = insert as HTML, om img = insert as img
+      // OM bildData är en iframe så = insert as HTML, om img = insert as img
 if (typeof bildData === "string" && bildData.trim().startsWith("<iframe")) {
   bildEl.innerHTML = bildData;
 } else {
   bildEl.innerHTML = `<img id="förklaring-bild-img" src="${bildData}" alt="Förklaring bild" style="max-width:100%;height:auto;cursor:pointer;">`;
 
-  // Fullskärm för img alternativt html
+      // Fullskärm för img alternativt html
   const img = document.getElementById("förklaring-bild-img");
   if (img) {
     img.addEventListener("click", () => {
@@ -162,7 +174,7 @@ if (typeof bildData === "string" && bildData.trim().startsWith("<iframe")) {
   }
 }
 
-// Vänta ett kort ögonblick och lägg till klassen "visible" så att transition triggas
+      // Vänta ett kort ögonblick och lägg till klassen "visible" så att transition triggas
 setTimeout(() => {
   förklaringEl.classList.add("active");
   bildEl.classList.add("active");
