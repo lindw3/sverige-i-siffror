@@ -122,6 +122,7 @@ p <- df %>%
              text = paste(Parti, "\nInkomst: ", Inkomst, "\nAndel: ", Andel, "%"))) +
   geom_col(position = "dodge") +
   xlab("Andel, %") + ylab(NULL) +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
   labs(fill = "Inkomstpercentil") +
   sis_theme + 
   scale_fill_manual(values = c("0-20 %" = "#5991E5",
@@ -152,6 +153,7 @@ p <- df %>%
                      breaks = c(0.5), 
                      labels = scales::percent_format(accuracy = 1)) +
   ylab("Andel, %") + xlab(NULL) +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
   partifärger_colour +
   sis_theme
 
@@ -172,6 +174,7 @@ p <- anställning_sektor %>%
   geom_col(position = "dodge") +
   sis_theme +
   xlab(NULL) +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
   scale_fill_manual(values = c("Kvinnor" = "#E56759",
                                "Män" = "#5991E5")) +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 6), labels = scales::comma)
@@ -189,6 +192,7 @@ p <- lön_utbildningsnivå %>%
              text = paste(Kön, "\nSektor: ", Sektor , "\nGenomsnittslön: ", comma(Lön)))) +
   geom_col(position = "dodge") +
   sis_theme +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
   ylab("Genomsnittslön") + xlab(NULL) +
   scale_fill_manual(values = c("Kvinnor" = "#E56759",
                                "Män" = "#5991E5")) +
@@ -237,6 +241,7 @@ p <- df %>%
                           "\nBarn:" , fertility_rate_hist))) +
   geom_line(linewidth = 1 , colour = "#5991E5") +
   sis_theme +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
   scale_x_continuous(breaks = c(1891, 1935, 2023)) +
   scale_y_continuous(limits = c(0 , 4.2) , 
                      breaks = 0:4) +
