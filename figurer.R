@@ -122,7 +122,6 @@ p <- df %>%
              text = paste(Parti, "\nInkomst: ", Inkomst, "\nAndel: ", Andel, "%"))) +
   geom_col(position = "dodge") +
   xlab("Andel, %") + ylab(NULL) +
-  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
   labs(fill = "Inkomstpercentil") +
   sis_theme + 
   scale_fill_manual(values = c("0-20 %" = "#5991E5",
@@ -241,8 +240,7 @@ p <- df %>%
                           "\nBarn:" , fertility_rate_hist))) +
   geom_line(linewidth = 1 , colour = "#5991E5") +
   sis_theme +
-  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
-  scale_x_continuous(breaks = c(1891, 1935, 2023)) +
+  scale_x_continuous(breaks = c(1891, 1935, max(df$Year))) +
   scale_y_continuous(limits = c(0 , 4.2) , 
                      breaks = 0:4) +
   xlab(NULL) + ylab("Barn per kvinna")
@@ -254,4 +252,53 @@ saveWidget(img, "images/barnafödande_sverige.html")
 
 
  # Sverige i jämförelse med utvalda länder
+df <- read.csv("https://ourworldindata.org/grapher/children-born-per-woman.csv?v=1&csvType=full&useColumnShortNames=true")
+
+df <- df %>% 
+  mutate(fertility_rate_hist = round(fertility_rate_hist, 2))
+
+p <- df %>%
+  filter(Entity %in% c("Sweden", 
+                       "High-income countries",
+                       "Low-income countries",
+                       "Lower-middle-income countries",
+                       "Upper-middle-income countries")) %>%
+  mutate(
+    Entity = case_when(
+      Entity == "Sweden" ~ "Sverige",
+      Entity == "High-income countries" ~ "Höginkomstländer",
+      Entity == "Low-income countries" ~ "Låginkomstländer",
+      Entity == "Lower-middle-income countries" ~ "Undre medelinkomstländer",
+      Entity == "Upper-middle-income countries" ~ "Övre medelinkomstländer",
+      TRUE ~ Entity
+    )
+  ) %>% 
+  ggplot(aes(x = Year, y = fertility_rate_hist  , 
+             group = Entity, colour = Entity,
+             text = paste("År:" , Year , 
+                          "\nLand/region:" , Entity,
+                          "\nBarn:" , fertility_rate_hist))) +
+  geom_line(linewidth = 1) +
+  scale_colour_manual(name = "Land/region" ,
+    values = c(
+    "Sverige" = "#5991E5",
+    "Låginkomstländer" = "#D7E559",
+    "Undre medelinkomstländer" = "#E56759",
+    "Övre medelinkomstländer" = "#AD59E5",
+    "Höginkomstländer" = "#59E5AD"
+  )) +
+  sis_theme +
+  scale_x_continuous(breaks = c(1891, max(df$Year))) +
+  scale_y_continuous(limits = c(0 , 7) , 
+                     breaks = 0:7) +
+  xlab(NULL) + ylab("Barn per kvinna")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/barnafödande.html")
+
+
+
+
 

@@ -1,0 +1,680 @@
+########## ATT ÖPPNA UPP DIREKT ##########
+install.packages(c("ggplot2", "scales" , "openxlsx", "patchwork", "ggthemes", "plotly", "ggridges", "forecast", "GGally", "dplyr", "tidyr", "data.table" , "sf" , "gganimate"))
+library(ggplot2)
+library(lubridate)
+library(stringr)
+library(scales)
+library(dplyr)
+library(tidyr)
+library(DT)
+library(data.table)
+library(magrittr)
+library(gridExtra)
+library(openxlsx)
+library(patchwork)
+library(ggthemes)
+library(plotly)
+library(ggridges)
+library(forecast)
+library(GGally)
+library(cluster)
+library(sf)
+
+# Importera datan
+library(readxl)
+idrottskategoriseringar <- read_excel("C:/Users/WILIDF17/OneDrive - Sveriges Riksidrottsförbund/Skrivbordet/R/RF-SISU Uppland/Föreningsenkäten/data/Idrottskategoriseringar.xlsx")
+idrottskategoriseringar$Idrott <- as.factor(idrottskategoriseringar$Idrott)
+idrottskategoriseringar$Typ <- as.factor(idrottskategoriseringar$Typ)
+idrottskategoriseringar$Miljö <- as.factor(idrottskategoriseringar$Miljö)
+
+library(readxl)
+projektstöd <- read_excel("data/projektstöd.xlsx", 
+                               col_types = c("numeric", "text", "text", 
+                                                       "text", "numeric", "text", "text", 
+                                                       "text", "text", "text", "numeric",
+                                                       "text" , "text", "text", "text"))
+
+budget <- read_excel("data/budget.xlsx")
+
+
+## Addera idrottstyp till dataramar med idrottsindelningar ##
+addera_idrottstyp <- function(df) {
+  df <- df %>%
+    mutate(idrottstyp = ifelse(idrott %in% c("Akademisk idrott", "Akademisk Idrott" , "Cykel", "Cykelsport" , "Dragkamp", "Dövidrott", "Frisbee", 
+                                             "Korpen", "Parasport", "Segling", "Skolidrott", "Varpa"), "Kombinerat", 
+                        ifelse(idrott %in% c("Amerikansk Fotboll/Flaggfotboll/Landhockey", "Amerikansk Fotboll" , "Bandy", "Baseboll och softboll", "Base- och softboll" , 
+                                                    "Baseboll och Softboll" , "Baseboll & Softboll" , "Basket", "Bob & Rodel" , "Bridge" , "Cheerleading", "Cricket", "Curling", "Danssport", 
+                                                    "E-sport", "Fotboll", "Handboll", "Innebandy", "Ishockey", "Kanot", "Kanotsport" , "Landhockey" ,
+                                                    "Padel", "Rugby", "Swe3" , "Volleyboll"), "Lagidrott", 
+                        ifelse(idrott %in% c("Badminton", "Bangolf", "Biljard", "Bilsport", "Bordtennis", "Boule", "Bowling",
+                                                           "Boxning", "Brottning", "Budo & Kampsport", "Budo och Kampsport" , "Bågskytte", "Casting", "Dart", 
+                                                           "Draghundsport", "Flygsport", "Friidrott", "Funktionell fitness", "Fäktning", 
+                                                           "Golf", "Gymnastik", "Islandshäst", "Islandshästar" , "Issegling", "Judo", "Karate", "Klättring", 
+                                                           "Konståkning", "Motorcykel och snöskoter", "Motorcykel och Snöskoter" , "Motorcykel & Snöskoter" , "Motorsport" , "Motorbåtsport" ,
+                                                           "Mångkamp", "Orientering", "Pistolskytte", "Racerbåt" , "Ridsport", "Rodd", "Roddsport" , "Simidrott", "Skateboard", "Skidor", 
+                                                           "Skidsport" , "Skidskytte", "Skridsko" , "Skyttesport", "Sportdykning", "Squash", "Styrkelyft", "Styrkelyftning" ,
+                                                           "SweSports", "Swesports" , "Taekwondo", "Tennis", "Triathlon", "Tyngdlyftning", 
+                                                           "Vattenskidor och Wakeboard" , "Vattenskidor & Wakeboard"), "Individuell idrott", ""))),
+                        .after = idrott)
+  
+  return(df)
+}
+
+## Addera idrottsmiljöindelning till dataramar med idrottsindelningar ##
+addera_idrottsmiljö <- function(df) {
+  df <- df %>% 
+    mutate(idrottsmiljö = ifelse(idrott %in% c("Akademisk idrott" , "Akademisk Idrott" , "Bågskytte" , "Dragkamp" , "Dövidrott" , "Korpen" , 
+                                               "Parasport" , "Skolidrott" , "Tennis" , "Varpa"), "Kombinerat", 
+                          ifelse(idrott %in% c("Badminton" , "Basket" , "Biljard" , "Bordtennis" , "Bowling" , "Boxning" , "Bridge" , "Brottning" , 
+                                                      "Budo & Kampsport" , "Budo och Kampsport" , "Cheerleading" , "Curling" , "Danssport" , "Dart" , "E-sport" ,
+                                                      "Funktionell fitness" , "Fäktning" , "Gymnastik" , "Handboll" , "Innebandy" , "Ishockey" ,
+                                                      "Judo" , "Karate" , "Klättring" , "Konståkning" , "Padel" , "Simidrott" , "Skridsko" , "Squash" , 
+                                                      "Styrkelyft" , "Styrkelyftning" , "SweSports" , "Swesports" , "Taekwondo" , "Tyngdlyftning" , "Volleyboll"), "Inomhus", 
+                          ifelse(idrott %in% c("Amerikansk Fotboll/Flaggfotboll/Landhockey" , "Amerikansk Fotboll" , "Bangolf" , "Bandy" , "Baseboll och softboll" , "Base- och softboll" ,
+                                                             "Baseboll och Softboll" , "Baseboll & Softboll" , "Bilsport" , "Bob & Rodel" , "Boule" , "Casting" , "Cricket" , "Cykel" , "Cykelsport" , "Draghundsport" , "Flygsport" , "Fotboll" ,
+                                                             "Friidrott" , "Frisbee" , "Golf" , "Islandshäst" , "Islandshästar" , "Issegling" , "Kanot" , "Kanotsport" , "Landhockey" , "Motorcykel och snöskoter" , "Motorcykel och Snöskoter" ,
+                                                             "Motorcykel & Snöskoter" , "Motorsport" , "Motorbåtsport" , "Mångkamp" , "Orientering" , "Pistolskytte" , "Racerbåt" , "Ridsport" , "Rodd" , "Roddsport" , "Rugby" , "Segling" , "Skateboard" , "Skidor" , 
+                                                             "Skidsport" ,"Skidskytte" , "Skyttesport" , "Sportdykning" , "Swe3" , "Triathlon" , "Vattenskidor och Wakeboard" , "Vattenskidor & Wakeboard"), "Utomhus", ""))),
+                          .after = idrott)
+  
+  return(df)
+}
+
+## Addera LOK-IF-indelning utifrån idrott
+addera_lokif <- function(df) {
+  df <- df %>% 
+    mutate(lokif = ifelse(idrott %in% c("Bangolf", "Baseboll och Softboll" , "Biljard", "Curling", "Dart", "Dragkamp", "Draghundsport" , "E-sport" , "Flygsport" , 
+                                        "Frisbee" , "Funktionell fitness", "Fäktning" , "Mångkamp",  "Styrkelyft" , "SweSports" , "Triathlon" , "Tyngdlyftning"), as.numeric(1), 
+                          ifelse(idrott %in% c("Bågskytte", "Cheerleading", "Cricket", "Issegling", "Korpen", "Rodd", "Skateboard", 
+                                               "Skidskytte", "Squash", "Swe3", "Vattenskidor och Wakeboard"), as.numeric(2), 
+                          ifelse(idrott %in% c("Bilsport", "Danssport", "Islandshäst", "Klättring", "Rugby", "Sportdykning", "Taekwondo"), as.numeric(3), 
+                          ifelse(idrott %in% c("Kanot"), as.numeric(4),
+                          ifelse(idrott %in% c("Bandy", "Bowling", "Volleyboll"), as.numeric(5),
+                          ifelse(idrott %in% c("Badminton", "Boxning", "Konståkning", "Motorcykel och Snöskoter", "Padel", "Skolidrott"), as.numeric(6),
+                          ifelse(idrott %in% c("Brottning", "Parasport"), as.numeric(7),
+                          ifelse(idrott %in% c("Segling"), as.numeric(8),
+                          ifelse(idrott %in% c("Tennis"), as.numeric(9),
+                          ifelse(idrott %in% c("Judo"), as.numeric(11),
+                          ifelse(idrott %in% c("Akademisk idrott", "Basket", "Cykel", "Karate", "Simidrott"), as.numeric(12),
+                          ifelse(idrott %in% c("Golf", "Orientering"), as.numeric(14),
+                          ifelse(idrott %in% c("Handboll"), as.numeric(15),
+                          ifelse(idrott %in% c("Bordtennis"), as.numeric(16),
+                          ifelse(idrott %in% c("Skyttesport"), as.numeric(17),
+                          ifelse(idrott %in% c("Friidrott", "Ishockey"), as.numeric(20),
+                          ifelse(idrott %in% c("Budo & Kampsport"), as.numeric(21),
+                          ifelse(idrott %in% c("Gymnastik"), as.numeric(23),
+                          ifelse(idrott %in% c("Skidor"), as.numeric(24),
+                          ifelse(idrott %in% c("Ridsport"), as.numeric(28),
+                          ifelse(idrott %in% c("Innebandy"), as.numeric(41),
+                          ifelse(idrott %in% c("Fotboll"), as.numeric(105),
+                                 "")))))))))))))))))))))))
+  
+                               }
+
+
+##### FORMATERA DATA #####
+   # Justera kolumnnamnen
+colnames(projektstöd) <- c("id", "ärende" , "idrottsförening", "status", "stödsumma", "inriktning", "återbetalning", "idrott", "kommun", "idrottsmedel", "återbetalning_summa", "orgnummer",  "skapad", "godkändutbetalning" , "kategori")
+
+# Om Avslagen, Ej genomförd eller Återbetalning krävd - sätt angiven SEK till 0
+projektstöd <- projektstöd %>% 
+  mutate(stödsumma = if_else(status %in% c("Avslagen" , "Återbetalning krävd" , "Ej genomförd satsning") , 0 , stödsumma))
+
+# Justering av projektstöd som har flera idrotter men som ska ha en specifik idrott
+projektstöd <- projektstöd %>% 
+  mutate(
+    idrott = case_when(
+      id == 86109 ~ "Skidor",
+      id == 162445 ~ "Fotboll",
+      id == 138196 ~ "Skidor",
+      id == 43782 ~ "Ishockey",
+      id == 6573 ~ "Skidor",
+      TRUE ~ idrott
+    )
+  )
+
+   # Ändra till endast en idrott och ta bort grenar
+    ### MANUELLA JUSTERINGAR FÖRST I EXCEL:
+       # Gör om Heby AIF:s anläggningsansökan till "Fotboll"
+       # Gör om Månkarbo IF:s anläggningsansökan till "Skidor"
+       # Gör om Sportklubben Iron:s anläggningsansökan till "Ishockey"
+       # Gör om Häverödals SK:s anläggningsansökan till "Skidor"
+projektstöd <- projektstöd %>% 
+  mutate(idrott = str_replace_all(idrott, ".*Skyttesport.*", "Skyttesport")) %>%
+  mutate(idrott =  str_replace_all(idrott, ".*Amerikansk Fotboll.*", "Swe3")) %>%
+  mutate(idrott =  str_replace_all(idrott, ".*Fotboll.*", "Fotboll")) %>%
+  mutate(idrott =  str_replace_all(idrott, ".*SweSports.*", "SweSports")) %>% 
+  mutate(idrott =  str_replace_all(idrott, ".*Curling.*", "Curling")) %>%
+  mutate(idrott =  str_replace_all(idrott, ".*Danssport.*", "Danssport")) %>%
+  mutate(idrott =  str_replace_all(idrott, ".*Gymnastik.*", "Gymnastik")) %>%
+  mutate(idrott =  str_replace_all(idrott, ".*Parasport.*", "Parasport")) %>%
+  mutate(idrott =  str_replace_all(idrott, ".*Motorcykel och Snöskoter.*", "Motorcykel och Snöskoter")) %>%
+  mutate(idrott =  str_replace_all(idrott, ".*Cykel.*", "Cykel")) %>%
+  mutate(idrott =  str_replace_all(idrott, ".*Flygsport.*", "Flygsport")) %>%
+  mutate(idrott =  str_replace_all(idrott, ".*Korpen.*", "Korpen")) %>%
+  mutate(idrott =  str_replace_all(idrott, ".*Frisbee.*", "Frisbee")) %>%
+  mutate(idrott =  str_replace_all(idrott, ".*Skidor.*", "Skidor")) %>%
+  mutate(idrott =  str_replace_all(idrott, ".*Budo & Kampsport.*", "Budo & Kampsport")) %>%
+  mutate(idrott =  str_replace_all(idrott, ".*Kanot.*", "Kanot")) %>%
+  mutate(idrott =  str_replace_all(idrott, ".*Bordtennis.*", "Bordtennis")) %>% 
+  mutate(idrott =  str_replace_all(idrott, ".*Segling.*", "Segling")) %>% 
+  mutate(idrott =  str_replace_all(idrott, ".*Friidrott.*", "Friidrott")) %>% 
+  mutate(idrott =  str_replace_all(idrott, ".*Rodd.*", "Rodd")) %>% 
+  mutate(idrott =  str_replace_all(idrott, ".*Ishockey.*", "Ishockey")) %>% 
+  mutate(idrott =  str_replace_all(idrott, ".*Tennis.*", "Tennis")) %>% 
+  mutate(idrott =  str_replace_all(idrott, ".*Boule.*", "Boule")) %>% 
+  mutate(idrott =  str_replace_all(idrott, ".*Mångkamp.*", "Mångkamp"))
+
+   # Lägg till idrott för ansökningar 2017 som saknar idrottsindelning
+projektstöd <- projektstöd %>%
+       mutate(idrott = if_else(idrottsförening == "SMK Uppsala" & is.na(idrott), "Cykel", 
+                       if_else(idrottsförening == "Bålsta Bordtennisklubb" & is.na(idrott), "Bordtennis",
+                       if_else(idrottsförening == "Norrtälje Gymnastikförening" & is.na(idrott), "Gymnastik",
+                       if_else(idrottsförening == "Rimbo Idrottsförening" & is.na(idrott), "Fotboll",
+                       if_else(idrottsförening == "Rimbo Tennisklubb" & is.na(idrott), "Tennis",
+                       if_else(idrottsförening == "Uppsala AFC 86ers" & is.na(idrott), "Swe3",
+                       if_else(idrottsförening == "Långhundra Idrottsförening" & is.na(idrott), "Friidrott",
+                       if_else(idrottsförening == "Märsta Cricket Club" & is.na(idrott), "Cricket",
+                       if_else(idrottsförening == "Gymnastikföreningen Uppsala Stars" & is.na(idrott), "Gymnastik",
+                       if_else(idrottsförening == "Uppsala Rugby Footballclub" & is.na(idrott), "Rugby",
+                       if_else(idrottsförening == "Uppsala Judoklubb" & is.na(idrott), "Judo",
+                       if_else(idrottsförening == "Bälinge-Jumkil Skytteförening" & is.na(idrott), "Skyttesport",
+                       if_else(idrottsförening == "Sportklubben Iron" & is.na(idrott), "Fotboll",
+                       if_else(idrottsförening == "Föreningen Uppsala Basket Dam" & is.na(idrott), "Basket",
+                       if_else(idrottsförening == "Bälinge Ryttarförening" & is.na(idrott), "Ridsport",
+                       if_else(idrottsförening == "Norrtälje Tennisklubb" & is.na(idrott), "Tennis",
+                       if_else(idrottsförening == "Norrtelje Bowlingklubb" & is.na(idrott), "Bowling",
+                       if_else(idrottsförening == "Norrtälje Ishockeyklubb" & is.na(idrott), "Ishockey",
+                       if_else(idrottsförening == "Ridklubben Norrtälje Ryttare" & is.na(idrott), "Ridsport",
+                       if_else(idrottsförening == "Norrtälje Judoklubb" & is.na(idrott), "Judo",
+                       if_else(idrottsförening == "Orienteringsklubben Roslagen" & is.na(idrott), "Orientering",
+                       if_else(idrottsförening == "Norrtälje Basketbollklubb" & is.na(idrott), "Basket",
+                       if_else(idrottsförening == "Rimbo Judoklubb" & is.na(idrott), "Judo",
+                       if_else(idrottsförening == "Rimbo Tennisklubb" & is.na(idrott), "Tennis",
+                       if_else(idrottsförening == "Skånela Idrottsförening" & is.na(idrott), "Handboll",
+                       if_else(idrottsförening == "Märsta Judoklubb" & is.na(idrott), "Judo",
+                       if_else(idrottsförening == "Märsta Idrottsklubb" & is.na(idrott), "Fotboll",
+                       if_else(idrottsförening == "Vassunda Idrottsförening" & is.na(idrott), "Handboll",
+                       if_else(idrottsförening == "Bålsta Idrottsförening" & is.na(idrott), "Handboll",
+                       if_else(idrottsförening == "Föreningen Upplands-Bro Bålsta Basket" & is.na(idrott), "Basket",
+                       if_else(idrottsförening == "Bålsta Tennisklubb" & is.na(idrott), "Tennis",
+                       if_else(idrottsförening == "Älvkarleby Golfklubb" & is.na(idrott), "Golf",
+                       if_else(idrottsförening == "Älvkarleby Judoklubb" & is.na(idrott), "Judo",
+                       if_else(idrottsförening == "Skutskärs Tennisklubb" & is.na(idrott), "Tennis",
+                       if_else(idrottsförening == "Älvkarleby Ridklubb" & is.na(idrott), "Ridsport",
+                       if_else(idrottsförening == "Heby Skytteförening" & is.na(idrott), "Skyttesport",
+                       if_else(idrottsförening == "Heby Ryttarförening" & is.na(idrott), "Ridsport",
+                       if_else(idrottsförening == "Heby Allmänna Idrottsförening" & is.na(idrott), "Fotboll",
+                       if_else(idrottsförening == "Enköpings Handbollförening" & is.na(idrott), "Handboll",
+                       if_else(idrottsförening == "Enköpings Innebandyklubb" & is.na(idrott), "Innebandy",
+                       if_else(idrottsförening == "Enköpings Ki Aikidoförening" & is.na(idrott), "Budo & Kampsport",
+                       if_else(idrottsförening == "Stratos Enköping Bordtennisklubb" & is.na(idrott), "Bordtennis",
+                       if_else(idrottsförening == "Enköpings Extremsports Förening vi unga" & is.na(idrott), "Skateboard",
+                       if_else(idrottsförening == "Almunge Idrottsklubb" & is.na(idrott), "Fotboll",
+                       if_else(idrottsförening == "Arlanda Amerikanska FF" & is.na(idrott), "Swe3",
+                       if_else(idrottsförening == "IK Sirius Bordtennisklubb" & is.na(idrott), "Bordtennis",
+                       if_else(idrottsförening == "BKV Norrtälje" & is.na(idrott), "Fotboll",
+                       if_else(idrottsförening == "Vaksala Sportklubb" & is.na(idrott), "Fotboll",
+                       idrott)))))))))))))))))))))))))))))))))))))))))))))))))
+  
+  # Ytterligare ifelse-sträng då 50 iterationer är max
+projektstöd <- projektstöd %>%
+  mutate(idrott = if_else(idrottsförening == "Water Frogs" & is.na(idrott), "Sportdykning", 
+                  if_else(idrottsförening == "Storvreta Innebandyklubb" & is.na(idrott), "Innebandy",
+                  if_else(idrottsförening == "Enköpings Klätterklubb" & is.na(idrott), "Klättring",
+                  if_else(idrottsförening == "SHK Hockey-Club" & is.na(idrott), "Ishockey",
+                  if_else(idrottsförening == "Gymnastik och Cheerleadingföreningen Uppsala" & is.na(idrott), "Gymnastik",
+                  if_else(idrottsförening == "Sigtunabygdens Ryttarförening" & is.na(idrott), "Ridsport",
+                  if_else(idrottsförening == "Tierps Ryttarklubb" & is.na(idrott), "Ridsport",
+                  if_else(idrottsförening == "Procyon Bollklubb" & is.na(idrott), "Fotboll",
+                  if_else(idrottsförening == "Örsundsbro Sportklubb" & is.na(idrott), "Fotboll",
+                  if_else(idrottsförening == "KK Mälarpiraterna I Sigtuna" & is.na(idrott), "Kanot",
+                  if_else(idrottsförening == "Uppsala Volleybollsällskap" & is.na(idrott), "Volleyboll",
+                  if_else(idrottsförening == "Gimo IF Hockey Club" & is.na(idrott), "Ishockey",
+                  if_else(idrottsförening == "Gimo Ridklubb" & is.na(idrott), "Ridsport",
+                  if_else(idrottsförening == "Almo Bollklubb" & is.na(idrott), "Fotboll",
+                  if_else(idrottsförening == "Orienteringsklubben Rodhen" & is.na(idrott), "Orientering",
+                  if_else(idrottsförening == "Sportklubben Tirfing" & is.na(idrott), "Handboll",
+                  if_else(idrottsförening == "Sigtuna Basketbollklubb" & is.na(idrott), "Basket",
+                  if_else(idrottsförening == "Sigtuna Budoklubb" & is.na(idrott), "Budo & Kampsport",
+                  if_else(idrottsförening == "Länna Idrottsförening" & is.na(idrott), "Orientering",
+                  if_else(idrottsförening == "IK Sirius Innebandyklubb" & is.na(idrott), "Innebandy",
+                  if_else(idrottsförening == "Grönlund Golfklubb" & is.na(idrott), "Golf",
+                  if_else(idrottsförening == "Upsala Golfklubb" & is.na(idrott), "Golf",
+                  if_else(idrottsförening == "IFK Uppsala" & is.na(idrott), "Fotboll",
+                  if_else(idrottsförening == "Stenhagens Kamratklubb" & is.na(idrott), "Innebandy",
+                  if_else(idrottsförening == "Hallstaviks Golfklubb" & is.na(idrott), "Golf",
+                  if_else(idrottsförening == "Rimbo Handbollsklubb Roslagen" & is.na(idrott), "Handboll",
+                  if_else(idrottsförening == "Rånäs Orienteringsklubb" & is.na(idrott), "Orientering",
+                  if_else(idrottsförening == "Norrtälje Bordtennisklubb" & is.na(idrott), "Bordtennis",
+                  if_else(idrottsförening == "Midas Innebandyklubb" & is.na(idrott), "Innebandy",
+                  if_else(idrottsförening == "Norrtälje Brottarklubb" & is.na(idrott), "Brottning",
+                  if_else(idrottsförening == "Bålsta Floorballclub" & is.na(idrott), "Innebandy",
+                  if_else(idrottsförening == "Enköpings KonståkningsKlubb" & is.na(idrott), "Konståkning",
+                  if_else(idrottsförening == "Lagga-Långhundra Bollklubb" & is.na(idrott), "Fotboll",
+                  if_else(idrottsförening == "Hallstaviks Ryttarförening" & is.na(idrott), "Ridsport",
+                  if_else(idrottsförening == "Lagga Fältrittklubb" & is.na(idrott), "Ridsport",
+                  if_else(idrottsförening == "Föreningen Okinawa Goju Ryu Karate Enköping" & is.na(idrott), "Karate",
+                  if_else(idrottsförening == "Fjärdhundra Sportklubb" & is.na(idrott), "Fotboll",
+                  if_else(idrottsförening == "Enköpings Rugbyklubb Ungdom" & is.na(idrott), "Rugby",
+                  if_else(idrottsförening == "Enköpings Klätterklubb" & is.na(idrott), "Klättring",
+                  if_else(idrottsförening == "Enköpings Base- och Softbollklubb" & is.na(idrott), "Baseboll och Softboll",
+                  if_else(idrottsförening == "Skutskärs Innebandyklubb" & is.na(idrott), "Innebandy",
+                  if_else(idrottsförening == "Rimbo Handbollklubb Roslagen" & is.na(idrott), "Handboll",
+                  if_else(idrottsförening == "Rånäs Orienteringsklubb" & is.na(idrott), "Orientering",
+                  if_else(idrottsförening == "Hallsta Idrottsklubb" & is.na(idrott), "Fotboll",
+                  if_else(idrottsförening == "Föreningen Bålsta Idrottskamrater" & is.na(idrott), "Friidrott",
+                  if_else(idrottsförening == "Heby Gymnastikförening" & is.na(idrott), "Gymnastik",
+                  if_else(idrottsförening == "Västerlöfsta Innebandyförening" & is.na(idrott), "Innebandy",
+                  if_else(idrottsförening == "Bålsta Gymnastikklubb" & is.na(idrott), "Gymnastik",
+                  idrott)))))))))))))))))))))))))))))))))))))))))))))))))
+
+# Ytterligare ifelse-sträng då 50 iterationer är max
+projektstöd <- projektstöd %>%
+  mutate(idrott = if_else(idrottsförening == "Sporta Lagom IF" & is.na(idrott), "Korpen", 
+                  if_else(idrottsförening == "Coup droit – Knivsta Fäktförening" & is.na(idrott), "Fäktning",
+                  if_else(idrottsförening == "IF Ju-Jutsu Kai Enköping" & is.na(idrott), "Budo & Kampsport",
+                  if_else(idrottsförening == "Upsala Idrottsförening" & is.na(idrott), "Fotboll",
+                  if_else(idrottsförening == "Stenhagens Kamratklubb Innebandyförening" & is.na(idrott), "Innebandy",
+                  if_else(idrottsförening == "Bar Madness Enköping Calisthenics Förening" & is.na(idrott), "Styrkelyft",
+                  if_else(idrottsförening == "Fiskeklubben Rena Rama Löjan" & is.na(idrott), "Casting",
+                  if_else(idrottsförening == "Gimo Fight Center Idrottsförening" & is.na(idrott), "Budo & Kampsport",
+                  if_else(idrottsförening == "Storvreta Handbollsklubb" & is.na(idrott), "Handboll",
+                          idrott))))))))))
+
+   # Addera föreningstyp och idrottsmiljö
+addera_idrottstyp(projektstöd) -> projektstöd
+addera_idrottsmiljö(projektstöd) -> projektstöd
+
+   # Lägg till data för LOK-IF/kommun
+lokif_kommun <- read_excel("data/lokif_kommun.xlsx")
+
+   # Lägg till data för LOK-IF/idrott
+lokif_idrott <- read_excel("data/lokif_idrott.xlsx")
+
+
+   # Ändra idrottsmedel
+projektstöd <- projektstöd %>% 
+      mutate(idrottsmedel =  str_replace_all(idrottsmedel, ".*anläggning.*", "Anläggningsstöd")) %>% 
+      mutate(idrottsmedel =  str_replace_all(idrottsmedel, ".*Anläggning.*", "Anläggningsstöd")) %>% 
+      mutate(idrottsmedel =  str_replace_all(idrottsmedel, ".*Projektstöd IF B&U.*", "Projektstöd IF B&U")) %>% 
+      mutate(idrottsmedel =  str_replace_all(idrottsmedel, ".*Projektstöd IF Idrott 65.*", "65+")) %>% 
+      mutate(idrottsmedel =  str_replace_all(idrottsmedel, ".*Anläggning.*", "Anläggningsstöd")) %>% 
+      mutate(idrottsmedel =  str_replace_all(idrottsmedel, ".*Idrottslyftet.*", "Idrottslyftet")) %>% 
+      mutate(idrottsmedel =  str_replace_all(idrottsmedel, ".*Idrott för nyanlända.*", "Idrott för nyanlända")) %>% 
+      mutate(idrottsmedel =  str_replace_all(idrottsmedel, ".*Inkludering/Etnicitet.*", "Allaskaharåd")) %>% 
+      mutate(idrottsmedel =  str_replace_all(idrottsmedel, "Projektstöd IF 2020/2021", "Projektstöd IF")) %>% 
+      mutate(idrottsmedel =  str_replace_all(idrottsmedel, "Projektstöd IF 2020/2021 - Idrott för nyanlända", "Idrott för nyanlända")) %>% 
+      mutate(idrottsmedel =  str_replace_all(idrottsmedel, ".*Projektstöd IF Idrottsklivet.*", "Idrottsklivet")) %>% 
+      mutate(idrottsmedel =  str_replace_all(idrottsmedel, ".*Återstart.*", "Återstartsstöd")) %>% 
+      mutate(idrottsmedel =  str_replace_all(idrottsmedel, ".*Inkludering/Etnicitet.*", "Allaskaharåd")) 
+
+
+   # Ändra inriktning
+projektstöd <- projektstöd %>% 
+  mutate(inriktning =  str_replace_all(inriktning, ".*Projektstöd IF B.*", "B&U")) %>% 
+  mutate(inriktning =  str_replace_all(inriktning, ".*Projektstöd IF Idrottsklivet.*", "Idrottsklivet")) %>% 
+  mutate(inriktning =  str_replace_all(inriktning, ".*Projektstöd IF Idrott 65.*", "65+")) %>% 
+  mutate(inriktning =  str_replace_all(inriktning, ".*Projektstöd IF - An.*", "Anläggningsstöd")) %>% 
+  mutate(inriktning =  str_replace_all(inriktning, ".*Projektstöd IF An.*", "Anläggningsstöd")) %>% 
+  mutate(inriktning =  str_replace_all(inriktning, ".*#alla.*", "Allaskaharåd")) %>% 
+  mutate(inriktning =  str_replace_all(inriktning, ".*Aktivitets.*", "Aktivitetslistan")) %>% 
+  mutate(inriktning =  str_replace_all(inriktning, ".*Projektstöd IF Idrott 65.*", "65+")) %>% 
+  mutate(inriktning =  str_replace_all(inriktning, ".*Projektstöd IF Åter*", "Återstartsstöd")) %>%
+  mutate(inriktning =  str_replace_all(inriktning, ".*Projektstöd IF - An.*", "Anläggningsstöd"))
+
+   # Ändra inriktning för anläggningsstöd för separat analys
+projektstöd <- projektstöd %>% 
+  mutate(
+    inriktning = case_when(
+      id %in% c(178198, 184314, 192492, 189789, 189788, 178377, 190617, 190429, 
+                180379, 169940, 184016, 168952, 191662) ~ "Energi och miljö",
+      id %in% c(168506, 178130, 177511, 182956, 168520, 188133, 169297, 184835, 
+                184708, 190341, 168091, 172923, 178394, 169822, 168270, 186015) ~ "Idrottsytor, mindre",
+      id %in% c(183880) ~ "Idrottsytor, större",
+      id %in% c(192197, 183333, 167291) ~ "Parasport",
+      id %in% c(167002, 188226, 170815, 185977, 184145, 182926, 171325, 
+                190648, 180166, 190414, 190426, 176961, 181716) ~ "Renovering",
+      id %in% c(190361) ~ "Säkerhet",
+      TRUE ~ inriktning
+    )
+  )
+
+
+  # Allaskaharåd både i idrottsmedel och inriktning
+projektstöd <- projektstöd %>% 
+  mutate(idrottsmedel = 
+           ifelse(inriktning == "Allaskaharåd" , "Allaskaharåd" , idrottsmedel))
+
+   # Parasport både i idrottsmedel och inriktning
+projektstöd <- projektstöd %>% 
+  mutate(idrottsmedel = 
+           ifelse(inriktning == "Projektstöd IF Parasport 2025" , "Parasport" , idrottsmedel))
+
+
+# Lägg till kategori = Öppen idrott för ansökningar som indikerar detta
+keywords <- c("öppe", "öppn", "prova", "Idrottens dag", "fritids", "sommar", "skol", "lov", "kväll", "natt", "spontan")
+
+check_keywords <- function(text) {
+  for (keyword in keywords) {
+    if (grepl(keyword, text, ignore.case = TRUE)) {
+      return("Öppen idrott")
+    }
+  }
+  return("")
+}
+
+projektstöd$kategori <- sapply(projektstöd$ärende, check_keywords)
+
+
+# Justera ett fåtal ansökningar som blev fel efter ovanstående funktion
+projektstöd <- projektstöd %>% 
+  mutate(kategori = case_when(
+    id %in% c(117944, 122733, 54661, 54320, 73015) ~ NA_character_,
+    TRUE ~ kategori
+  ))
+
+
+# Handpåläggning för stöd över 30 000 :- med samma syfte
+projektstöd <- projektstöd %>% 
+  mutate(kategori = case_when(id %in% c(124654, 113244, 119616, 76093, 88004) ~ "Öppen idrott" ,
+                              TRUE ~ kategori
+  ))
+
+
+# Lägg till kategori för prioriterade projektstöd att följa upp
+projektstöd <- projektstöd %>% 
+  mutate(
+    kategori = case_when(
+      id %in% c(122754, 124025, 135439, 124025, 135439, 109324, 116854, 144873, 163086, 115505, 
+                144161, 123063, 115401, 136492, 115523, 162801, 141187, 117427, 115454, 149179, 
+                128121, 125059, 167198, 168785, 145734, 152501, 169339, 178737, 180798, 171262, 
+                187922, 169397, 189520, 188302, 176873, 169206, 176353, 170461) ~ "Ledarstödjare",
+      id %in% c(122377, 122753, 123060, 155063, 116857, 119292, 116057, 117151, 116038, 117253, 
+                144875, 136921, 134347, 136066, 126531, 116065, 144140, 129943, 158314, 115522, 
+                129690, 118768, 149178, 161481, 141046, 122550, 125060, 128122, 122748, 146262, 
+                177276, 178748, 178302, 179579, 183821, 185007, 187475, 187065, 168178, 187517) ~ "Trygghetsperson",
+      id %in% c(136618, 144537, 111959, 149454) ~ "Inkluderande förening, jämställdhet",
+      id %in% c(168313) ~ "Inkluderande förening, personer med funktionsnedsättning",
+      id %in% c(136162, 128061, 168526, 168726, 168836, 168725) ~ "Världens bästa IF",
+      id %in% c(183516) ~ "Ungdomsdelaktighet",
+      id %in% c(72088, 71185, 73238, 62430, 64016, 34109, 56888, 6507, 11577, 
+                79114, 42924, 52600, 63225, 50624, 21772, 50525, 43782, 5263, 
+                29211, 37799, 22121, 2347, 8059, 84778, 90861 , 88336 , 88015, 
+                86109 , 91848 , 90782) ~ "Nya aktivitetsytor",
+      TRUE ~ kategori
+    )
+  )
+
+
+
+
+
+ # Importera samverkansföreningar via utbildningsmodulen (unika IF från och med föregående år)
+
+
+
+
+
+   # Fixa datumformatering
+projektstöd$år <- year(ymd(projektstöd$godkändutbetalning))
+projektstöd$månad <- month(ymd(projektstöd$godkändutbetalning))
+projektstöd$godkändutbetalning <- NULL
+projektstöd$skapad <- NULL
+
+   # Gör om kategoriska variabler till factor
+projektstöd$idrottsförening <- as.factor(projektstöd$idrottsförening)
+projektstöd$status <- as.factor(projektstöd$status)
+projektstöd$inriktning <- as.factor(projektstöd$inriktning)
+projektstöd$idrott <- as.factor(projektstöd$idrott)
+projektstöd$idrottsmiljö <- as.factor(projektstöd$idrottsmiljö)
+projektstöd$idrottstyp <- as.factor(projektstöd$idrottstyp)
+projektstöd$kommun <- as.factor(projektstöd$kommun)
+projektstöd$idrottsmedel <- as.factor(projektstöd$idrottsmedel)
+projektstöd$idrottsförening <- as.factor(projektstöd$idrottsförening)
+
+
+##### GEODATA #####
+# Hämta ut Geodata från SCB #
+data <- st_read("C:\\Users\\WILIDF17\\OneDrive - Sveriges Riksidrottsförbund\\Skrivbordet\\R\\RF-SISU Uppland\\Föreningsenkäten\\data\\RegSO_2018_v2.gpkg" , layer = "RegSO_2018_v2")
+kommuneruppland <- data %>%
+  filter(kommunnamn %in% c("Enköping", "Heby" , "Håbo" , "Knivsta" , "Norrtälje" , "Sigtuna" , "Tierp" , "Uppsala", "Älvkarleby" , "Östhammar")) %>% 
+  select(regso, kommunnamn, geom)
+rm(data)
+
+### Hämta ut stödsummor per kommun
+
+# Totalt 2024
+projektstöd %>% 
+  filter(år == "2024") %>% 
+  group_by(kommun) %>% 
+  summarize(summa = sum(stödsumma)) -> stödsumma_kommun
+
+# Allaskaharåd
+projektstöd %>% 
+  filter(år == "2024") %>% 
+  filter(inriktning == "Allaskaharåd") %>% 
+  group_by(kommun) %>% 
+  summarize(summa = sum(stödsumma)) -> stödsumma_kommun_allaskaharåd
+df <- data.frame(kommun = "Älvkarleby" , summa = 0)   # HANDPÅLÄGGNING DÅ ÄLVKARLEBY SAKNAS!!!
+stödsumma_kommun_allaskaharåd <- stödsumma_kommun_allaskaharåd %>% add_row(.before = 9, !!!df)
+
+# Barn och ungdom
+projektstöd %>% 
+  filter(år == "2024") %>% 
+  filter(inriktning == "B&U") %>% 
+  group_by(kommun) %>% 
+  summarize(summa = sum(stödsumma)) -> stödsumma_kommun_barnungdom
+df1 <- data.frame(kommun = "Heby" , summa = 0)   # HANDPÅLÄGGNING DÅ HEBY SAKNAS!!!
+stödsumma_kommun_barnungdom <- stödsumma_kommun_barnungdom %>% add_row(.before = 2, !!!df1)
+df2 <- data.frame(kommun = "Älvkarleby" , summa = 0)   # HANDPÅLÄGGNING DÅ ÄLVKARLEBY SAKNAS!!!
+stödsumma_kommun_barnungdom <- stödsumma_kommun_barnungdom %>% add_row(.before = 9, !!!df2)
+
+# Stimulansmedel
+projektstöd %>% 
+  filter(år == "2024") %>% 
+  filter(inriktning == "Stimulansmedel") %>% 
+  group_by(kommun) %>% 
+  summarize(summa = sum(stödsumma)) -> stödsumma_kommun_stimulansmedel
+df1 <- data.frame(kommun = "Heby" , summa = 0)   # HANDPÅLÄGGNING DÅ HEBY SAKNAS!!!
+stödsumma_kommun_stimulansmedel <- stödsumma_kommun_stimulansmedel %>% add_row(.before = 2, !!!df1)
+df2 <- data.frame(kommun = "Knivsta" , summa = 0)   # HANDPÅLÄGGNING DÅ KNIVSTA SAKNAS!!!
+stödsumma_kommun_stimulansmedel <- stödsumma_kommun_stimulansmedel %>% add_row(.before = 4, !!!df2)
+df3 <- data.frame(kommun = "Älvkarleby" , summa = 0)   # HANDPÅLÄGGNING DÅ ÄLVKARLEBY SAKNAS!!!
+stödsumma_kommun_stimulansmedel <- stödsumma_kommun_stimulansmedel %>% add_row(.before = 9, !!!df3)
+
+# 65+
+projektstöd %>% 
+  filter(år == "2024") %>% 
+  filter(inriktning == "65+") %>% 
+  group_by(kommun) %>% 
+  summarize(summa = sum(stödsumma)) -> stödsumma_kommun_65
+df1 <- data.frame(kommun = "Knivsta" , summa = 0)   # HANDPÅLÄGGNING DÅ KNIVSTA SAKNAS!!!
+stödsumma_kommun_65 <- stödsumma_kommun_65 %>% add_row(.before = 4, !!!df1) # HANDPÅLÄGGNING!!!
+
+# Anläggning
+projektstöd %>% 
+  filter(år == "2024") %>% 
+  filter(idrottsmedel == "Anläggningsstöd") %>% 
+  group_by(kommun) %>% 
+  summarize(summa = sum(stödsumma)) -> stödsumma_kommun_anläggning
+
+# Totalt historiskt
+projektstöd %>% 
+  group_by(kommun) %>% 
+  summarize(summa = sum(stödsumma)) -> stödsumma_kommun_totalt
+stödsumma_kommun_totalt <- subset(stödsumma_kommun_totalt, kommun != "Upplands-Bro")
+
+
+### Mutera geodatan med siffror från projektstödsdatan
+   # Data för nuvarande projektstödsperiod
+kommuneruppland <- kommuneruppland %>% 
+  mutate(stöd = 
+           ifelse(kommunnamn == "Enköping" , stödsumma_kommun$summa[1], 
+                  ifelse(kommunnamn == "Heby" , stödsumma_kommun$summa[2], 
+                         ifelse(kommunnamn == "Håbo" , stödsumma_kommun$summa[3],
+                                ifelse(kommunnamn == "Knivsta" , stödsumma_kommun$summa[4],
+                                       ifelse(kommunnamn == "Norrtälje" , stödsumma_kommun$summa[5],
+                                              ifelse(kommunnamn == "Sigtuna" , stödsumma_kommun$summa[6] ,
+                                                     ifelse(kommunnamn == "Tierp" , stödsumma_kommun$summa[7], 
+                                                            ifelse(kommunnamn == "Uppsala" , stödsumma_kommun$summa[8],
+                                                                   ifelse(kommunnamn == "Älvkarleby" , stödsumma_kommun$summa[9],
+                                                                          ifelse(kommunnamn == "Östhammar" , stödsumma_kommun$summa[10],
+                                                                                 0)))))))))) , 
+         stöd_allaskaharåd = 
+           ifelse(kommunnamn == "Enköping" , stödsumma_kommun_allaskaharåd$summa[1], 
+                  ifelse(kommunnamn == "Heby" , stödsumma_kommun_allaskaharåd$summa[2], 
+                         ifelse(kommunnamn == "Håbo" , stödsumma_kommun_allaskaharåd$summa[3],
+                                ifelse(kommunnamn == "Knivsta" , stödsumma_kommun_allaskaharåd$summa[4],
+                                       ifelse(kommunnamn == "Norrtälje" , stödsumma_kommun_allaskaharåd$summa[5],
+                                              ifelse(kommunnamn == "Sigtuna" , stödsumma_kommun_allaskaharåd$summa[6] ,
+                                                     ifelse(kommunnamn == "Tierp" , stödsumma_kommun_allaskaharåd$summa[7], 
+                                                            ifelse(kommunnamn == "Uppsala" , stödsumma_kommun_allaskaharåd$summa[8],
+                                                                   ifelse(kommunnamn == "Älvkarleby" , stödsumma_kommun_allaskaharåd$summa[9],
+                                                                          ifelse(kommunnamn == "Östhammar" , stödsumma_kommun_allaskaharåd$summa[10],
+                                                                                 0)))))))))) ,
+         stöd_barnungdom = 
+           ifelse(kommunnamn == "Enköping" , stödsumma_kommun_barnungdom$summa[1], 
+                  ifelse(kommunnamn == "Heby" , stödsumma_kommun_barnungdom$summa[2], 
+                         ifelse(kommunnamn == "Håbo" , stödsumma_kommun_barnungdom$summa[3],
+                                ifelse(kommunnamn == "Knivsta" , stödsumma_kommun_barnungdom$summa[4],
+                                       ifelse(kommunnamn == "Norrtälje" , stödsumma_kommun_barnungdom$summa[5],
+                                              ifelse(kommunnamn == "Sigtuna" , stödsumma_kommun_barnungdom$summa[6] ,
+                                                     ifelse(kommunnamn == "Tierp" , stödsumma_kommun_barnungdom$summa[7], 
+                                                            ifelse(kommunnamn == "Uppsala" , stödsumma_kommun_barnungdom$summa[8],
+                                                                   ifelse(kommunnamn == "Älvkarleby" , stödsumma_kommun_barnungdom$summa[9],
+                                                                          ifelse(kommunnamn == "Östhammar" , stödsumma_kommun_barnungdom$summa[10],
+                                                                                 0)))))))))) ,
+         stöd_stimulansmedel = 
+           ifelse(kommunnamn == "Enköping" , stödsumma_kommun_stimulansmedel$summa[1], 
+                  ifelse(kommunnamn == "Heby" , stödsumma_kommun_stimulansmedel$summa[2], 
+                         ifelse(kommunnamn == "Håbo" , stödsumma_kommun_stimulansmedel$summa[3],
+                                ifelse(kommunnamn == "Knivsta" , stödsumma_kommun_stimulansmedel$summa[4],
+                                       ifelse(kommunnamn == "Norrtälje" , stödsumma_kommun_stimulansmedel$summa[5],
+                                              ifelse(kommunnamn == "Sigtuna" , stödsumma_kommun_stimulansmedel$summa[6] ,
+                                                     ifelse(kommunnamn == "Tierp" , stödsumma_kommun_stimulansmedel$summa[7], 
+                                                            ifelse(kommunnamn == "Uppsala" , stödsumma_kommun_stimulansmedel$summa[8],
+                                                                   ifelse(kommunnamn == "Älvkarleby" , stödsumma_kommun_stimulansmedel$summa[9],
+                                                                          ifelse(kommunnamn == "Östhammar" , stödsumma_kommun_stimulansmedel$summa[10],
+                                                                                 0)))))))))) ,
+         stöd_65 = 
+           ifelse(kommunnamn == "Enköping" , stödsumma_kommun_65$summa[1], 
+                  ifelse(kommunnamn == "Heby" , stödsumma_kommun_65$summa[2], 
+                         ifelse(kommunnamn == "Håbo" , stödsumma_kommun_65$summa[3],
+                                ifelse(kommunnamn == "Knivsta" , stödsumma_kommun_65$summa[4],
+                                       ifelse(kommunnamn == "Norrtälje" , stödsumma_kommun_65$summa[5],
+                                              ifelse(kommunnamn == "Sigtuna" , stödsumma_kommun_65$summa[6] ,
+                                                     ifelse(kommunnamn == "Tierp" , stödsumma_kommun_65$summa[7], 
+                                                            ifelse(kommunnamn == "Uppsala" , stödsumma_kommun_65$summa[8],
+                                                                   ifelse(kommunnamn == "Älvkarleby" , stödsumma_kommun_65$summa[9],
+                                                                          ifelse(kommunnamn == "Östhammar" , stödsumma_kommun_65$summa[10],
+                                                                                 0)))))))))) ,
+         stöd_anläggning = 
+           ifelse(kommunnamn == "Enköping" , stödsumma_kommun_anläggning$summa[1], 
+                  ifelse(kommunnamn == "Heby" , stödsumma_kommun_anläggning$summa[2], 
+                         ifelse(kommunnamn == "Håbo" , stödsumma_kommun_anläggning$summa[3],
+                                ifelse(kommunnamn == "Knivsta" , stödsumma_kommun_anläggning$summa[4],
+                                       ifelse(kommunnamn == "Norrtälje" , stödsumma_kommun_anläggning$summa[5],
+                                              ifelse(kommunnamn == "Sigtuna" , stödsumma_kommun_anläggning$summa[6] ,
+                                                     ifelse(kommunnamn == "Tierp" , stödsumma_kommun_anläggning$summa[7], 
+                                                            ifelse(kommunnamn == "Uppsala" , stödsumma_kommun_anläggning$summa[8],
+                                                                   ifelse(kommunnamn == "Älvkarleby" , stödsumma_kommun_anläggning$summa[9],
+                                                                          ifelse(kommunnamn == "Östhammar" , stödsumma_kommun_anläggning$summa[10],
+                                                                                 0)))))))))) ,
+         lokif = 
+           ifelse(kommunnamn == "Enköping" , lokif_kommun$lokif[1], 
+                  ifelse(kommunnamn == "Heby" , lokif_kommun$lokif[2], 
+                  ifelse(kommunnamn == "Håbo" , lokif_kommun$lokif[3],
+                  ifelse(kommunnamn == "Knivsta" , lokif_kommun$lokif[4],
+                  ifelse(kommunnamn == "Norrtälje" , lokif_kommun$lokif[5],
+                  ifelse(kommunnamn == "Sigtuna" , lokif_kommun$lokif[6] ,
+                  ifelse(kommunnamn == "Tierp" , lokif_kommun$lokif[7], 
+                  ifelse(kommunnamn == "Uppsala" , lokif_kommun$lokif[8],
+                  ifelse(kommunnamn == "Älvkarleby" , lokif_kommun$lokif[9],
+                  ifelse(kommunnamn == "Östhammar" , lokif_kommun$lokif[10],
+                  0))))))))))
+  )
+
+   # Lägg till korrigerad kolumn för LOK-IF/kommun
+kommuneruppland <- kommuneruppland %>% 
+  mutate(stöd_korr= round(stöd / lokif))
+
+  # Lägg till korrigerad kolumn för LOK-IF/kommun samt ex. anläggning
+kommuneruppland <- kommuneruppland %>% 
+  mutate(stöd_korr_exanläggning= round((stöd - stöd_anläggning) / lokif))
+
+  # Lägg till korrigerad kolumn för Allaskaharåd
+kommuneruppland <- kommuneruppland %>% 
+  mutate(stöd_korr_allaskaharåd = round(stöd_allaskaharåd / lokif))
+
+   # Lägg till korrigerad kolumn för Projektstöd IF B&U
+kommuneruppland <- kommuneruppland %>% 
+  mutate(stöd_korr_barnungdom = round(stöd_barnungdom / lokif))
+
+# Lägg till korrigerad kolumn för 65+
+kommuneruppland <- kommuneruppland %>% 
+  mutate(stöd_korr_65 = round(stöd_65 / lokif))
+
+# Lägg till korrigerad kolumn för Anläggningsstöd
+kommuneruppland <- kommuneruppland %>% 
+  mutate(stöd_korr_anläggning = round(stöd_anläggning / lokif))
+
+# Lägg till korrigerad kolumn för Stimulansmedel
+kommuneruppland <- kommuneruppland %>% 
+  mutate(stöd_korr_stimulansmedel = round(stöd_stimulansmedel / lokif))
+
+   # Data från 2017
+kommuneruppland <- kommuneruppland %>% 
+  mutate(stöd_tot = 
+         ifelse(kommunnamn == "Enköping" , stödsumma_kommun_totalt$summa[1], 
+         ifelse(kommunnamn == "Heby" , stödsumma_kommun_totalt$summa[2], 
+         ifelse(kommunnamn == "Håbo" , stödsumma_kommun_totalt$summa[3],
+         ifelse(kommunnamn == "Knivsta" , stödsumma_kommun_totalt$summa[4],
+         ifelse(kommunnamn == "Norrtälje" , stödsumma_kommun_totalt$summa[5],
+         ifelse(kommunnamn == "Sigtuna" , stödsumma_kommun_totalt$summa[6] ,
+         ifelse(kommunnamn == "Tierp" , stödsumma_kommun_totalt$summa[7], 
+         ifelse(kommunnamn == "Uppsala" , stödsumma_kommun_totalt$summa[8],
+         ifelse(kommunnamn == "Älvkarleby" , stödsumma_kommun_totalt$summa[9],
+         ifelse(kommunnamn == "Östhammar" , stödsumma_kommun_totalt$summa[10],
+        0)))))))))))
+
+# Lägg till korrigerad kolumn för LOK-IF/kommun
+kommuneruppland <- kommuneruppland %>% 
+  mutate(stöd_korr_tot = round(stöd_tot / lokif))
+
+
+########## Färgteman ##########
+rfsisu_theme <- theme(plot.background = element_rect(fill = "#006BB1") ,
+                      plot.caption = element_text(hjust = 0) ,
+                      panel.background = element_rect(fill = "white"),
+                      axis.line.x = element_line(color = "black" , linewidth = 0.75) ,
+                      axis.line.y = element_line(color = "black" , linewidth = 0.75) ,
+                      plot.title = element_text(color = "white" , size = 16 , family = "sans"),
+                      panel.grid.major.y  = element_line(color = "#1e3479" , linetype = "dotted"),
+                      panel.grid.major.x = element_line(NULL),
+                      panel.grid.minor = element_line(NULL),
+                      legend.background = element_rect(fill = "white"),
+                      legend.key = element_rect(fill = "white"),
+                      legend.text = element_text(color = "#003559" , family = "sans") ,
+                      legend.title = element_text(color = "#003559" , family = "sans") , 
+                      text = element_text(size=12, face="plain", color = "white" , family = "sans"),
+                      axis.title = element_text(color = "white" , family = "sans"),
+                      axis.text = element_text(color = "white" , family = "sans") ,
+                      axis.text.x = element_text(size = 12))
+
+### RF-SISU:s färger ###
+
+"#8DE2FF"
+"#00A7E0"
+"#006BB1"
+"#1e3479"
+"#63E4D7"
+"#1EAFA0"
+"#007B5E"
+"#003559"
+"#F4AEAB"
+"#E4352D"
+"#B51E17"
+"#994346"
+"#5F090D"
+"#ffed35"

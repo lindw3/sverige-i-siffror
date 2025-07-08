@@ -1,4 +1,4 @@
- // Uppdatera till senaste datum en uppdatering gjordes
+// Uppdatera footern till senaste datum en uppdatering gjordes
 document.getElementById("last-updated").textContent = document.lastModified.split(' ')[0];
 
 
@@ -8,6 +8,7 @@ document.getElementById("last-updated").textContent = document.lastModified.spli
 
 const frågor = [
   {
+    kategori: "POLITIK",
     fråga: "Vilket parti är störst bland de inkomstgrupper som tjänar över genomsnittet?",
     korrekt: "Socialdemokraterna",
     alternativ: [
@@ -20,6 +21,7 @@ const frågor = [
     bild: '<iframe src="images/partisympatier_inkomst.html" class="iframe" frameborder="0"></iframe>'
   },
   {
+    kategori: "POLITIK",
     fråga: "Hur många av riksdagspartierna har fler kvinnliga än manliga kommunalt förtroendevalda?",
     korrekt: "Två",
     alternativ: [
@@ -32,6 +34,7 @@ const frågor = [
     bild: '<iframe src="images/förtroendevalda_kön.html" class="iframe" frameborder="0"></iframe>'
   },
   {
+    kategori: "ARBETE",
     fråga: "Hur stor andel av anställda är inom näringslivet?",
     korrekt: "70%",
     alternativ: [
@@ -44,6 +47,7 @@ const frågor = [
     bild: '<iframe src="images/anställning_sektor_kön.html" class="iframe" frameborder="0"></iframe>'
   },
   {
+    kategori: "ARBETE",
     fråga: "Inom vilken sektor är skillnaden i genomsnittslön mellan män och kvinnor högst?",
     korrekt: "Region",
     alternativ: [
@@ -56,6 +60,7 @@ const frågor = [
     bild: '<iframe src="images/lön_sektor_kön.html" class="iframe" frameborder="0"></iframe>'
   },
 {
+    kategori: "UTBILDNING", 
     fråga: "Hur mycket mer tjänar i genomsnitt de med eftergymnasial utbildning 3+ år jämfört med de med 3-årig gymnasial utbildning?",
     korrekt: "25% mer",
     alternativ: [
@@ -68,7 +73,8 @@ const frågor = [
     bild: '<iframe src="images/lön_utbildning_kön.html" class="iframe" frameborder="0"></iframe>'
 } ,
 {
-fråga: "Hur ser barnafödandet per kvinna ut i Sverige idag jämfört med 1900?",
+    kategori: "FAMILJ",
+    fråga: "Hur ser barnafödandet per kvinna ut i Sverige idag jämfört med 1900?",
     korrekt: "Det har minskat med två tredjedelar",
     alternativ: [
       "Det har inte förändrats",
@@ -76,8 +82,10 @@ fråga: "Hur ser barnafödandet per kvinna ut i Sverige idag jämfört med 1900?
       "Det har halverats",
       "Det har minskat med två tredjedelar"
     ],
-    förklaring: "Samma trend ses över världen i stort, med vissa skillnader mellan länder. Även om barnafödandet minskat över hela denna tidsperiod ser man att trenden från år till år kan fluktuera kraftigt. Det är även värt att notera att spädbarnsdödligheten och död under de första levnadsåren har minskat kraftigt under samma tidsperiod. Trots detta har dock den globala populationstillväxten mer än halverats under de senaste 60 åren.",
-    bild: '<iframe src="images/barnafödande_sverige.html" class="iframe" frameborder="0"></iframe>'
+    förklaring: "Även om barnafödandet minskat över hela denna tidsperiod ser man att trenden från år till år kan fluktuera kraftigt. Det är även värt att notera att spädbarnsdödligheten och död under de första levnadsåren har minskat kraftigt under samma tidsperiod.",
+    bild: '<iframe src="images/barnafödande_sverige.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "Detta är en trend som man kan se globalt sett också, där rikare länder tenderar ha lägre barnafödande. Den globala populationstillväxten har mer än halverats under de senaste 60 åren.",
+    bild2: '<iframe src="images/barnafödande.html" class="iframe" frameborder="0"></iframe>'
   }
 ]
 
@@ -89,6 +97,20 @@ fråga: "Hur ser barnafödandet per kvinna ut i Sverige idag jämfört med 1900?
 let currentQuestion = 0;
 
   function visaFråga(index) {
+  const kategoriEl = document.getElementById("kategori");
+  if (index < frågor.length) {
+    kategoriEl.textContent = frågor[index].kategori || "";
+  } else {
+    kategoriEl.textContent = "";
+  }
+
+  const frågenummerEl = document.getElementById("frågenummer");
+  if (index < frågor.length) {
+    frågenummerEl.textContent = `Fråga ${index + 1}/${frågor.length}`;
+  } else {
+    frågenummerEl.textContent = "";
+  }
+
   const förklaringEl = document.getElementById("förklaring");
   const bildEl = document.getElementById("förklaring-bild");
   förklaringEl.classList.remove("active");
@@ -110,12 +132,16 @@ let currentQuestion = 0;
     });
     nästaFrågaBtn.style.display = "none";
   } else {
-    frågaEl.textContent = "Testet är klart!";
+    frågaEl.textContent = "Testet är slut! Du fick X/Y rätt.";
     alternativKnappar.forEach(btn => {
       btn.style.display = "none";
     });
     nästaFrågaBtn.style.display = "none";
   }
+
+  // Rensa extra-förklaring/bild om den finns
+  const extraEl = document.getElementById("förklaring-extra");
+  if (extraEl) extraEl.remove();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -155,13 +181,34 @@ const bildData = frågor[currentQuestion].bild;
 
       // OM bildData är en iframe så = insert as HTML, om img = insert as img
 if (typeof bildData === "string" && bildData.trim().startsWith("<iframe")) {
-  bildEl.innerHTML = bildData;
+bildEl.innerHTML = `
+  <div class="förklaring-bild-container">
+    ${bildData}
+    <a href="#" id="fullscreen-link">Visa i helskärm</a>
+  </div>
+`;
+
+  // Lägg till eventlistener för helskärm
+  const iframe = bildEl.querySelector("iframe");
+  const fullscreenLink = document.getElementById("fullscreen-link");
+  if (iframe && fullscreenLink) {
+    fullscreenLink.addEventListener("click", function(e) {
+      e.preventDefault();
+      if (iframe.requestFullscreen) {
+        iframe.requestFullscreen();
+      } else if (iframe.webkitRequestFullscreen) {
+        iframe.webkitRequestFullscreen();
+      } else if (iframe.msRequestFullscreen) {
+        iframe.msRequestFullscreen();
+      }
+    });
+  }
 } else {
   bildEl.innerHTML = `<img id="förklaring-bild-img" src="${bildData}" alt="Förklaring bild" style="max-width:100%;height:auto;cursor:pointer;">`;
 
       // Fullskärm för img alternativt html
   const img = document.getElementById("förklaring-bild-img");
-  if (img) {
+  if (img) { 
     img.addEventListener("click", () => {
       if (img.requestFullscreen) {
         img.requestFullscreen();
@@ -183,6 +230,63 @@ setTimeout(() => {
 
       // Visa "Nästa fråga"-knappen
       nästaFrågaBtn.style.display = "block";
+
+      // Visa andra förklaring och bild om de finns
+const förklaring2 = frågor[currentQuestion].förklaring2;
+const bildData2 = frågor[currentQuestion].bild2;
+
+if (förklaring2 || bildData2) {
+  let extraEl = document.getElementById("förklaring-extra");
+  if (!extraEl) {
+    extraEl = document.createElement("div");
+    extraEl.id = "förklaring-extra";
+    bildEl.parentNode.insertBefore(extraEl, bildEl.nextSibling);
+  }
+  extraEl.innerHTML = "";
+
+  if (förklaring2) {
+    const p = document.createElement("p");
+    p.textContent = förklaring2;
+    extraEl.appendChild(p);
+  }
+  if (bildData2) {
+    if (typeof bildData2 === "string" && bildData2.trim().startsWith("<iframe")) {
+      const div = document.createElement("div");
+      div.className = "förklaring-bild-container";
+      div.innerHTML = `
+        ${bildData2}
+        <a href="#" class="fullscreen-link-2" style="margin-top:8px;color:#5991E5;cursor:pointer;text-decoration:underline;display:block;">Visa i helskärm</a>
+      `;
+      extraEl.appendChild(div);
+
+      // Lägg till eventlistener för helskärm på bild2
+      const iframe2 = div.querySelector("iframe");
+      const fullscreenLink2 = div.querySelector(".fullscreen-link-2");
+      if (iframe2 && fullscreenLink2) {
+        fullscreenLink2.addEventListener("click", function(e) {
+          e.preventDefault();
+          if (iframe2.requestFullscreen) {
+            iframe2.requestFullscreen();
+          } else if (iframe2.webkitRequestFullscreen) {
+            iframe2.webkitRequestFullscreen();
+          } else if (iframe2.msRequestFullscreen) {
+            iframe2.msRequestFullscreen();
+          }
+        });
+      }
+    } else {
+      const img = document.createElement("img");
+      img.src = bildData2;
+      img.alt = "Förklaring bild 2";
+      img.style.maxWidth = "100%";
+      img.style.height = "auto";
+      extraEl.appendChild(img);
+    }
+  }
+} else {
+  const extraEl = document.getElementById("förklaring-extra");
+  if (extraEl) extraEl.remove();
+}
     });
   });
 
