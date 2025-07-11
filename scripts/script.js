@@ -101,6 +101,21 @@ const frågor = [
     bild: '<iframe src="images/ålder_giftermål_sverige.html" class="iframe" frameborder="0"></iframe>',
     förklaring2: "När OECD undersökt denna trend för alla OECD-länder kan man notera att denna trend sker i alla länder. Sverige är dock, tillsammans med Spanien, det OECD-land med högst genomsnittsålder för kvinnors första giftermål.",
     bild2: '<iframe src="images/ålder_giftermål.html" class="iframe" frameborder="0"></iframe>'
+  },
+  {
+    kategori: "MÅENDE",
+    fråga: "Vart befinner sig Sverige globalt sett gällande livstillfredställelse?",
+    korrekt: "Mellan plats 1-5",
+    alternativ: [
+      "Mellan plats 1-5",
+      "Mellan plats 6-10",
+      "Mellan plats 11-15",
+      "Mellan plats 16-20"
+    ],
+    förklaring: "2024 var Finland, Danmark, Island, Sverige och Nederländerna de fem länder som hade högst livstillfredställelse. Sverige har befunnit sig i toppen sedan den första mätningen 2011.",
+    bild: '<iframe src="images/satisfaction.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "Att Sverige är ett rikt land är sannolikt en starkt bidragande faktor till detta, då det finns en tydlig korrelationen mellan länders GDP och livstillfredställelse",
+    bild2: '<iframe src="images/gdp_satisfaction.html" class="iframe" frameborder="0"></iframe>'
   }
 ]
 

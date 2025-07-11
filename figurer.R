@@ -359,16 +359,69 @@ saveWidget(img, "images/ålder_giftermål.html")
 
 
 
-  # Andel som säger att de är lyckliga
-df <- read.csv("https://ourworldindata.org/grapher/share-of-people-who-say-they-are-happy.csv?v=1&csvType=full&useColumnShortNames=true")
+  # Livstillfredställelse jämfört med andra länder
+df <- read.csv("https://ourworldindata.org/grapher/happiness-cantril-ladder.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod" , "År" , "Tillfredsställelse")
 
-  # ... jämfört med andra länder
+p <- df %>%
+  ggplot(aes(x = År, y = Tillfredsställelse, group = Land)) +
+  geom_line(color = "#5991E5", linewidth = 1.2) +
+  gghighlight(use_direct_label = FALSE,
+              Land == "Sweden",
+              unhighlighted_params = list(linewidth = 0.5,
+                                          color = "#5991E5",
+                                          alpha = 0.25)) +
+  sis_theme +
+  scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
+  scale_y_continuous(limits = c(0, 10),
+                     breaks = seq(0, 10, 2.5)) +
+  xlab(NULL) +
+  ylab("Livstillfredsställelse, skala 1-10")
+
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/satisfaction.html")
 
 
 
 
-  # Koppling mellan life satisfaction och GDP
+  # Koppling mellan livstillfredställelse och GDP
 df <- read.csv("https://ourworldindata.org/grapher/gdp-vs-happiness.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod" , "År" , "Livstillfredsställelse" , "GDP", "Region")
+
+df <- df %>% 
+  filter(År == 2023,
+         Region != "")
+
+p <- df %>% 
+  ggplot(aes(x = GDP, y = Livstillfredsställelse ,
+             text = paste(Land, 
+                          "\nLivstillfredsställelse:", round(Livstillfredsställelse,2),
+                          "\nGDP: ", round(GDP)))) +
+  geom_point(aes(colour = Region)) +
+  sis_theme +
+  labs(colour = "Region") +
+  xlab("GDP per capita") + ylab("Livstillfredsställelse, skala 1-10") +
+  scale_color_manual(values = c(
+    "Africa" = "#5991E5",
+    "Asia" = "#D7E559",
+    "Europe" = "#E56759",
+    "North America" = "#AD59E5",
+    "Oceania" = "#59E5AD",
+    "South America" = "#e5ad59"
+  )) +
+  scale_x_log10(labels = label_number(big.mark = ",")) +
+  scale_y_log10(labels = label_number(big.mark = ","))
+  
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/gdp_satisfaction.html")
+
+
 
 
 

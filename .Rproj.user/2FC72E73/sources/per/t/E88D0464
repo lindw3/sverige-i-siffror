@@ -3,9 +3,9 @@
     "path": "~/GitHub/Hemsideprojekt/Hemsideprojekt/figurer.R",
     "project_path": "figurer.R",
     "type": "r_source",
-    "hash": "0",
+    "hash": "1496305242",
     "contents": "",
-    "dirty": true,
+    "dirty": false,
     "created": 1751615557517.0,
     "source_on_save": false,
     "relative_order": 1,
@@ -13,15 +13,15 @@
         "tempName": "Untitled2",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "422,40",
-        "scrollLine": "408"
+        "cursorPosition": "385,0",
+        "scrollLine": "355"
     },
     "folds": "",
-    "lastKnownWriteTime": 1752245678,
+    "lastKnownWriteTime": 1752255006,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1752253030565,
+    "last_content_update": 1752255006629,
     "read_only": false,
     "read_only_alternatives": []
 }
