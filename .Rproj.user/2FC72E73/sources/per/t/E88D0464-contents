@@ -227,6 +227,10 @@ saveWidget(img, "images/lön_utbildning_kön.html")
 
 
 
+
+
+
+
  # Barnafödande i Sverige
 df <- read.csv("https://ourworldindata.org/grapher/children-born-per-woman.csv?v=1&csvType=full&useColumnShortNames=true")
 
@@ -251,11 +255,7 @@ img <- ggplotly(p, tooltip = "text") %>%
 saveWidget(img, "images/barnafödande_sverige.html")
 
 
- # Sverige i jämförelse med utvalda länder
-df <- read.csv("https://ourworldindata.org/grapher/children-born-per-woman.csv?v=1&csvType=full&useColumnShortNames=true")
-
-df <- df %>% 
-  mutate(fertility_rate_hist = round(fertility_rate_hist, 2))
+ # ... jämfört med andra länder
 
 p <- df %>%
   filter(Entity %in% c("Sweden", 
@@ -297,6 +297,263 @@ img <- ggplotly(p, tooltip = "text") %>%
   config(displayModeBar = F)
 
 saveWidget(img, "images/barnafödande.html")
+
+
+
+
+
+
+  # Medelålder för kvinnor att gifta sig
+df <- read.csv("https://ourworldindata.org/grapher/age-at-marriage-women.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+  # ... jämfört med andra länder
+
+
+
+
+
+
+  # Skilsmässor per 1000 invånare
+df <- read.csv("https://ourworldindata.org/grapher/divorces-per-1000-people.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+
+  # ... jämfört med andra länder
+
+
+  # Andel som säger att de är lyckliga
+df <- read.csv("https://ourworldindata.org/grapher/share-of-people-who-say-they-are-happy.csv?v=1&csvType=full&useColumnShortNames=true")
+
+  # ... jämfört med andra länder
+
+
+
+
+  # Koppling mellan life satisfaction och GDP
+df <- read.csv("https://ourworldindata.org/grapher/gdp-vs-happiness.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+
+
+
+  # Suicid per 100 000
+df <- read.csv("https://ourworldindata.org/grapher/suicide-rate-who-mdb.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+  # ... jämfört med andra länder
+
+
+
+
+
+  # Singelhushåll som % av totala hushåll
+df <- read.csv("https://ourworldindata.org/grapher/one-person-households.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+
+  # ... jämfört med andra länder
+
+
+
+
+
+
+  # Sjukvårdsinvesteringar som % av GDP
+df <- read.csv("https://ourworldindata.org/grapher/public-health-expenditure-share-gdp.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+
+  # ... jämfört med andra länder
+
+
+
+
+
+
+
+  # Uppskattade dödsorsaker
+df <- read_excel("data/dödsorsaker.xlsx")
+
+
+  # ... jämfört med andra länder
+
+
+
+
+
+
+
+
+  # Övervikt
+df <- read.csv("https://ourworldindata.org/grapher/share-of-adults-defined-as-obese.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+  # ... jämfört med andra länder
+
+
+
+
+
+
+
+  # GDP per capita
+df <- read.csv("https://ourworldindata.org/grapher/gdp-per-capita-penn-world-table.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+  # ... jämfört med andra länder
+
+
+
+
+
+
+
+
+
+  # Gini-koefficient
+df <- read_excel("data/gini.xlsx")
+
+
+  # ... jämfört med andra länder
+
+
+
+
+
+
+
+
+
+
+  # Skatter som andel av statens inkomster (kolla bara Sverige)
+df <- read.csv("https://ourworldindata.org/grapher/tax-revenue-national-income-longrun.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+  # Skatteintäkter som andel av GDP (jämfört med andra länder)
+df <- read.csv("https://ourworldindata.org/grapher/tax-revenues-as-a-share-of-gdp-unu-wider.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+
+
+
+
+
+
+
+
+  # Ojusterat lönegap mellan män och kvinnor
+df <- read.csv("https://ourworldindata.org/grapher/gender-wage-gap-oecd.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+  # ... jämfört med andra länder
+
+
+
+
+
+
+
+
+
+
+
+  # Andel kvinnor i chefspositioner
+df <- read.csv("https://ourworldindata.org/grapher/proportion-of-women-in-senior-and-middle-management-positions.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+  # ... jämfört med andra länder
+
+
+
+
+
+
+
+
+
+
+  # Medelvärde i arbetade timmar/år
+df <- read.csv("https://ourworldindata.org/grapher/annual-working-hours-per-worker.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+  # ... jämfört med andra länder
+df <- read.csv("https://ourworldindata.org/grapher/annual-working-hours-per-person-employed.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+
+
+
+
+
+
+
+
+  # Statlig investering i utildning som andel av GDP
+df <- read.csv("https://ourworldindata.org/grapher/total-government-expenditure-on-education-gdp.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+  # ... jämfört med andra länder
+
+
+
+
+
+
+
+
+
+  # Resultat i PISA
+df <- read_excel("data/pisa_data.xlsx")
+
+
+  # ... jämfört med andra länder
+
+
+
+
+
+
+
+
+
+  # Andel av nationalinkomst på bistånd (FN:s mål är 0.7%)
+df <- read.csv("https://ourworldindata.org/grapher/foreign-aid-given-as-a-share-of-national-income.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+  # ... jämfört med andra länder
+
+
+
+
+
+
+  # Årliga CO2-utsläpp
+df <- read.csv("https://ourworldindata.org/grapher/annual-co2-emissions-per-country.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+  # ... jämfört med andra länder
+
+
+
+
+
+
+  # CO2-utsläpp per capita
+df <- read_excel("data/co2_percapita.xlsx")
+
+
+
+
+
+
+
+
+  # Energimix (fossilt, kärnkraft och förnybart)
+df <- read.csv("https://ourworldindata.org/grapher/per-capita-energy-source-stacked.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+  # ... jämfört med andra länder
 
 
 
