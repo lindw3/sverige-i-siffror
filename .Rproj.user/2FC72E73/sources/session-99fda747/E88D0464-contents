@@ -359,16 +359,70 @@ saveWidget(img, "images/ålder_giftermål.html")
 
 
 
-  # Andel som säger att de är lyckliga
+  # Andel som säger att de är lyckliga jämfört med andra länder
 df <- read.csv("https://ourworldindata.org/grapher/share-of-people-who-say-they-are-happy.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod" , "År" , "Lycka" , "Annotering")
 
-  # ... jämfört med andra länder
+p <- df %>%
+  ggplot(aes(x = År, y = Lycka, group = Land
+  )) +
+  geom_line(color = "#5991E5", linewidth = 1.2) +
+  gghighlight(use_direct_label = FALSE,
+              Land == "Sweden",
+              unhighlighted_params = list(linewidth = 0.5,
+                                          color = "#5991E5",
+                                          alpha = 0.25)) +
+  sis_theme +
+  scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
+  scale_y_continuous(limits = c(0, 100),
+                     breaks = seq(0, 100, 25)) +
+  xlab(NULL) +
+  ylab("Andel som säger att de är lyckliga")
+
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/lycka.html")
 
 
 
 
   # Koppling mellan life satisfaction och GDP
 df <- read.csv("https://ourworldindata.org/grapher/gdp-vs-happiness.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod" , "År" , "Lycka" , "GDP", "Region")
+
+df <- df %>% 
+  filter(År == 2023,
+         Region != "")
+
+p <- df %>% 
+  ggplot(aes(x = GDP, y = Lycka) ,
+             text = paste(Land, 
+                          "\nLyckoindex:", Lycka,
+                          "\nGDP: ", GDP)) +
+  geom_point(aes(colour = Region)) +
+  sis_theme +
+  labs(colour = "Region") +
+  xlab("GDP per capita") + ylab("Lyckoindex") +
+  scale_color_manual(values = c(
+    "Africa" = "#5991E5",
+    "Asia" = "#D7E559",
+    "Europe" = "#E56759",
+    "North America" = "#AD59E5",
+    "Oceania" = "#59E5AD",
+    "South America" = "#e5ad59"
+  )) +
+  scale_x_log10(labels = label_number(big.mark = ",")) +
+  scale_y_log10(labels = label_number(big.mark = ","))
+  
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/gdp_lycka.html")
+
+
 
 
 
