@@ -304,6 +304,8 @@ saveWidget(img, "images/barnafödande.html")
 
 
 
+
+
   # Medelålder för kvinnor att gifta sig
 df <- read.csv("https://ourworldindata.org/grapher/age-at-marriage-women.csv?v=1&csvType=full&useColumnShortNames=true")
 colnames(df) <- c("Land" , "Kod" , "År" , "Medelålder" , "median")
