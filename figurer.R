@@ -22,6 +22,7 @@ library(GGally)
 library(cluster)
 library(sf)
 library(readxl)
+library(gghighlight)
 
 # Tema för figurer
 sis_theme <- theme(plot.background = element_rect(fill = "#e5ad59") ,
@@ -305,9 +306,50 @@ saveWidget(img, "images/barnafödande.html")
 
   # Medelålder för kvinnor att gifta sig
 df <- read.csv("https://ourworldindata.org/grapher/age-at-marriage-women.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod" , "År" , "Medelålder" , "median")
+
+p <- df %>% 
+  filter(Land == "Sweden") %>% 
+  ggplot(aes(x = År, y = Medelålder  , group = 2,
+             text = paste("År:" , År , 
+                          "\nGenomsnittsålder:" , Medelålder))) +
+  geom_line(linewidth = 1 , colour = "#5991E5") +
+  sis_theme +
+  scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
+  scale_y_continuous(limits = c(0 , max(df$Medelålder) + 1) ,
+                     breaks =  seq(0, 35, 5)) +
+  xlab(NULL) + ylab("Genomsnittsålder vid giftermål bland kvinnor")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/ålder_giftermål_sverige.html")
 
 
   # ... jämfört med andra länder
+p <- df %>% 
+  ggplot(aes(x = År, y = Medelålder, group = Land) ,
+         text = paste(
+           "År:", År,
+           "\nGenomsnittsålder:" = Medelålder,
+           "\nLand:" , Land
+         )) +
+  geom_line(color = "#5991E5" , linewidth = 1.2) +
+  gghighlight(use_direct_label = FALSE ,
+              Land == "Sweden",
+              unhighlighted_params = list(linewidth = 0.5 , 
+                                          color = "#5991E5" ,
+                                          alpha = 0.25)) +
+  sis_theme +
+  scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
+  scale_y_continuous(limits = c(0 , max(df$Medelålder) + 1) ,
+                     breaks =  seq(0, 35, 5)) +
+  xlab(NULL) + ylab("Genomsnittsålder vid giftermål bland kvinnor")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/ålder_giftermål.html")
 
 
 

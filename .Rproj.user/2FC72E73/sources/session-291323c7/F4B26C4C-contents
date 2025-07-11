@@ -1,0 +1,1848 @@
+########## ATT ÖPPNA UPP DIREKT ##########
+install.packages(c("ggplot2", "scales" , "openxlsx", "patchwork", "ggthemes", "plotly", "ggridges", "forecast", "GGally", "dplyr", "tidyr", "data.table" , "sf" , "gganimate" , "gghighlight"))
+library(ggplot2)
+library(lubridate)
+library(stringr)
+library(scales)
+library(dplyr)
+library(tidyr)
+library(DT)
+library(data.table)
+library(magrittr)
+library(gridExtra)
+library(openxlsx)
+library(patchwork)
+library(ggthemes)
+library(plotly)
+library(ggridges)
+library(forecast)
+library(GGally)
+library(cluster)
+library(sf)
+library(readxl)
+library(gghighlight)
+library(ggtext)
+
+
+
+### KOMMUNSTATISTIK ###
+
+ ### Enköping
+
+  # % förändring i LOK-IF
+
+df <- lok_långsiktigt %>% 
+  filter(Kommun == "Enköping") %>% 
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Enköping" ,
+            Kvot = last(lokif) / first(lokif))
+
+df1 <- lok_långsiktigt %>%
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Uppland" ,
+            Kvot = last(lokif) / first(lokif))
+
+
+title <- "Antal LOK-föreningar, 2011-2024"
+
+lokif_enköping <- df %>% 
+  full_join(df1) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Enköping" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.25, 0.25), 
+                     limits = c(0, 1.25))
+
+
+
+  # LOK/100 aktiva
+df <- lok100_kommun %>% 
+  filter(Kommun == "Enköping") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK100 = LOK100_Totalt)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK100 = round(sum(`Deltagare_7-25_Totalt`) / sum(`Befolkning_7-25_Totalt`), 3) * 100)
+
+title <- "Andel LOK-deltagare av befolkningen, 2021-2023"
+
+lok100_enköping <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK100) / first(LOK100)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Enköping" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.1))
+
+
+
+# LOK/1000 ledare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Enköping") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK1000 = `Ledare/1000_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK1000 = round(sum(`Ledare_Totalt`) / sum(`Befolkning_13-80_Totalt`), 4) * 1000)
+
+title <- "Andel LOK-ledare av befolkningen, 2021-2023"
+
+lok1000_enköping <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK1000) / first(LOK1000)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Enköping" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.11))
+
+
+  # % förändring unika deltagare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Enköping") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            Deltagare = `Deltagare_7-25_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            Deltagare = sum(`Deltagare_7-25_Totalt`))
+
+title <- "Unika LOK-deltagare, 2021-2023"
+
+deltagare_enköping <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(Deltagare) / first(Deltagare)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Enköping" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.11))
+
+wrap_plots(
+  lokif_enköping, lok1000_enköping, 
+  deltagare_enköping, lok100_enköping, 
+  ncol = 2, nrow = 2
+) + plot_annotation(title = "Den idrottsliga utvecklingen i Enköpings kommun" ,
+                    subtitle = "Nedan presenteras LOK-stödstrender i form av procentuella förändringar över tid utifrån ett antal indikatorer. \nVi har statistik för antalet LOK-föreningar sedan 2011. Övrig statistik som presenteras finns tillgänglig sedan 2021.",
+                    theme = rfsisu_theme)
+
+ggsave("infoblad\\infoblad-enköping.png" , width = 297, height = 210, units="mm", dpi = "retina")
+
+
+
+
+
+
+  ### Heby
+
+# % förändring i LOK-IF
+
+df <- lok_långsiktigt %>% 
+  filter(Kommun == "Heby") %>% 
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Heby" ,
+            Kvot = last(lokif) / first(lokif))
+
+df1 <- lok_långsiktigt %>%
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Uppland" ,
+            Kvot = last(lokif) / first(lokif))
+
+
+title <- "Antal LOK-föreningar, 2011-2024"
+
+lokif_heby <- df %>% 
+  full_join(df1) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0(if_else(Kvot > 1, "+" , ""), round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Heby" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.25, 0.25), 
+                     limits = c(0, 1.25))
+
+
+
+# LOK/100 aktiva
+df <- lok100_kommun %>% 
+  filter(Kommun == "Heby") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK100 = LOK100_Totalt)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK100 = round(sum(`Deltagare_7-25_Totalt`) / sum(`Befolkning_7-25_Totalt`), 3) * 100)
+
+title <- "Andel LOK-deltagare av befolkningen, 2021-2023"
+
+lok100_heby <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK100) / first(LOK100)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Heby" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.2, 0.2), 
+                     limits = c(0, 1.2))
+
+
+
+# LOK/1000 ledare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Heby") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK1000 = `Ledare/1000_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK1000 = round(sum(`Ledare_Totalt`) / sum(`Befolkning_13-80_Totalt`), 4) * 1000)
+
+title <- "Andel LOK-ledare av befolkningen, 2021-2023"
+
+lok1000_heby <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK1000) / first(LOK1000)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Heby" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.11))
+
+
+# % förändring unika deltagare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Heby") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            Deltagare = `Deltagare_7-25_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            Deltagare = sum(`Deltagare_7-25_Totalt`))
+
+title <- "Unika LOK-deltagare, 2021-2023"
+
+deltagare_heby <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(Deltagare) / first(Deltagare)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Heby" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.25, 0.25), 
+                     limits = c(0, 1.25))
+
+wrap_plots(
+  lokif_heby, lok1000_heby, 
+  deltagare_heby, lok100_heby, 
+  ncol = 2, nrow = 2
+) + plot_annotation(title = "Den idrottsliga utvecklingen i Heby kommun" ,
+                    subtitle = "Nedan presenteras LOK-stödstrender i form av procentuella förändringar över tid utifrån ett antal indikatorer. \nVi har statistik för antalet LOK-föreningar sedan 2011. Övrig statistik som presenteras finns tillgänglig sedan 2021.",
+                    theme = rfsisu_theme)
+
+ggsave("infoblad\\infoblad-heby.png" , width = 297, height = 210, units="mm", dpi = "retina")
+
+
+
+
+  ### Håbo
+
+# % förändring i LOK-IF
+
+df <- lok_långsiktigt %>% 
+  filter(Kommun == "Håbo") %>% 
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Håbo" ,
+            Kvot = last(lokif) / first(lokif))
+
+df1 <- lok_långsiktigt %>%
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Uppland" ,
+            Kvot = last(lokif) / first(lokif))
+
+
+title <- "Antal LOK-föreningar, 2011-2024"
+
+lokif_håbo <- df %>% 
+  full_join(df1) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Håbo" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.25, 0.25), 
+                     limits = c(0, 1.25))
+
+
+
+# LOK/100 aktiva
+df <- lok100_kommun %>% 
+  filter(Kommun == "Håbo") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK100 = LOK100_Totalt)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK100 = round(sum(`Deltagare_7-25_Totalt`) / sum(`Befolkning_7-25_Totalt`), 3) * 100)
+
+title <- "Andel LOK-deltagare av befolkningen, 2021-2023"
+
+lok100_håbo <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK100) / first(LOK100)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Håbo" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.1))
+
+
+
+# LOK/1000 ledare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Håbo") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK1000 = `Ledare/1000_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK1000 = round(sum(`Ledare_Totalt`) / sum(`Befolkning_13-80_Totalt`), 4) * 1000)
+
+title <- "Andel LOK-ledare av befolkningen, 2021-2023"
+
+lok1000_håbo <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK1000) / first(LOK1000)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Håbo" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.2, 0.2), 
+                     limits = c(0, 1.2))
+
+
+# % förändring unika deltagare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Håbo") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            Deltagare = `Deltagare_7-25_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            Deltagare = sum(`Deltagare_7-25_Totalt`))
+
+title <- "Unika LOK-deltagare, 2021-2023"
+
+deltagare_håbo <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(Deltagare) / first(Deltagare)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Håbo" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.11))
+
+wrap_plots(
+  lokif_håbo, lok1000_håbo, 
+  deltagare_håbo, lok100_håbo, 
+  ncol = 2, nrow = 2
+) + plot_annotation(title = "Den idrottsliga utvecklingen i Håbo kommun" ,
+                    subtitle = "Nedan presenteras LOK-stödstrender i form av procentuella förändringar över tid utifrån ett antal indikatorer. \nVi har statistik för antalet LOK-föreningar sedan 2011. Övrig statistik som presenteras finns tillgänglig sedan 2021.",
+                    theme = rfsisu_theme)
+
+ggsave("infoblad\\infoblad-håbo.png" , width = 297, height = 210, units="mm", dpi = "retina")
+
+
+
+
+  ### Knivsta
+
+# % förändring i LOK-IF
+
+df <- lok_långsiktigt %>% 
+  filter(Kommun == "Knivsta") %>% 
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Knivsta" ,
+            Kvot = last(lokif) / first(lokif))
+
+df1 <- lok_långsiktigt %>%
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Uppland" ,
+            Kvot = last(lokif) / first(lokif))
+
+
+title <- "Antal LOK-föreningar, 2011-2024"
+
+lokif_knivsta <- df %>% 
+  full_join(df1) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Knivsta" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.5, 0.25), 
+                     limits = c(0, 1.5))
+
+
+
+# LOK/100 aktiva
+df <- lok100_kommun %>% 
+  filter(Kommun == "Knivsta") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK100 = LOK100_Totalt)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK100 = round(sum(`Deltagare_7-25_Totalt`) / sum(`Befolkning_7-25_Totalt`), 3) * 100)
+
+title <- "Andel LOK-deltagare av befolkningen, 2021-2023"
+
+lok100_knivsta <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK100) / first(LOK100)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Knivsta" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.1))
+
+
+
+# LOK/1000 ledare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Knivsta") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK1000 = `Ledare/1000_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK1000 = round(sum(`Ledare_Totalt`) / sum(`Befolkning_13-80_Totalt`), 4) * 1000)
+
+title <- "Andel LOK-ledare av befolkningen, 2021-2023"
+
+lok1000_knivsta <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK1000) / first(LOK1000)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Knivsta" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.11))
+
+
+# % förändring unika deltagare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Knivsta") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            Deltagare = `Deltagare_7-25_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            Deltagare = sum(`Deltagare_7-25_Totalt`))
+
+title <- "Unika LOK-deltagare, 2021-2023"
+
+deltagare_knivsta <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(Deltagare) / first(Deltagare)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Knivsta" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.11))
+
+wrap_plots(
+  lokif_knivsta, lok1000_knivsta, 
+  deltagare_knivsta, lok100_knivsta, 
+  ncol = 2, nrow = 2
+) + plot_annotation(title = "Den idrottsliga utvecklingen i Knivsta kommun" ,
+                    subtitle = "Nedan presenteras LOK-stödstrender i form av procentuella förändringar över tid utifrån ett antal indikatorer. \nVi har statistik för antalet LOK-föreningar sedan 2011. Övrig statistik som presenteras finns tillgänglig sedan 2021.",
+                    theme = rfsisu_theme)
+
+ggsave("infoblad\\infoblad-knivsta.png" , width = 297, height = 210, units="mm", dpi = "retina")
+
+
+
+
+
+
+  ### Norrtälje
+
+# % förändring i LOK-IF
+
+df <- lok_långsiktigt %>% 
+  filter(Kommun == "Norrtälje") %>% 
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Norrtälje" ,
+            Kvot = last(lokif) / first(lokif))
+
+df1 <- lok_långsiktigt %>%
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Uppland" ,
+            Kvot = last(lokif) / first(lokif))
+
+
+title <- "Antal LOK-föreningar, 2011-2024"
+
+lokif_norrtälje <- df %>% 
+  full_join(df1) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Norrtälje" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.25, 0.25), 
+                     limits = c(0, 1.25))
+
+
+
+# LOK/100 aktiva
+df <- lok100_kommun %>% 
+  filter(Kommun == "Norrtälje") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK100 = LOK100_Totalt)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK100 = round(sum(`Deltagare_7-25_Totalt`) / sum(`Befolkning_7-25_Totalt`), 3) * 100)
+
+title <- "Andel LOK-deltagare av befolkningen, 2021-2023"
+
+lok100_norrtälje <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK100) / first(LOK100)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Norrtälje" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.1))
+
+
+
+# LOK/1000 ledare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Norrtälje") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK1000 = `Ledare/1000_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK1000 = round(sum(`Ledare_Totalt`) / sum(`Befolkning_13-80_Totalt`), 4) * 1000)
+
+title <- "Andel LOK-ledare av befolkningen, 2021-2023"
+
+lok1000_norrtälje <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK1000) / first(LOK1000)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Norrtälje" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.2, 0.2), 
+                     limits = c(0, 1.2))
+
+
+# % förändring unika deltagare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Norrtälje") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            Deltagare = `Deltagare_7-25_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            Deltagare = sum(`Deltagare_7-25_Totalt`))
+
+title <- "Unika LOK-deltagare, 2021-2023"
+
+deltagare_norrtälje <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(Deltagare) / first(Deltagare)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Norrtälje" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.11))
+
+wrap_plots(
+  lokif_norrtälje, lok1000_norrtälje, 
+  deltagare_norrtälje, lok100_norrtälje, 
+  ncol = 2, nrow = 2
+) + plot_annotation(title = "Den idrottsliga utvecklingen i Norrtälje kommun" ,
+                    subtitle = "Nedan presenteras LOK-stödstrender i form av procentuella förändringar över tid utifrån ett antal indikatorer. \nVi har statistik för antalet LOK-föreningar sedan 2011. Övrig statistik som presenteras finns tillgänglig sedan 2021.",
+                    theme = rfsisu_theme)
+
+ggsave("infoblad\\infoblad-norrtälje.png" , width = 297, height = 210, units="mm", dpi = "retina")
+
+
+
+
+
+
+
+  ### Sigtuna
+
+# % förändring i LOK-IF
+
+df <- lok_långsiktigt %>% 
+  filter(Kommun == "Sigtuna") %>% 
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Sigtuna" ,
+            Kvot = last(lokif) / first(lokif))
+
+df1 <- lok_långsiktigt %>%
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Uppland" ,
+            Kvot = last(lokif) / first(lokif))
+
+
+title <- "Antal LOK-föreningar, 2011-2024"
+
+lokif_sigtuna <- df %>% 
+  full_join(df1) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Sigtuna" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.25, 0.25), 
+                     limits = c(0, 1.25))
+
+
+
+# LOK/100 aktiva
+df <- lok100_kommun %>% 
+  filter(Kommun == "Sigtuna") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK100 = LOK100_Totalt)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK100 = round(sum(`Deltagare_7-25_Totalt`) / sum(`Befolkning_7-25_Totalt`), 3) * 100)
+
+title <- "Andel LOK-deltagare av befolkningen, 2021-2023"
+
+lok100_sigtuna <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK100) / first(LOK100)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Sigtuna" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.1))
+
+
+
+# LOK/1000 ledare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Sigtuna") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK1000 = `Ledare/1000_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK1000 = round(sum(`Ledare_Totalt`) / sum(`Befolkning_13-80_Totalt`), 4) * 1000)
+
+title <- "Andel LOK-ledare av befolkningen, 2021-2023"
+
+lok1000_sigtuna <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK1000) / first(LOK1000)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Sigtuna" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.11))
+
+
+# % förändring unika deltagare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Sigtuna") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            Deltagare = `Deltagare_7-25_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            Deltagare = sum(`Deltagare_7-25_Totalt`))
+
+title <- "Unika LOK-deltagare, 2021-2023"
+
+deltagare_sigtuna <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(Deltagare) / first(Deltagare)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Sigtuna" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.11))
+
+wrap_plots(
+  lokif_sigtuna, lok1000_sigtuna, 
+  deltagare_sigtuna, lok100_sigtuna, 
+  ncol = 2, nrow = 2
+) + plot_annotation(title = "Den idrottsliga utvecklingen i Sigtuna kommun" ,
+                    subtitle = "Nedan presenteras LOK-stödstrender i form av procentuella förändringar över tid utifrån ett antal indikatorer. \nVi har statistik för antalet LOK-föreningar sedan 2011. Övrig statistik som presenteras finns tillgänglig sedan 2021.",
+                    theme = rfsisu_theme)
+
+ggsave("infoblad\\infoblad-sigtuna.png" , width = 297, height = 210, units="mm", dpi = "retina")
+
+
+
+
+
+
+  ### Tierp
+
+# % förändring i LOK-IF
+
+df <- lok_långsiktigt %>% 
+  filter(Kommun == "Tierp") %>% 
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Tierp" ,
+            Kvot = last(lokif) / first(lokif))
+
+df1 <- lok_långsiktigt %>%
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Uppland" ,
+            Kvot = last(lokif) / first(lokif))
+
+
+title <- "Antal LOK-föreningar, 2011-2024"
+
+lokif_tierp <- df %>% 
+  full_join(df1) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0(if_else(Kvot > 1 , "+" , ""), round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Tierp" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.25, 0.25), 
+                     limits = c(0, 1.25))
+
+
+
+# LOK/100 aktiva
+df <- lok100_kommun %>% 
+  filter(Kommun == "Tierp") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK100 = LOK100_Totalt)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK100 = round(sum(`Deltagare_7-25_Totalt`) / sum(`Befolkning_7-25_Totalt`), 3) * 100)
+
+title <- "Andel LOK-deltagare av befolkningen, 2021-2023"
+
+lok100_tierp <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK100) / first(LOK100)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Tierp" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.1))
+
+
+
+# LOK/1000 ledare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Tierp") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK1000 = `Ledare/1000_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK1000 = round(sum(`Ledare_Totalt`) / sum(`Befolkning_13-80_Totalt`), 4) * 1000)
+
+title <- "Andel LOK-ledare av befolkningen, 2021-2023"
+
+lok1000_tierp <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK1000) / first(LOK1000)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Tierp" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.11))
+
+
+# % förändring unika deltagare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Tierp") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            Deltagare = `Deltagare_7-25_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            Deltagare = sum(`Deltagare_7-25_Totalt`))
+
+title <- "Unika LOK-deltagare, 2021-2023"
+
+deltagare_tierp <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(Deltagare) / first(Deltagare)) %>% 
+  ggplot(aes(x = Kommun , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Tierp" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.11))
+
+wrap_plots(
+  lokif_tierp, lok1000_tierp, 
+  deltagare_tierp, lok100_tierp, 
+  ncol = 2, nrow = 2
+) + plot_annotation(title = "Den idrottsliga utvecklingen i Tierps kommun" ,
+                    subtitle = "Nedan presenteras LOK-stödstrender i form av procentuella förändringar över tid utifrån ett antal indikatorer. \nVi har statistik för antalet LOK-föreningar sedan 2011. Övrig statistik som presenteras finns tillgänglig sedan 2021.",
+                    theme = rfsisu_theme)
+
+ggsave("infoblad\\infoblad-tierp.png" , width = 297, height = 210, units="mm", dpi = "retina")
+
+
+
+
+
+
+
+
+
+  ### Uppsala
+
+levels = c("Uppsala" , "Uppland")
+
+# % förändring i LOK-IF
+
+df <- lok_långsiktigt %>% 
+  filter(Kommun == "Uppsala") %>% 
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Uppsala" ,
+            Kvot = last(lokif) / first(lokif))
+
+df1 <- lok_långsiktigt %>%
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Uppland" ,
+            Kvot = last(lokif) / first(lokif))
+
+
+title <- "Antal LOK-föreningar, 2011-2024"
+
+lokif_uppsala <- df %>% 
+  full_join(df1) %>% 
+  ggplot(aes(x = factor(Kommun , levels = levels) , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Uppsala" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.3, 0.25), 
+                     limits = c(0, 1.3))
+
+
+
+# LOK/100 aktiva
+df <- lok100_kommun %>% 
+  filter(Kommun == "Uppsala") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK100 = LOK100_Totalt)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK100 = round(sum(`Deltagare_7-25_Totalt`) / sum(`Befolkning_7-25_Totalt`), 3) * 100)
+
+title <- "Andel LOK-deltagare av befolkningen, 2021-2023"
+
+lok100_uppsala <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK100) / first(LOK100)) %>% 
+  ggplot(aes(x = factor(Kommun , levels = levels) , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Uppsala" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.1))
+
+
+
+# LOK/1000 ledare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Uppsala") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK1000 = `Ledare/1000_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK1000 = round(sum(`Ledare_Totalt`) / sum(`Befolkning_13-80_Totalt`), 4) * 1000)
+
+title <- "Andel LOK-ledare av befolkningen, 2021-2023"
+
+lok1000_uppsala <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK1000) / first(LOK1000)) %>% 
+  ggplot(aes(x = factor(Kommun , levels = levels) , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Uppsala" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.11))
+
+
+# % förändring unika deltagare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Uppsala") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            Deltagare = `Deltagare_7-25_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            Deltagare = sum(`Deltagare_7-25_Totalt`))
+
+title <- "Unika LOK-deltagare, 2021-2023"
+
+deltagare_uppsala <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(Deltagare) / first(Deltagare)) %>% 
+  ggplot(aes(x = factor(Kommun , levels = levels) , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Uppsala" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.15, 0.1), 
+                     limits = c(0, 1.15))
+
+wrap_plots(
+  lokif_uppsala, lok1000_uppsala, 
+  deltagare_uppsala, lok100_uppsala, 
+  ncol = 2, nrow = 2
+) + plot_annotation(title = "Den idrottsliga utvecklingen i Uppsala kommun" ,
+                    subtitle = "Nedan presenteras LOK-stödstrender i form av procentuella förändringar över tid utifrån ett antal indikatorer. \nVi har statistik för antalet LOK-föreningar sedan 2011. Övrig statistik som presenteras finns tillgänglig sedan 2021.",
+                    theme = rfsisu_theme)
+
+ggsave("infoblad\\infoblad-uppsala.png" , width = 297, height = 210, units="mm", dpi = "retina")
+
+
+
+
+
+  ### Älvkarleby
+
+levels = c("Älvkarleby" , "Uppland")
+
+  # % förändring i LOK-IF
+
+df <- lok_långsiktigt %>% 
+  filter(Kommun == "Älvkarleby") %>% 
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Älvkarleby" ,
+            Kvot = last(lokif) / first(lokif))
+
+df1 <- lok_långsiktigt %>%
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Uppland" ,
+            Kvot = last(lokif) / first(lokif))
+
+
+title <- "Antal LOK-föreningar, 2011-2024"
+
+lokif_älvkarleby <- df %>% 
+  full_join(df1) %>% 
+  ggplot(aes(x = factor(Kommun , levels = levels) , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0(if_else(Kvot > 1, "+" , ""), round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Älvkarleby" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.25, 0.25), 
+                     limits = c(0, 1.25))
+
+
+
+  # LOK/100 aktiva
+df <- lok100_kommun %>% 
+  filter(Kommun == "Älvkarleby") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK100 = LOK100_Totalt)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK100 = round(sum(`Deltagare_7-25_Totalt`) / sum(`Befolkning_7-25_Totalt`), 3) * 100)
+
+title <- "Andel LOK-deltagare av befolkningen, 2021-2023"
+
+lok100_älvkarleby <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK100) / first(LOK100)) %>% 
+  ggplot(aes(x = factor(Kommun , levels = levels) , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Älvkarleby" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.1))
+
+
+
+# LOK/1000 ledare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Älvkarleby") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK1000 = `Ledare/1000_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK1000 = round(sum(`Ledare_Totalt`) / sum(`Befolkning_13-80_Totalt`), 4) * 1000)
+
+title <- "Andel LOK-ledare av befolkningen, 2021-2023"
+
+lok1000_älvkarleby <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK1000) / first(LOK1000)) %>% 
+  ggplot(aes(x = factor(Kommun , levels = levels) , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0(if_else(Kvot > 1 , "+" , ""), round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Älvkarleby" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.11))
+
+
+  # % förändring unika deltagare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Älvkarleby") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            Deltagare = `Deltagare_7-25_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            Deltagare = sum(`Deltagare_7-25_Totalt`))
+
+title <- "Unika LOK-deltagare, 2021-2023"
+
+deltagare_älvkarleby <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(Deltagare) / first(Deltagare)) %>% 
+  ggplot(aes(x = factor(Kommun , levels = levels) , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Älvkarleby" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.11))
+
+wrap_plots(
+  lokif_älvkarleby, lok1000_älvkarleby, 
+  deltagare_älvkarleby, lok100_älvkarleby, 
+  ncol = 2, nrow = 2
+) + plot_annotation(title = "Den idrottsliga utvecklingen i Älvkarleby kommun" ,
+                    subtitle = "Nedan presenteras LOK-stödstrender i form av procentuella förändringar över tid utifrån ett antal indikatorer. \nVi har statistik för antalet LOK-föreningar sedan 2011. Övrig statistik som presenteras finns tillgänglig sedan 2021.",
+                    theme = rfsisu_theme)
+
+ggsave("infoblad\\infoblad-älvkarleby.png" , width = 297, height = 210, units="mm", dpi = "retina")
+
+
+
+
+
+
+
+  ### Östhammar
+
+levels = c("Östhammar" , "Uppland")
+
+# % förändring i LOK-IF
+
+df <- lok_långsiktigt %>% 
+  filter(Kommun == "Östhammar") %>% 
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Östhammar" ,
+            Kvot = last(lokif) / first(lokif))
+
+df1 <- lok_långsiktigt %>%
+  group_by(År) %>% 
+  reframe(lokif = n_distinct(Förening)) %>% 
+  summarize(Kommun = "Uppland" ,
+            Kvot = last(lokif) / first(lokif))
+
+
+title <- "Antal LOK-föreningar, 2011-2024"
+
+lokif_östhammar <- df %>% 
+  full_join(df1) %>% 
+  ggplot(aes(x = factor(Kommun , levels = levels) , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0(if_else(Kvot > 1, "+" , ""), round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Östhammar" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.25, 0.25), 
+                     limits = c(0, 1.25))
+
+
+
+# LOK/100 aktiva
+df <- lok100_kommun %>% 
+  filter(Kommun == "Östhammar") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK100 = LOK100_Totalt)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK100 = round(sum(`Deltagare_7-25_Totalt`) / sum(`Befolkning_7-25_Totalt`), 3) * 100)
+
+title <- "Andel LOK-deltagare av befolkningen, 2021-2023"
+
+lok100_östhammar <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK100) / first(LOK100)) %>% 
+  ggplot(aes(x = factor(Kommun , levels = levels) , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Östhammar" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.1))
+
+
+
+# LOK/1000 ledare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Östhammar") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            LOK1000 = `Ledare/1000_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            LOK1000 = round(sum(`Ledare_Totalt`) / sum(`Befolkning_13-80_Totalt`), 4) * 1000)
+
+title <- "Andel LOK-ledare av befolkningen, 2021-2023"
+
+lok1000_östhammar <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(LOK1000) / first(LOK1000)) %>% 
+  ggplot(aes(x = factor(Kommun , levels = levels) , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Östhammar" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.11))
+
+
+# % förändring unika deltagare
+df <- lok100_kommun %>% 
+  filter(Kommun == "Östhammar") %>% 
+  group_by(År) %>% 
+  summarize(Kommun = Kommun ,
+            Deltagare = `Deltagare_7-25_Totalt`)
+
+df1 <- lok100_kommun %>% 
+  group_by(År) %>% 
+  summarize(Kommun = "Uppland" ,
+            Deltagare = sum(`Deltagare_7-25_Totalt`))
+
+title <- "Unika LOK-deltagare, 2021-2023"
+
+deltagare_östhammar <- df %>% 
+  full_join(df1) %>% 
+  group_by(Kommun) %>% 
+  summarize(Kvot = last(Deltagare) / first(Deltagare)) %>% 
+  ggplot(aes(x = factor(Kommun , levels = levels) , y = Kvot)) +
+  geom_col(aes(fill = Kommun) , position = "dodge") +
+  geom_text(aes(label = paste0("+", round(Kvot * 100 - 100, 0), "%")), 
+            vjust = 1.5, 
+            color = "white", 
+            size = 5) +
+  rfsisu_theme_mindretext +
+  xlab(NULL) + ylab("Förändring") +
+  labs(title = title) +
+  scale_fill_manual(values = c("Östhammar" = "#1EAFA0" ,
+                               "Uppland" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 1.1, 0.1), 
+                     limits = c(0, 1.11))
+
+wrap_plots(
+  lokif_östhammar, lok1000_östhammar, 
+  deltagare_östhammar, lok100_östhammar, 
+  ncol = 2, nrow = 2
+) + plot_annotation(title = "Den idrottsliga utvecklingen i Östhammars kommun" ,
+                    subtitle = "Nedan presenteras LOK-stödstrender i form av procentuella förändringar över tid utifrån ett antal indikatorer. \nVi har statistik för antalet LOK-föreningar sedan 2011. Övrig statistik som presenteras finns tillgänglig sedan 2021.",
+                    theme = rfsisu_theme)
+
+ggsave("infoblad\\infoblad-östhammar.png" ,width = 297, height = 210, units="mm", dpi = "retina")
+
+
+
+
+
+
+
+
+
+
+
+
+# Ideellt engagemang över tid jämfört med övriga organisationstyper
+title <- "Idrottsorganisationer är den typ av <br>organisation som flest personer är <br>ideellt engagerade i."
+subtitle <- "Andelen av befolkningen som är idrottsengagerad har legat en bit över 15% \nsedan 1992."
+caption <- "Siffrorna är tagna från Lundberg, Henrekson och von Essen (2025): Många bidrar, få orkar bära: Ideellt arbete i Sverige 1992-2024."
+
+df <- tibble(
+  "Organisation" = c("Idrottsorganisationer" ,
+                     "Fritidsorganisationer" ,
+                     "Organisationer för boende" , 
+                     "Intresseorganisationer och fackförening" ,
+                     "Organisationer med social inriktning" ,
+                     "Religiösa organisationer" ,
+                     "Sociala rörelser och politiska organisationer" ,
+                     "Kulturorganisationer" , 
+                     "Kooperativ") ,
+  "1992" = c(17, 12, 5, 14, 9, 5, 6, 7, 4) ,
+  "1998" = c(19, 10, 6, 15, 10, 7, 6, 7, 3) ,
+  "2005" = c(19, 10, 7, 13, 6, 6, 3, 5, 2) ,
+  "2009" = c(18, 9, 7, 11, 9, 6, 4, 5, 2) ,
+  "2014" = c(17, 12, 12, 12, 13, 7, 5, 6, 4) ,
+  "2019" = c(16, 15, 11, 13, 9, 6, 6, 5, 1) ,
+  "2024" = c(18, 16, 17, 14, 11, 6, 8, 7, 2)
+  
+) %>% 
+  pivot_longer(!Organisation, names_to = "År" , values_to = "Andel")
+
+df %>% 
+  ggplot(aes(År, Andel / 100, group = Organisation)) +
+  geom_line(color = "#1e3479" , linewidth = 1.3) +
+  geom_point(data = df %>% 
+             group_by(Organisation) %>% 
+             slice_max(År),
+             aes(x=År, y=Andel / 100),shape = 16 , size = 2.5) +
+  geom_text(data=df %>% 
+              filter(Organisation == "Idrottsorganisationer") %>% 
+              slice_max(År),
+            aes(x=År, y=Andel / 100, label = paste0(Andel, "%")),
+            hjust = -.5, vjust = .5, size = 4) +
+  gghighlight(use_direct_label = FALSE ,
+              Organisation == "Idrottsorganisationer" ,
+              unhighlighted_params = list(linewidth = 0.5 , 
+                                          color = "#8DE2FF" ,
+                                          alpha = 0.6)) +
+  rfsisu_theme +
+  labs(title = title,
+       subtitle = subtitle,
+       caption = caption) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 0.5, 0.1), 
+                     limits = c(0, 0.5)) +
+  xlab(NULL) + ylab(NULL)
+
+ggsave("infoblad\\infoblad-ideelltengagemang.png" , width = 210, height = 297, units="mm", dpi = "retina")
+
+
+
+
+
+# Andel LOK-deltagare mellan 7-25 utifrån socioekonomiska förutsättningar
+
+title <- "Stark koppling mellan socioekonomiska <br>förutsättningar och idrottsdeltagande."
+subtitle <- "Vid indelning av boendeområden utifrån socioekonomiska förutsättningar noteras \nen tydlig skillnad i andelen personer mellan 7-25 år som idrottar i förening. \nSkillnaden mellan kvinnor och män är även mer påtaglig i områden med \nstora socioekonomiska utmaningar."
+caption <- "Siffrorna är tagna från Riksidrottsförbundets LOK-stödsstatistik 2023."
+
+df <- deltagare_områdestyp %>% 
+  filter(År == "2023") %>% 
+  group_by(Områdestyp) %>% 
+  reframe(
+    Kategori = c("Kvinnor", "Män"),
+    Medelvärde = c(
+      round(mean(Deltagare_Kvinnor), 1), 
+      round(mean(Deltagare_Män), 1)
+    ) 
+  ) %>% 
+  mutate(Områdestyp = as.factor(Områdestyp)) %>% 
+  mutate(Områdestyp = case_when(
+    Områdestyp == "1" ~ "Mycket stora \nsocioekonomiska utmaningar" ,
+    Områdestyp == "5" ~ "Mycket goda \nsocioekonomiska förutsättningar" ,
+    TRUE ~ Områdestyp
+  ))
+
+levels = c("Mycket stora \nsocioekonomiska utmaningar" , 
+           "2" , 
+           "3" , 
+           "4" ,
+           "Mycket goda \nsocioekonomiska förutsättningar")
+
+df %>% 
+  ggplot(aes(x = factor(Områdestyp , levels = levels) , y = Medelvärde/100)) +
+  geom_col(aes(fill = Kategori) , position = "dodge") +
+  rfsisu_theme +
+  xlab(NULL) + ylab(NULL) +
+  labs(title = title,
+       subtitle = subtitle,
+       caption = caption) +
+  scale_fill_manual(values = c("Kvinnor" = "#1EAFA0" ,
+                               "Män" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     breaks = seq(0, 0.6, 0.2), 
+                     limits = c(0, 0.6)) +
+  scale_x_discrete(breaks = c("Mycket stora \nsocioekonomiska utmaningar",
+                              "Mycket goda \nsocioekonomiska förutsättningar")) +
+  theme(axis.text.x = element_text(size = 13))
+
+
+ggsave("infoblad\\infoblad-områdestyper.png" , width = 210, height = 297, units="mm", dpi = "retina")
+
+
+
+
+
+
+
+
+# Andel av Upplands befolkning 7-25 år som idrottar i förening utifrån ålder och kön
+
+title <- "Dramatiskt tapp i andelen idrottsaktiva i <br>Uppland när barn kommer upp tonåren."
+subtitle <- "Det första tappet ses hos pojkar i 11-årsåldern och hos flickor i 12-årsåldern, \nför att sedan falla mer påtagligt från tonåren och framåt."
+caption <- "Siffrorna är tagna från Riksidrottsförbundets LOK-stödsstatistik 2023."
+
+df <- deltagare %>% 
+  filter(År == "2023") %>% 
+  group_by(Ålder) %>% 
+  reframe(Kategori = c("Kvinnor" , "Män"),
+          Antal = c(sum(Deltagare_Kvinnor, na.rm = TRUE) ,
+                    sum(Deltagare_Män , na.rm = TRUE)) ,
+          Befolkning = c(sum(Befolkning_Kvinnor) ,
+                         sum(Befolkning_Män))) %>% 
+  mutate(Andel = (Antal / Befolkning))
+
+df %>% 
+  ggplot(aes(x = Ålder , y = Andel , group = Kategori , colour = Kategori, fill = Kategori)) +
+  geom_line(linewidth = 1.5) +
+  geom_point(
+    shape = 21,
+    size = 2.5,
+    stroke = 1,
+    show.legend = FALSE
+  ) +
+  annotate(geom="text", x = "11" , y = 0.73,
+           label = "11 år" ,
+           size = 3, colour = "#B51E17" , face = "bold" , family = "sans") +
+  annotate(geom="text", x = "12" , y = 0.55,
+           label = "12 år" ,
+           size = 3, colour = "#1EAFA0" , face = "bold" , family = "sans") +
+  rfsisu_theme +
+  xlab("Ålder") + ylab(NULL) +
+  labs(title = title,
+       subtitle = subtitle,
+       caption = caption) +
+  scale_color_manual(values = c("Kvinnor" = "#1EAFA0" , "Män" = "#B51E17")) +  
+  scale_fill_manual(values = c("Kvinnor" = "#1EAFA0" , "Män" = "#B51E17")) +
+  scale_y_continuous(labels = scales::label_percent() , 
+                     breaks = seq(0 , 1 , 0.1) , limits = c(0 , 1)) +
+  scale_x_discrete(breaks = c("7" , "25")) +
+  theme(axis.text.x = element_text(size = 13))
+
+
+ggsave("infoblad\\infoblad-andelidrottsaktiva.png" , width = 210, height = 297, units="mm", dpi = "retina")
+
+
+
+
+
+
+
+
+# Jämförelse mellan könen i antal ledare utifrån ålder
+
+title <- "De flesta unga ledarna i Uppland är kvinnor. Högre upp i <br>åldrarna är dock männen överrepresenterade."
+subtitle <- "Fram till 21-årsåldern är fler kvinnor än män ledare inom den uppländska idrotten. \nDärefter är det vanligare att män är ledare, särskilt mellan 40 till 60 år."
+caption <- "Siffrorna är tagna från Riksidrottsförbundets LOK-stödsstatistik 2023."
+
+
+df <- ledare %>% 
+  filter(År == "2023") %>% 
+  group_by(Ålder) %>% 
+  reframe(Kön = c("Kvinnor" , "Män"),
+          Antal = c(sum(Ledare_Kvinnor, na.rm = TRUE) ,
+                    sum(Ledare_Män , na.rm = TRUE)))
+df %>% 
+  ggplot(aes(x = Ålder , y = Antal , group = Kön , colour = Kön , fill = Kön ,
+             text = paste("Ålder: " , Ålder,  "\nKön: " , Kön,  "\nAntal: " , format(Antal , big.mark=",")))) +
+  geom_line(linewidth = 1.5) +
+  geom_point(
+    shape = 21,
+    size = 2.5,
+    stroke = 1,
+    show.legend = FALSE
+  ) +
+  geom_vline(xintercept = "21", color = "#006BB1", linetype = "dashed") +
+  rfsisu_theme +
+  xlab(NULL) + ylab(NULL) +
+  labs(title = title,
+       subtitle = subtitle,
+       caption = caption) +
+  scale_fill_manual(values = c("Kvinnor" = "#1EAFA0" , "Män" = "#B51E17")) +
+  scale_color_manual(values = c("Kvinnor" = "#1EAFA0" , "Män" = "#B51E17")) +
+  scale_y_continuous(breaks = NULL) + 
+  scale_x_discrete(breaks = c("13" , "21" , "80"))
+
+ggsave("infoblad\\infoblad-ledare.png" , width = 297, height = 210, units="mm", dpi = "retina")
+
+
+
+
+
+
+
+
+# Upplands mest jämställda idrotter sett till aktiva
+
+title <- "De är Upplands mest jämställda idrotter."
+subtitle <- "Med hjälp av LOK-stödet kan man undersöka hur fördelningen av aktiva ser ut mellan könen utifrån idrott. \nNedan presenteras Upplands mest jämställda idrotter från vänster till höger."
+caption <- "Siffrorna är tagna från Riksidrottsförbundets LOK-stödsstatistik 2023."
+
+df <- idrottsrapport %>% 
+  filter(År == "2023") %>% 
+  group_by(idrott) %>% 
+  reframe(Flickor = sum(`Antal flickor`) / sum(`Antal flickor` , `Antal pojkar`) , 
+          Pojkar = sum(`Antal pojkar`) / sum(`Antal flickor` , `Antal pojkar`)
+          ) %>% 
+  mutate(diff = abs(Flickor - 0.5)) %>% 
+  arrange(diff) %>% 
+  slice_head(n = 10) 
+
+levels = df$idrott
+
+plot <- df %>% 
+  pivot_longer(cols = c(-idrott), names_to = "kön" , values_to = "andel")
+
+
+plot %>% 
+  ggplot(aes(x = factor(idrott, levels = levels) , y = andel , fill = kön, )) +
+  geom_bar(position = "stack" , stat = "identity") +
+  rfsisu_theme +
+  xlab(NULL) + ylab(NULL) + 
+  labs(fill = "Kön" ,
+       title = title ,
+       subtitle = subtitle ,
+       caption = caption) +
+  scale_y_continuous(labels = scales::label_percent() , breaks = seq(0 , 1 , 0.1) , limits = c(0 , 1)) +
+  scale_fill_manual(values = c("Flickor" = "#1EAFA0" , "Pojkar" = "#B51E17" ) , 
+                    labels = c("Flickor" , "Pojkar"))
+
+ggsave("infoblad\\infoblad-jämställdhetaktiva.png" , width = 297, height = 210, units="mm", dpi = "retina")
+
