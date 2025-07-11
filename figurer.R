@@ -304,7 +304,9 @@ saveWidget(img, "images/barnafödande.html")
 
 
 
-  # Medelålder för kvinnor att gifta sig
+
+
+  # Medelålder för kvinnors första giftermål
 df <- read.csv("https://ourworldindata.org/grapher/age-at-marriage-women.csv?v=1&csvType=full&useColumnShortNames=true")
 colnames(df) <- c("Land" , "Kod" , "År" , "Medelålder" , "median")
 
@@ -327,24 +329,22 @@ saveWidget(img, "images/ålder_giftermål_sverige.html")
 
 
   # ... jämfört med andra länder
-p <- df %>% 
-  ggplot(aes(x = År, y = Medelålder, group = Land) ,
-         text = paste(
-           "År:", År,
-           "\nGenomsnittsålder:" = Medelålder,
-           "\nLand:" , Land
-         )) +
-  geom_line(color = "#5991E5" , linewidth = 1.2) +
-  gghighlight(use_direct_label = FALSE ,
+p <- df %>%
+  ggplot(aes(x = År, y = Medelålder, group = Land
+             )) +
+  geom_line(color = "#5991E5", linewidth = 1.2) +
+  gghighlight(use_direct_label = FALSE,
               Land == "Sweden",
-              unhighlighted_params = list(linewidth = 0.5 , 
-                                          color = "#5991E5" ,
+              unhighlighted_params = list(linewidth = 0.5,
+                                          color = "#5991E5",
                                           alpha = 0.25)) +
   sis_theme +
   scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
-  scale_y_continuous(limits = c(0 , max(df$Medelålder) + 1) ,
-                     breaks =  seq(0, 35, 5)) +
-  xlab(NULL) + ylab("Genomsnittsålder vid giftermål bland kvinnor")
+  scale_y_continuous(limits = c(0, max(df$Medelålder, na.rm = TRUE) + 1),
+                     breaks = seq(0, 35, 5)) +
+  xlab(NULL) +
+  ylab("Genomsnittsålder vid giftermål bland kvinnor")
+
 
 img <- ggplotly(p, tooltip = "text") %>% 
   config(displayModeBar = F)
@@ -356,12 +356,7 @@ saveWidget(img, "images/ålder_giftermål.html")
 
 
 
-  # Skilsmässor per 1000 invånare
-df <- read.csv("https://ourworldindata.org/grapher/divorces-per-1000-people.csv?v=1&csvType=full&useColumnShortNames=true")
 
-
-
-  # ... jämfört med andra länder
 
 
   # Andel som säger att de är lyckliga

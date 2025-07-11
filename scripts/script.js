@@ -86,6 +86,21 @@ const frågor = [
     bild: '<iframe src="images/barnafödande_sverige.html" class="iframe" frameborder="0"></iframe>',
     förklaring2: "Detta är en trend som man kan se globalt sett också, där rikare länder tenderar ha lägre barnafödande. Den globala populationstillväxten har mer än halverats under de senaste 60 åren.",
     bild2: '<iframe src="images/barnafödande.html" class="iframe" frameborder="0"></iframe>'
+  },
+  {
+    kategori: "FAMILJ",
+    fråga: "Hur har medelåldern för kvinnors första giftermål förändrats under de senaste 30 åren?",
+    korrekt: "Den har ökat med sju år",
+    alternativ: [
+      "Den har minskat med tre år",
+      "Den har inte förändrats",
+      "Den har ökat med tre år",
+      "Den har ökat med sju år"
+    ],
+    förklaring: "Mellan 1990 och 2021 ökade genomsnittsåldern för kvinnors första giftermål med 25%, vilket uppgår till ca. 7 år.",
+    bild: '<iframe src="images/ålder_giftermål_sverige.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "När OECD undersökt denna trend för alla OECD-länder kan man notera att denna trend sker i alla länder. Sverige är dock, tillsammans med Spanien, det OECD-land med högst genomsnittsålder för kvinnors första giftermål.",
+    bild2: '<iframe src="images/ålder_giftermål.html" class="iframe" frameborder="0"></iframe>'
   }
 ]
 
