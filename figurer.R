@@ -656,7 +656,7 @@ p <- df %>%
   filter(Land == "Sweden") %>% 
   ggplot(aes(x = År, y = GDP  , group = 2,
              text = paste("År:" , År , 
-                          "\nAndel singelhushåll:" , round(GDP)))) +
+                          "\nGDP per capita:" , round(GDP)))) +
   geom_line(linewidth = 1 , colour = "#5991E5") +
   sis_theme +
   scale_x_continuous(breaks = c(1300, 1870, 2022)) +
@@ -716,7 +716,7 @@ p <- df %>%
   filter(Land == "Sweden") %>% 
   ggplot(aes(x = År, y = Gini  , group = 2,
              text = paste("År:" , År , 
-                          "\nGini-koefficient:" , round(Gini)))) +
+                          "\nGini-koefficient:" , round(Gini, 3)))) +
   geom_line(linewidth = 1 , colour = "#5991E5") +
   sis_theme +
   scale_x_continuous(breaks = c(1975, 2021)) +
@@ -738,7 +738,7 @@ p <- df %>%
              colour = Land == "Sweden",
              text = paste("År:" , År , 
                           "\nLand:" , Land,
-                          "\nGini-koefficient:" , round(Gini)))) +
+                          "\nGini-koefficient:" , round(Gini, 3)))) +
   geom_line() +
   scale_colour_manual(values = c("TRUE" = "#D7E559", "FALSE" = "#5991E5")) +
   scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0.25)) +
