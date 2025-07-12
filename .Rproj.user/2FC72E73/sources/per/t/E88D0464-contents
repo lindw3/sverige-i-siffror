@@ -22,7 +22,6 @@ library(GGally)
 library(cluster)
 library(sf)
 library(readxl)
-library(gghighlight)
 
 # Tema för figurer
 sis_theme <- theme(plot.background = element_rect(fill = "#e5ad59") ,
@@ -330,18 +329,23 @@ saveWidget(img, "images/ålder_giftermål_sverige.html")
 
   # ... jämfört med andra länder
 p <- df %>%
-  ggplot(aes(x = År, y = Medelålder, group = Land
+  ggplot(aes(x = År, y = Medelålder, group = Land ,
+             alpha = Land == "Sweden",
+             linewidth = Land == "Sweden",
+             text = paste(
+               "År:" , År,
+               "\nLand:" , Land,
+               "\nGenomsnittsålder:" , Medelålder
+             )
              )) +
-  geom_line(color = "#5991E5", linewidth = 1.2) +
-  gghighlight(use_direct_label = FALSE,
-              Land == "Sweden",
-              unhighlighted_params = list(linewidth = 0.5,
-                                          color = "#5991E5",
-                                          alpha = 0.25)) +
+  geom_line(color = "#5991E5") +
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0.25)) +
+  scale_linewidth_manual(values = c("TRUE" = 1.25, "FALSE" = 0.5)) +
   sis_theme +
   scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
   scale_y_continuous(limits = c(0, max(df$Medelålder, na.rm = TRUE) + 1),
                      breaks = seq(0, 35, 5)) +
+  guides(alpha = "none", linewidth = "none") +
   xlab(NULL) +
   ylab("Genomsnittsålder vid giftermål bland kvinnor")
 
@@ -364,17 +368,22 @@ df <- read.csv("https://ourworldindata.org/grapher/happiness-cantril-ladder.csv?
 colnames(df) <- c("Land" , "Kod" , "År" , "Tillfredsställelse")
 
 p <- df %>%
-  ggplot(aes(x = År, y = Tillfredsställelse, group = Land)) +
-  geom_line(color = "#5991E5", linewidth = 1.2) +
-  gghighlight(use_direct_label = FALSE,
-              Land == "Sweden",
-              unhighlighted_params = list(linewidth = 0.5,
-                                          color = "#5991E5",
-                                          alpha = 0.25)) +
+  ggplot(aes(x = År, y = Tillfredsställelse, group = Land,
+             alpha = Land == "Sweden",
+             linewidth = Land == "Sweden",
+             text = paste(
+               "År:" , År,
+               "\nLand:" , Land,
+               "\nLivstillfredsställelse:" , Tillfredsställelse
+             ))) +
+  geom_line(color = "#5991E5") +
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0.25)) +
+  scale_linewidth_manual(values = c("TRUE" = 1.25, "FALSE" = 0.5)) +
   sis_theme +
   scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
   scale_y_continuous(limits = c(0, 10),
                      breaks = seq(0, 10, 2.5)) +
+  guides(alpha = "none", linewidth = "none") +
   xlab(NULL) +
   ylab("Livstillfredsställelse, skala 1-10")
 
@@ -429,20 +438,100 @@ saveWidget(img, "images/gdp_satisfaction.html")
 
   # Suicid per 100 000
 df <- read.csv("https://ourworldindata.org/grapher/suicide-rate-who-mdb.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod" , "År" , "Suicid")
+
+p <- df %>% 
+  filter(Land == "Sweden") %>% 
+  ggplot(aes(x = År, y = Suicid  , group = 2,
+             text = paste("År:" , År , 
+                          "\nSuicid/100,000:" , round(Suicid, 2)))) +
+  geom_line(linewidth = 1 , colour = "#5991E5") +
+  sis_theme +
+  scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
+  scale_y_continuous(limits = c(0 , 20) ,
+                     breaks =  seq(0, 20, 5)) +
+  xlab(NULL) + ylab("Suicid per 100,000 invånare")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/suicid_sverige.html")
 
 
   # ... jämfört med andra länder
+p <- df %>%
+  ggplot(aes(x = År, y = Suicid, group = Land, 
+             alpha = Land == "Sweden" ,
+             linewidth = Land == "Sweden" ,
+             text = paste("År:" , År , 
+                          "\nLand:" , Land,
+                          "\nSuicid/100,000:" , round(Suicid, 2)))) +
+  geom_line(color = "#5991E5") +
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0.25)) +
+  scale_linewidth_manual(values = c("TRUE" = 1.25, "FALSE" = 0.5)) +
+  sis_theme +
+  scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
+  scale_y_continuous(limits = c(0, max(df$Suicid, na.rm = TRUE) + 1)) +
+  guides(alpha = "none", linewidth = "none") +
+  xlab(NULL) +
+  ylab("Suicid per 100,000 invånare")
 
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/suicid.html")
 
 
 
 
   # Singelhushåll som % av totala hushåll
 df <- read.csv("https://ourworldindata.org/grapher/one-person-households.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod" , "År" , "Andel")
+
+p <- df %>% 
+  filter(Land == "Sweden") %>% 
+  ggplot(aes(x = År, y = Andel  , group = 2,
+             text = paste("År:" , År , 
+                          "\nAndel singelhushåll:" , round(Andel, 2)))) +
+  geom_line(linewidth = 1 , colour = "#5991E5") +
+  sis_theme +
+  scale_x_continuous(breaks = c(2004, 2018)) +
+  scale_y_continuous(limits = c(0 , 100) ,
+                     breaks =  seq(0, 100, 25)) +
+  xlab(NULL) + ylab("Andel singelhushåll, %")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/singelhushåll_sverige.html")
 
 
+# ... jämfört med andra länder
+p <- df %>%
+  ggplot(aes(x = År, y = Andel, group = Land, 
+             alpha = Land == "Sweden" ,
+             linewidth = Land == "Sweden" ,
+             text = paste("År:" , År , 
+                          "\nLand:" , Land,
+                          "\nSuicid/100,000:" , round(Andel, 2)))) +
+  geom_line(color = "#5991E5") +
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0.25)) +
+  scale_linewidth_manual(values = c("TRUE" = 1.25, "FALSE" = 0.5)) +
+  sis_theme +
+  scale_x_continuous(limits = c(1970, 2018),
+                     breaks = c(1970, 2018)) +
+  scale_y_continuous(limits = c(0 , 100) ,
+                     breaks =  seq(0, 100, 25)) +
+  guides(alpha = "none", linewidth = "none") +
+  xlab(NULL) +
+  ylab("Andel singelhushåll, %")
 
-  # ... jämfört med andra länder
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/singelhushåll.html")
+
+
 
 
 

@@ -30,20 +30,20 @@ const frågor = [
       "Tre",
       "Fyra"
     ],
-    förklaring: "Två partier, Miljöpartiet och Vänsterpartiet, har fler kvinnliga än manliga kommunalt förtroendevalda under mandatperioden 2023-2026, vilket är de enda partier där detta hänt sedan statistik började föras 2007. Totalt sett har andelen kvinnliga kommunalt förtroendevalda legat stabilt på strax över 40%.",
+    förklaring: "Två partier, Miljöpartiet och Vänsterpartiet, har fler kvinnliga än manliga kommunalt förtroendevalda under mandatperioden 2023-2026, vilket är de enda partier där detta hänt sedan statistik började föras 2007. Totalt sett har andelen kvinnliga kommunalt förtroendevalda legat stabilt på strax över 40 procent.",
     bild: '<iframe src="images/förtroendevalda_kön.html" class="iframe" frameborder="0"></iframe>'
   },
   {
     kategori: "ARBETE",
     fråga: "Hur stor andel av anställda är inom näringslivet?",
-    korrekt: "70%",
+    korrekt: "70 procent",
     alternativ: [
-      "30%",
-      "50%",
-      "70%",
-      "90%"
+      "30 procent",
+      "50 procent",
+      "70 procent",
+      "90 procent"
     ],
-    förklaring: "Totalt sett är 70% av alla anställda inom näringslivet. Det finns dock stora skillnader mellan män och kvinnor, där kvinnor är överrepresenterade inom kommun och region medan män är överrepresenterade inom privat sektor.",
+    förklaring: "Totalt sett är 70 procent av alla anställda inom näringslivet. Det finns dock stora skillnader mellan män och kvinnor, där kvinnor är överrepresenterade inom kommun och region medan män är överrepresenterade inom privat sektor.",
     bild: '<iframe src="images/anställning_sektor_kön.html" class="iframe" frameborder="0"></iframe>'
   },
   {
@@ -56,20 +56,20 @@ const frågor = [
       "Region",
       "Statlig"
     ],
-    förklaring: "Inom den regionala sektorn tjänar män i genomsnitt 21% mer än kvinnor. Skillnaderna är som minst inom kommunal sektor, där män i genomsnitt tjänar 1% mer än kvinnor.",
+    förklaring: "Inom den regionala sektorn tjänar män i genomsnitt 21 procent mer än kvinnor. Skillnaderna är som minst inom kommunal sektor, där män i genomsnitt tjänar 1 procent mer än kvinnor.",
     bild: '<iframe src="images/lön_sektor_kön.html" class="iframe" frameborder="0"></iframe>'
   },
 {
     kategori: "UTBILDNING", 
     fråga: "Hur mycket mer tjänar i genomsnitt de med eftergymnasial utbildning 3+ år jämfört med de med 3-årig gymnasial utbildning?",
-    korrekt: "25% mer",
+    korrekt: "25 procent mer",
     alternativ: [
       "De tjänar lika",
-      "10% mer",
-      "25% mer",
-      "50% mer"
+      "10 procent mer",
+      "25 procent mer",
+      "50 procent mer"
     ],
-    förklaring: "Genomsnittslönen ökar med ökad utbildningsnivå, med undantag för när man jämför de med gymnasial utbildning under 3 år med de som har 3-årig gymnasial utbildning. Män tjänar i genomsnitt mer än kvinnor i samtliga utbildningsnivåer. Könsskillnaderna är lägst för forskarutbildade, där män tjänar ca. 8% mer än kvinnor.  ",
+    förklaring: "Genomsnittslönen ökar med ökad utbildningsnivå, med undantag för när man jämför de med gymnasial utbildning under 3 år med de som har 3-årig gymnasial utbildning. Män tjänar i genomsnitt mer än kvinnor i samtliga utbildningsnivåer. Könsskillnaderna är lägst för forskarutbildade, där män tjänar ca. 8 procent mer än kvinnor.  ",
     bild: '<iframe src="images/lön_utbildning_kön.html" class="iframe" frameborder="0"></iframe>'
 } ,
 {
@@ -97,9 +97,9 @@ const frågor = [
       "Den har ökat med tre år",
       "Den har ökat med sju år"
     ],
-    förklaring: "Mellan 1990 och 2021 ökade genomsnittsåldern för kvinnors första giftermål med 25%, vilket uppgår till ca. 7 år.",
+    förklaring: "Mellan 1990 och 2021 ökade genomsnittsåldern för kvinnors första giftermål med 25 procent, vilket uppgår till ca. 7 år.",
     bild: '<iframe src="images/ålder_giftermål_sverige.html" class="iframe" frameborder="0"></iframe>',
-    förklaring2: "När OECD undersökt denna trend för alla OECD-länder kan man notera att denna trend sker i alla länder. Sverige är dock, tillsammans med Spanien, det OECD-land med högst genomsnittsålder för kvinnors första giftermål.",
+    förklaring2: "När OECD undersökt denna trend för alla OECD-länder kan man notera att denna trend sker i samtliga länder. Sverige är dock, tillsammans med Spanien, det OECD-land med högst genomsnittsålder för kvinnors första giftermål.",
     bild2: '<iframe src="images/ålder_giftermål.html" class="iframe" frameborder="0"></iframe>'
   },
   {
@@ -116,6 +116,36 @@ const frågor = [
     bild: '<iframe src="images/satisfaction.html" class="iframe" frameborder="0"></iframe>',
     förklaring2: "Att Sverige är ett rikt land är sannolikt en starkt bidragande faktor till detta, då det finns en tydlig korrelationen mellan länders GDP och livstillfredställelse",
     bild2: '<iframe src="images/gdp_satisfaction.html" class="iframe" frameborder="0"></iframe>'
+  },
+  {
+    kategori: "MÅENDE",
+    fråga: "Hur har antalet suicidfall i Sverige förändrats sedan 1950?",
+    korrekt: "Det har minskat med en tredjedel",
+    alternativ: [
+      "Det har ökat med två tredjedelar",
+      "Det har ökat med en tredjedel",
+      "Det har minskat med en tredjedel",
+      "Det har minskat med två tredjedelar"
+    ],
+    förklaring: "Sedan 1950 har antalet suicidfall minskat från ca. 15 fall per 100 000 invånare till ca. 10 fall per 100 000 invånare. Denna trend noteras i alla åldersgrupper, även om den inte är lika tydlig i åldersgruppen 15-24 år.",
+    bild: '<iframe src="images/suicid_sverige.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "Ur en internationell synvinkel ligger Sverige i den övre halvan av länderna i världen gällande suicid, men det finns några länder som har betydligt högre suicidfrekvens än Sverige.",
+    bild2: '<iframe src="images/suicid.html" class="iframe" frameborder="0"></iframe>'
+  },
+{
+    kategori: "MÅENDE",
+    fråga: "Hur stor andel av Sveriges hushåll är singelhushåll?",
+    korrekt: "Ungefär 40 procent",
+    alternativ: [
+      "Ungefär 20 procent",
+      "Ungefär 30 procent",
+      "Ungefär 40 procent",
+      "Ungefär 50 procent"
+    ],
+    förklaring: "Mellan 2004-2018 låg andelen singelhushåll i Sverige stabilt på strax över 40 procent.",
+    bild: '<iframe src="images/singelhushåll_sverige.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "Globalt sett är denna trend något uppåtgående generellt sett. De nordiska länderna är de länder med högst andel singelhushåll i världen, där Norge, Danmark, Finland och Sverige ligger i toppen.",
+    bild2: '<iframe src="images/singelhushåll.html" class="iframe" frameborder="0"></iframe>'
   }
 ]
 

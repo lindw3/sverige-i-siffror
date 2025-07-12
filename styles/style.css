@@ -466,8 +466,23 @@ button:hover {
   display: block;
 }
 
+#fullscreen-link-2 {
+  font-size: 1rem;
+  margin-top: 8px;
+  color: #5991E5;
+  cursor: pointer;
+  text-decoration: underline;
+  display: block;
+}
+
 @media (max-width: 768px) {
   #fullscreen-link {
+    display:none; /* Döljer länken på mindre skärmar, då mobiltelefoner inte stödjer den funktionen */
+  }
+}
+
+@media (max-width: 768px) {
+  #fullscreen-link-2 {
     display:none; /* Döljer länken på mindre skärmar, då mobiltelefoner inte stödjer den funktionen */
   }
 }
