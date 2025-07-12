@@ -466,7 +466,7 @@ button:hover {
   display: block;
 }
 
-#fullscreen-link-2 {
+.fullscreen-link-2 {
   font-size: 1rem;
   margin-top: 8px;
   color: #5991E5;
@@ -482,7 +482,7 @@ button:hover {
 }
 
 @media (max-width: 768px) {
-  #fullscreen-link-2 {
+  .fullscreen-link-2 {
     display:none; /* Döljer länken på mindre skärmar, då mobiltelefoner inte stödjer den funktionen */
   }
 }

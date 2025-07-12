@@ -144,8 +144,53 @@ const frågor = [
     ],
     förklaring: "Mellan 2004-2018 låg andelen singelhushåll i Sverige stabilt på strax över 40 procent.",
     bild: '<iframe src="images/singelhushåll_sverige.html" class="iframe" frameborder="0"></iframe>',
-    förklaring2: "Globalt sett är denna trend något uppåtgående generellt sett. De nordiska länderna är de länder med högst andel singelhushåll i världen, där Norge, Danmark, Finland och Sverige ligger i toppen.",
+    förklaring2: "Globalt sett är denna trend något uppåtgående generellt. De nordiska länderna är de länder med högst andel singelhushåll i världen, där Norge, Danmark, Finland och Sverige ligger i toppen.",
     bild2: '<iframe src="images/singelhushåll.html" class="iframe" frameborder="0"></iframe>'
+  },
+  {
+    kategori: "MÅENDE",
+    fråga: "Vilka är de två klart vanligaste uppskattade orsakerna till dödsfall i Sverige?",
+    korrekt: "Kardiovaskulära sjukdomar och cancer",
+    alternativ: [
+      "Neurologiska sjukdomar och luftvägsinfektioner/tuberkulos",
+      "Kardiovaskulära sjukdomar och cancer",
+      "Luftvägsinfektioner/tuberkulos och kroniska luftvägssjukdomar",
+      "Cancer och neurologiska sjukdomar"
+    ],
+    förklaring: "Utifrån 21 olika kategoriseringar uppskattades dessa två stå för nästan 60 procent av dödsfallen i Sverige under 2021. Nedan visas de fem vanligaste kategoriseringarna.",
+    bild: '<iframe src="images/dödsorsaker_sverige.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "Vilka dödsorsaker som är vanligast, och till vilken magnitud dessa sjukdomar leder till död, skiljer sig mycket åt beroende på länders välstånd. Kardiovaskulära sjukdomar och cancer är bland de vanligaste dödsorsakerna även i länder med lägre välstånd (mätt i Social Development Index, SDI), men luftvägsinfektioner och tuberkulos är vanligast.",
+    bild2: '<iframe src="images/dödsorsaker_sverige_lowsdi.html" class="iframe" frameborder="0"></iframe>'
+  },
+ {
+    kategori: "EKONOMI",
+    fråga: "Hur står sig Sveriges GDP per capita jämfört med för 100 år sedan?",
+    korrekt: "Den har nästan niodubblats",
+    alternativ: [
+      "Den är i stort sett oförändrat",
+      "Den har nästan tredubblats",
+      "Den har nästan sexdubblats",
+      "Den har nästan niodubblats"
+    ],
+    förklaring: "Enligt estimeringar från Madisson Project var Sveriges GDP per capita i stort sett oförändrad fram till industrialiseringen på 1870-talet, då den ökade dramatiskt. Ökningen har varit särskilt kraftig sedan efterkrigstiden.",
+    bild: '<iframe src="images/gdp_sverige.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "Denna trend har vi sett i stora drag globalt, även om det finns länder som inte har noterat denna uppåtgående trend.",
+    bild2: '<iframe src="images/gdp.html" class="iframe" frameborder="0"></iframe>'
+  },
+ {
+    kategori: "EKONOMI",
+    fråga: "Gini-koefficienten är ett mått på ojämlikhet i inkomstfördelning på en skala mellan 0 och 1, där en högre siffra innebär större ojämlikhet. Hur har Gini-koefficienten i Sverige förändrats sedan 1975?",
+    korrekt: "Den har ökat med över 20 procent",
+    alternativ: [
+      "Den är i stort sett oförändrat",
+      "Den har ökat med över 20 procent",
+      "Den har ökat med över 40 procent",
+      "Den har ökat med över 60 procent"
+    ],
+    förklaring: "Gini-koefficienten har ökat i stadig takt sedan 1975, vilket innebär de totala inkomsterna koncentrerats till en mindre andel av befolkningen.",
+    bild: '<iframe src="images/gini_sverige.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "Ur ett internationellt hänseende har Sverige förhållandevis jämlika inkomster. Värt att tillägga är att Gini-koefficienten inte tar hänsyn till de omfördelande effekter som offentligt finansierad välfärd innebär, där det finns stora skillnader mellan länder. Den tar inte heller hänsyn till förmögenheter, vilket innebär att Sveriges omfattande pensionssystem faller bort från siffrorna.",
+    bild2: '<iframe src="images/gini.html" class="iframe" frameborder="0"></iframe>'
   }
 ]
 
