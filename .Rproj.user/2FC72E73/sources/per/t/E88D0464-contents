@@ -833,7 +833,43 @@ colnames(df) <- c("Land" , "Kod" , "År" , "Social protection" ,
                   "Recreation, culture and religion" , 
                   "Environmental protection")
 
+df <- df %>% 
+  filter(
+    År == 2023
+  ) %>% 
+  pivot_longer(!c(1:3) , names_to = "Kategori" , 
+               values_to = "Andel")
 
+p <- df %>% 
+  filter(Land == "Sweden") %>% 
+  ggplot(aes(x = fct_reorder(Kategori, Andel, .desc = TRUE), y = Andel ,
+             text = paste("Kategori:" , Kategori , 
+                          "\nAndel av statliga utgifter, %:" , round(Andel, 2)))) +
+  geom_col(fill = "#5991E5") +
+  sis_theme +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
+  xlab(NULL) + ylab("Andel av statliga utgifter, %")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/statligautgifter_fördelning_sverige.html")
+
+  # OECD-länder
+p <- df %>% 
+  filter(Land == "OECD countries") %>% 
+  ggplot(aes(x = fct_reorder(Kategori, Andel, .desc = TRUE), y = Andel ,
+             text = paste("Kategori:" , Kategori , 
+                          "\nAndel av statliga utgifter, %:" , round(Andel, 2)))) +
+  geom_col(fill = "#5991E5") +
+  sis_theme +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
+  xlab(NULL) + ylab("Andel av statliga utgifter, %")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/statligautgifter_fördelning.html")
 
 
 
@@ -844,10 +880,54 @@ colnames(df) <- c("Land" , "Kod" , "År" , "Social protection" ,
 
   # Skatter som andel av statens inkomster (kolla bara Sverige)
 df <- read.csv("https://ourworldindata.org/grapher/tax-revenue-national-income-longrun.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod", "År" , "Andel")
+
+p <- df %>% 
+  filter(Land == "Sweden") %>% 
+  ggplot(aes(x = År, y = Andel  , group = 2,
+             text = paste("År:" , År , 
+                          "\nAndel av GDP, %:" , round(Andel, 2)))) +
+  geom_line(linewidth = 1 , colour = "#5991E5") +
+  sis_theme +
+  scale_x_continuous(breaks = c(1880, max(df$År))) +
+  scale_y_continuous(limits = c(0 , 55) ,
+                     breaks =  seq(0, 50, 10)) +
+  xlab(NULL) + ylab("Andel av GDP, %")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/skatter_statligainkomster_sverige.html")
 
 
   # Skatteintäkter som andel av GDP (jämfört med andra länder)
 df <- read.csv("https://ourworldindata.org/grapher/tax-revenues-as-a-share-of-gdp-unu-wider.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod", "År" , "Andel")
+
+p <- df %>%
+  ggplot(aes(x = År, y = Andel, group = Land, 
+             alpha = Land == "Sweden" ,
+             linewidth = Land == "Sweden" ,
+             colour = Land == "Sweden",
+             text = paste("År:" , År , 
+                          "\nLand:" , Land,
+                          "\nAndel av GDP, %:" , round(Andel, 2)))) +
+  geom_line() +
+  scale_colour_manual(values = c("TRUE" = "#D7E559", "FALSE" = "#5991E5")) +
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0.25)) +
+  scale_linewidth_manual(values = c("TRUE" = 1.35, "FALSE" = 0.5)) +
+  sis_theme +
+  scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
+  scale_y_continuous(limits = c(0 , max(df$Andel + 5)) ,
+                     breaks =  seq(0, 60, 10)) +
+  guides(alpha = "none", linewidth = "none" ,colour = "none") +
+  xlab(NULL) +
+  ylab("Andel av GDP, %")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/skatter_statligainkomster.html")
 
 
 
@@ -874,6 +954,8 @@ df <- read.csv("https://ourworldindata.org/grapher/gender-wage-gap-oecd.csv?v=1&
 
 
 
+
+
   # Andel kvinnor i chefspositioner
 df <- read.csv("https://ourworldindata.org/grapher/proportion-of-women-in-senior-and-middle-management-positions.csv?v=1&csvType=full&useColumnShortNames=true")
 
@@ -889,14 +971,32 @@ df <- read.csv("https://ourworldindata.org/grapher/proportion-of-women-in-senior
 
 
 
+
+
   # Medelvärde i arbetade timmar/år
 df <- read.csv("https://ourworldindata.org/grapher/annual-working-hours-per-worker.csv?v=1&csvType=full&useColumnShortNames=true")
 
 
   # ... jämfört med andra länder
+        # "Sverige är även ett av de länder med flest antal lediga dagar från arbete i form av semester och röda dagar"
 df <- read.csv("https://ourworldindata.org/grapher/annual-working-hours-per-person-employed.csv?v=1&csvType=full&useColumnShortNames=true")
 
 
+
+
+
+
+
+
+
+
+  # Vad är viktigast - arbete eller fritid?
+leisure <- read.csv("https://ourworldindata.org/grapher/how-important-leisure-is-to-people-in-life.csv?v=1&csvType=full&useColumnShortNames=true")
+work <- read.csv("https://ourworldindata.org/grapher/how-important-work-is-to-people-in-life.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+
+  # Count för hur många länder där arbete är viktigast, fritid är viktigast eller de är likvärdiga
 
 
 
@@ -919,11 +1019,9 @@ df <- read_excel("data/pisa_data.xlsx")
 
 
 
-  # Andel av nationalinkomst på bistånd (FN:s mål är 0.7%)
-df <- read.csv("https://ourworldindata.org/grapher/foreign-aid-given-as-a-share-of-national-income.csv?v=1&csvType=full&useColumnShortNames=true")
 
 
-  # ... jämfört med andra länder
+
 
 
 
@@ -941,8 +1039,13 @@ df <- read.csv("https://ourworldindata.org/grapher/annual-co2-emissions-per-coun
 
 
 
+
+
+
   # CO2-utsläpp per capita
 df <- read_excel("data/co2_percapita.xlsx")
+
+
 
 
 
@@ -959,5 +1062,18 @@ df <- read.csv("https://ourworldindata.org/grapher/per-capita-energy-source-stac
 
 
 
+
+
+
+
+
+
+
+
+# Andel av nationalinkomst på bistånd (FN:s mål är 0.7%)
+df <- read.csv("https://ourworldindata.org/grapher/foreign-aid-given-as-a-share-of-national-income.csv?v=1&csvType=full&useColumnShortNames=true")
+
+
+# ... jämfört med andra länder
 
 

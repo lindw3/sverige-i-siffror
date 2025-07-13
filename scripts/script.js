@@ -166,6 +166,51 @@ const frågor = [
     förklaring2: "Ur ett internationellt hänseende har Sverige förhållandevis jämlika inkomster. Värt att tillägga är att Gini-koefficienten inte tar hänsyn till de omfördelande effekter som offentligt finansierad välfärd innebär, där det finns stora skillnader mellan länder. Den tar inte heller hänsyn till förmögenheter, vilket innebär att Sveriges omfattande pensionssystem faller bort från siffrorna.",
     bild2: '<iframe src="images/gini.html" class="iframe" frameborder="0"></iframe>'
   },
+ {
+    kategori: "EKONOMI",
+    fråga: "Hur stor andel av Sveriges BNP utgör statliga utgifter?",
+    korrekt: "Ungefär 50 procent",
+    alternativ: [
+      "Ungefär 10 procent",
+      "Ungefär 30 procent",
+      "Ungefär 50 procent",
+      "Ungefär 70 procent"
+    ],
+    förklaring: "Sedan mitten på 30-talet har vi sett en ökning av statliga utgifter som andel av BNP, med en extrem topp under finanskrisen i början av 90-talet.",
+    bild: '<iframe src="images/statligautgifter_sverige.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "Internationellt sett har vi sett liknande trender, men jämfört med övriga länder har Sverige gått från att ha relativt låga statliga utgifter i förhållande till GDP till att ligga i toppskiktet.",
+    bild2: '<iframe src="images/statligautgifter.html" class="iframe" frameborder="0"></iframe>'
+  },
+ {
+    kategori: "EKONOMI",
+    fråga: "Vilken kostnadspost utgör störst andel av Sveriges statliga utgifter?",
+    korrekt: "Socialt skydd (stöd till sjuka, funktionsnedsatta, arbetslösa, pensionärer etc.)",
+    alternativ: [
+      "Hälso- och sjukvård",
+      "Allmän ordning och säkerhet",
+      "Utbildning",
+      "Socialt skydd (stöd till sjuka, funktionsnedsatta, arbetslösa, pensionärer etc.)"
+    ],
+    förklaring: "Socialt skydd utgör med råge den största kostnadsposten i Sveriges statliga utgifter, där Sveriges omfattande pensionssystem är en stor del av posten.",
+    bild: '<iframe src="images/statligautgifter_fördelning_sverige.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "För OECD-länderna i stort är fortfarande socialt skydd den största kostnadsposten, även om den inte utgör en lika stor andel av de totala kostnaderna som i Sverige. I stället investeras en större andel i hälso- och sjukvård, försvar och allmän ordning och säkerhet.",
+    bild2: '<iframe src="images/statligautgifter_fördelning.html" class="iframe" frameborder="0"></iframe>'
+  },
+ {
+    kategori: "EKONOMI",
+    fråga: "Hur stor andel av Sveriges nationalinkomster kommer från skatter?",
+    korrekt: "Ungefär 50 procent",
+    alternativ: [
+      "Ungefär 10 procent",
+      "Ungefär 30 procent",
+      "Ungefär 50 procent",
+      "Ungefär 70 procent"
+    ],
+    förklaring: "Logiskt, utifrån frågan om statliga utgifter! I takt med att de statliga utgifterna ökat har mer skatteintäkter behövts. Sveriges skatteintäkter ökade stadigt sedan 1930-talet, för att plana ut runt 50 procent från 90-talet och framåt.",
+    bild: '<iframe src="images/skatter_statligainkomster_sverige.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "För att kunna jämföra med andra länder tittar vi på annan data som i stället gäller skatter som andel av BNP. Denna data finns tillgänglig sedan 1980, och sedan dess har Sverige befunnit sig i toppskiktet.",
+    bild2: '<iframe src="images/skatter_statligainkomster.html" class="iframe" frameborder="0"></iframe>'
+  },
   {
     kategori: "ARBETE",
     fråga: "Hur stor andel av anställda är inom näringslivet?",
