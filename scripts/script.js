@@ -33,32 +33,6 @@ const frågor = [
     förklaring: "Två partier, Miljöpartiet och Vänsterpartiet, har fler kvinnliga än manliga kommunalt förtroendevalda under mandatperioden 2023-2026, vilket är de enda partier där detta hänt sedan statistik började föras 2007. Totalt sett har andelen kvinnliga kommunalt förtroendevalda legat stabilt på strax över 40 procent.",
     bild: '<iframe src="images/förtroendevalda_kön.html" class="iframe" frameborder="0"></iframe>'
   },
-  {
-    kategori: "ARBETE",
-    fråga: "Hur stor andel av anställda är inom näringslivet?",
-    korrekt: "70 procent",
-    alternativ: [
-      "30 procent",
-      "50 procent",
-      "70 procent",
-      "90 procent"
-    ],
-    förklaring: "Totalt sett är 70 procent av alla anställda inom näringslivet. Det finns dock stora skillnader mellan män och kvinnor, där kvinnor är överrepresenterade inom kommun och region medan män är överrepresenterade inom privat sektor.",
-    bild: '<iframe src="images/anställning_sektor_kön.html" class="iframe" frameborder="0"></iframe>'
-  },
-  {
-    kategori: "ARBETE",
-    fråga: "Inom vilken sektor är skillnaden i genomsnittslön mellan män och kvinnor högst?",
-    korrekt: "Region",
-    alternativ: [
-      "Kommun",
-      "Privat",
-      "Region",
-      "Statlig"
-    ],
-    förklaring: "Inom den regionala sektorn tjänar män i genomsnitt 21 procent mer än kvinnor. Skillnaderna är som minst inom kommunal sektor, där män i genomsnitt tjänar 1 procent mer än kvinnor.",
-    bild: '<iframe src="images/lön_sektor_kön.html" class="iframe" frameborder="0"></iframe>'
-  },
 {
     kategori: "UTBILDNING", 
     fråga: "Hur mycket mer tjänar i genomsnitt de med eftergymnasial utbildning 3+ år jämfört med de med 3-årig gymnasial utbildning?",
@@ -103,6 +77,21 @@ const frågor = [
     bild2: '<iframe src="images/ålder_giftermål.html" class="iframe" frameborder="0"></iframe>'
   },
   {
+    kategori: "FAMILJ",
+    fråga: "Hur stor andel av Sveriges hushåll är singelhushåll?",
+    korrekt: "Ungefär 40 procent",
+    alternativ: [
+      "Ungefär 20 procent",
+      "Ungefär 30 procent",
+      "Ungefär 40 procent",
+      "Ungefär 50 procent"
+    ],
+    förklaring: "Mellan 2004-2018 låg andelen singelhushåll i Sverige stabilt på strax över 40 procent.",
+    bild: '<iframe src="images/singelhushåll_sverige.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "Globalt sett är denna trend något uppåtgående generellt. De nordiska länderna är de länder med högst andel singelhushåll i världen, där Norge, Danmark, Finland och Sverige ligger i toppen.",
+    bild2: '<iframe src="images/singelhushåll.html" class="iframe" frameborder="0"></iframe>'
+  },
+  {
     kategori: "MÅENDE",
     fråga: "Vart befinner sig Sverige globalt sett gällande livstillfredställelse?",
     korrekt: "Mellan plats 1-5",
@@ -131,21 +120,6 @@ const frågor = [
     bild: '<iframe src="images/suicid_sverige.html" class="iframe" frameborder="0"></iframe>',
     förklaring2: "Ur en internationell synvinkel ligger Sverige i den övre halvan av länderna i världen gällande suicid, men det finns några länder som har betydligt högre suicidfrekvens än Sverige.",
     bild2: '<iframe src="images/suicid.html" class="iframe" frameborder="0"></iframe>'
-  },
-{
-    kategori: "MÅENDE",
-    fråga: "Hur stor andel av Sveriges hushåll är singelhushåll?",
-    korrekt: "Ungefär 40 procent",
-    alternativ: [
-      "Ungefär 20 procent",
-      "Ungefär 30 procent",
-      "Ungefär 40 procent",
-      "Ungefär 50 procent"
-    ],
-    förklaring: "Mellan 2004-2018 låg andelen singelhushåll i Sverige stabilt på strax över 40 procent.",
-    bild: '<iframe src="images/singelhushåll_sverige.html" class="iframe" frameborder="0"></iframe>',
-    förklaring2: "Globalt sett är denna trend något uppåtgående generellt. De nordiska länderna är de länder med högst andel singelhushåll i världen, där Norge, Danmark, Finland och Sverige ligger i toppen.",
-    bild2: '<iframe src="images/singelhushåll.html" class="iframe" frameborder="0"></iframe>'
   },
   {
     kategori: "MÅENDE",
@@ -187,11 +161,37 @@ const frågor = [
       "Den har ökat med över 40 procent",
       "Den har ökat med över 60 procent"
     ],
-    förklaring: "Gini-koefficienten har ökat i stadig takt sedan 1975, vilket innebär de totala inkomsterna koncentrerats till en mindre andel av befolkningen.",
+    förklaring: "Gini-koefficienten har ökat i stadig takt sedan 1975, vilket innebär att de totala inkomsterna koncentrerats till en mindre andel av befolkningen.",
     bild: '<iframe src="images/gini_sverige.html" class="iframe" frameborder="0"></iframe>',
     förklaring2: "Ur ett internationellt hänseende har Sverige förhållandevis jämlika inkomster. Värt att tillägga är att Gini-koefficienten inte tar hänsyn till de omfördelande effekter som offentligt finansierad välfärd innebär, där det finns stora skillnader mellan länder. Den tar inte heller hänsyn till förmögenheter, vilket innebär att Sveriges omfattande pensionssystem faller bort från siffrorna.",
     bild2: '<iframe src="images/gini.html" class="iframe" frameborder="0"></iframe>'
-  }
+  },
+  {
+    kategori: "ARBETE",
+    fråga: "Hur stor andel av anställda är inom näringslivet?",
+    korrekt: "70 procent",
+    alternativ: [
+      "30 procent",
+      "50 procent",
+      "70 procent",
+      "90 procent"
+    ],
+    förklaring: "Totalt sett är 70 procent av alla anställda inom näringslivet. Det finns dock stora skillnader mellan män och kvinnor, där kvinnor är överrepresenterade inom kommun och region medan män är överrepresenterade inom privat sektor.",
+    bild: '<iframe src="images/anställning_sektor_kön.html" class="iframe" frameborder="0"></iframe>'
+  },
+  {
+    kategori: "ARBETE",
+    fråga: "Inom vilken sektor är skillnaden i genomsnittslön mellan män och kvinnor högst?",
+    korrekt: "Region",
+    alternativ: [
+      "Kommun",
+      "Privat",
+      "Region",
+      "Statlig"
+    ],
+    förklaring: "Inom den regionala sektorn tjänar män i genomsnitt 21 procent mer än kvinnor. Skillnaderna är som minst inom kommunal sektor, där män i genomsnitt tjänar 1 procent mer än kvinnor.",
+    bild: '<iframe src="images/lön_sektor_kön.html" class="iframe" frameborder="0"></iframe>'
+  },
 ]
 
 
