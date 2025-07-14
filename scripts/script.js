@@ -213,6 +213,21 @@ const frågor = [
   },
   {
     kategori: "ARBETE",
+    fråga: "Hur har antalet arbetstimmar per år (räknat per person i arbete) förändrats sedan slutet på 1800-talet?",
+    korrekt: "Det har halverats",
+    alternativ: [
+      "Det är oförändrat",
+      "Det har minskat med en fjärdedel",
+      "Det har minskat med en tredjedel",
+      "Det har halverats"
+    ],
+    förklaring: "1870 uppskattades en genomsnittlig arbetare arbeta i nästan 3500 timmar per år. Sedan dess minskade antalet arbetstimmar drastiskt, för att planas ut på ca. 15-1600 timmar per år sedan 1980.",
+    bild: '<iframe src="images/arbetstimmar_sverige.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "Jämfört med andra länder är Sverige ett av de länder där personer i arbete arbetar minst timmar per år. Sverige är, efter Tyskland och Italien, det land som har flest semesterdagar och röda dagar, vilket sannolikt bidrar till detta.",
+    bild2: '<iframe src="images/arbetstimmar.html" class="iframe" frameborder="0"></iframe>'
+  },
+  {
+    kategori: "ARBETE",
     fråga: "Hur stor andel av anställda är inom näringslivet?",
     korrekt: "70 procent",
     alternativ: [
@@ -226,6 +241,21 @@ const frågor = [
   },
   {
     kategori: "ARBETE",
+    fråga: "Hur mycket mer tjänar män än kvinnor i genomsnitt?",
+    korrekt: "10 procent",
+    alternativ: [
+      "10 procent",
+      "20 procent",
+      "30 procent",
+      "40 procent"
+    ],
+    förklaring: "Sedan 90-talet har det ojusterade lönegapet mellan mäns och kvinnors genomsnittslöner minskat, där män tjänat 10% mer än kvinnor i genomsnitt sedan 2019. När man justerar för ålder, utbildning, arbetstid och sektor halveras lönegapet mellan män och kvinnor.",
+    bild: '<iframe src="images/lönegap_sverige.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "Vid jämförelse med andra länder (data finns fram till 2016) kan man se att det är många länder som 'kommit ikapp' Sverige och minskat lönegapet under andra halvan av 1900-talet.",
+    bild2: '<iframe src="images/lönegap.html" class="iframe" frameborder="0"></iframe>'
+  },
+  {
+    kategori: "ARBETE",
     fråga: "Inom vilken sektor är skillnaden i genomsnittslön mellan män och kvinnor högst?",
     korrekt: "Region",
     alternativ: [
@@ -236,6 +266,21 @@ const frågor = [
     ],
     förklaring: "Inom den regionala sektorn tjänar män i genomsnitt 21 procent mer än kvinnor. Skillnaderna är som minst inom kommunal sektor, där män i genomsnitt tjänar 1 procent mer än kvinnor.",
     bild: '<iframe src="images/lön_sektor_kön.html" class="iframe" frameborder="0"></iframe>'
+  },
+  {
+    kategori: "ARBETE",
+    fråga: "Hur stor andel av chefspositioner innehas av kvinnor?",
+    korrekt: "Över 40 procent",
+    alternativ: [
+      "Över 20 procent",
+      "Över 30 procent",
+      "Över 40 procent",
+      "Över 50 procent"
+    ],
+    förklaring: "Sedan millenieskiftet har andelen kvinnliga chefer (ledningspositioner och mellanchefer) ökat med nästan 15 procentenheter, och har legat på över 40 procent sedan 2019.",
+    bild: '<iframe src="images/kvinnligachefer_sverige.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "Utifrån ett internationellt perspektiv har Sverige gått från att ligga i mittskiktet vid 00-talet till att vara ett av de länder med högst andel kvinnliga chefer i världen.",
+    bild2: '<iframe src="images/kvinnligachefer.html" class="iframe" frameborder="0"></iframe>'
   },
 ]
 

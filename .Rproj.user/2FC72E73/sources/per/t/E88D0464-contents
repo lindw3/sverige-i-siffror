@@ -940,9 +940,55 @@ saveWidget(img, "images/skatter_statligainkomster.html")
 
   # Ojusterat lönegap mellan män och kvinnor
 df <- read.csv("https://ourworldindata.org/grapher/gender-wage-gap-oecd.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod", "År" , "Andel")
+lönegap_kön <- read_excel("data/lönegap_kön.xlsx")
+df <- union(df, lönegap_kön) # Komplettering med data från SCB efter 2013 
+
+p <- df %>% 
+  filter(Land == "Sweden") %>% 
+  ggplot(aes(x = År, y = Andel  , group = 2,
+             text = paste("År:" , År , 
+                          "\nLönegap, %:" , round(Andel, 2)))) +
+  geom_line(linewidth = 1 , colour = "#5991E5") +
+  sis_theme +
+  scale_x_continuous(breaks = c(1975, max(df$År))) +
+  scale_y_continuous(limits = c(0 , 30) ,
+                     breaks =  seq(0, 30, 10)) +
+  xlab(NULL) + ylab("Skillnad i genomsnittslön, %")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/lönegap_sverige.html")
 
 
-  # ... jämfört med andra länder
+# ... jämfört med andra länder
+p <- df %>%
+  filter(År %in% c(1970:2016)) %>% 
+  ggplot(aes(x = År, y = Andel, group = Land, 
+             alpha = Land == "Sweden" ,
+             linewidth = Land == "Sweden" ,
+             colour = Land == "Sweden",
+             text = paste("År:" , År , 
+                          "\nLand:" , Land,
+                          "\nLönegap, %:" , round(Andel, 2)))) +
+  geom_line() +
+  scale_colour_manual(values = c("TRUE" = "#D7E559", "FALSE" = "#5991E5")) +
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0.25)) +
+  scale_linewidth_manual(values = c("TRUE" = 1.35, "FALSE" = 0.5)) +
+  sis_theme +
+  scale_x_continuous(breaks = c(min(df$År), 2016)) +
+  scale_y_continuous(limits = c(0 , max(df$Andel + 5)) ,
+                     breaks =  seq(0, 60, 10)) +
+  guides(alpha = "none", linewidth = "none" ,colour = "none") +
+  xlab(NULL) +
+  ylab("Skillnad i genomsnittslön, %")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/lönegap.html")
+
 
 
 
@@ -958,9 +1004,51 @@ df <- read.csv("https://ourworldindata.org/grapher/gender-wage-gap-oecd.csv?v=1&
 
   # Andel kvinnor i chefspositioner
 df <- read.csv("https://ourworldindata.org/grapher/proportion-of-women-in-senior-and-middle-management-positions.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod", "År" , "Andel")
+
+p <- df %>% 
+  filter(Land == "Sweden") %>% 
+  ggplot(aes(x = År, y = Andel  , group = 2,
+             text = paste("År:" , År , 
+                          "\nAndel kvinnor, %:" , round(Andel, 2)))) +
+  geom_line(linewidth = 1 , colour = "#5991E5") +
+  sis_theme +
+  scale_x_continuous(breaks = c(2000, 2022)) +
+  scale_y_continuous(limits = c(0 , 50) ,
+                     breaks =  seq(0, 50, 10)) +
+  xlab(NULL) + ylab("Andel kvinnor i chefsposition, %")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/kvinnligachefer_sverige.html")
 
 
-  # ... jämfört med andra länder
+# ... jämfört med andra länder
+p <- df %>%
+  ggplot(aes(x = År, y = Andel, group = Land, 
+             alpha = Land == "Sweden" ,
+             linewidth = Land == "Sweden" ,
+             colour = Land == "Sweden",
+             text = paste("År:" , År , 
+                          "\nLand:" , Land,
+                          "\nAndel kvinnor, %:" , round(Andel, 2)))) +
+  geom_line() +
+  scale_colour_manual(values = c("TRUE" = "#D7E559", "FALSE" = "#5991E5")) +
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0.25)) +
+  scale_linewidth_manual(values = c("TRUE" = 1.35, "FALSE" = 0.5)) +
+  sis_theme +
+  scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
+  scale_y_continuous(limits = c(0 , max(df$Andel + 5)) ,
+                     breaks =  seq(0, 60, 10)) +
+  guides(alpha = "none", linewidth = "none" ,colour = "none") +
+  xlab(NULL) +
+  ylab("Andel kvinnor i chefsposition, %")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/kvinnligachefer.html")
 
 
 
@@ -975,11 +1063,53 @@ df <- read.csv("https://ourworldindata.org/grapher/proportion-of-women-in-senior
 
   # Medelvärde i arbetade timmar/år
 df <- read.csv("https://ourworldindata.org/grapher/annual-working-hours-per-worker.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod", "År" , "Antal")
+
+p <- df %>% 
+  filter(Land == "Sweden") %>% 
+  ggplot(aes(x = År, y = Antal  , group = 2,
+             text = paste("År:" , År , 
+                          "\nArbetstimmar/år:" , round(Antal)))) +
+  geom_line(linewidth = 1 , colour = "#5991E5") +
+  sis_theme +
+  scale_x_continuous(breaks = c(1870, 1980, 2017)) +
+  scale_y_continuous(limits = c(0 , 3500) ,
+                     breaks =  seq(0, 3500, 500)) +
+  xlab(NULL) + ylab("Genomsnittligt antal arbetstimmar/anställd/år")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/arbetstimmar_sverige.html")
 
 
-  # ... jämfört med andra länder
-        # "Sverige är även ett av de länder med flest antal lediga dagar från arbete i form av semester och röda dagar"
-df <- read.csv("https://ourworldindata.org/grapher/annual-working-hours-per-person-employed.csv?v=1&csvType=full&useColumnShortNames=true")
+# ... jämfört med andra länder
+    # "Sverige är även ett av de länder med flest antal lediga dagar från arbete i form av semester och röda dagar"
+p <- df %>%
+  ggplot(aes(x = År, y = Antal, group = Land, 
+             alpha = Land == "Sweden" ,
+             linewidth = Land == "Sweden" ,
+             colour = Land == "Sweden",
+             text = paste("År:" , År , 
+                          "\nLand:" , Land,
+                          "\nArbetstimmar/år:" , round(Antal, 2)))) +
+  geom_line() +
+  scale_colour_manual(values = c("TRUE" = "#D7E559", "FALSE" = "#5991E5")) +
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0.25)) +
+  scale_linewidth_manual(values = c("TRUE" = 1.35, "FALSE" = 0.5)) +
+  sis_theme +
+  scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
+  scale_y_continuous(limits = c(0 , max(df$Antal + 100)) ,
+                     breaks =  seq(0, 3500, 500)) +
+  guides(alpha = "none", linewidth = "none" ,colour = "none") +
+  xlab(NULL) +
+  ylab("Genomsnittligt antal arbetstimmar/anställd/år")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/arbetstimmar.html")
+
 
 
 
