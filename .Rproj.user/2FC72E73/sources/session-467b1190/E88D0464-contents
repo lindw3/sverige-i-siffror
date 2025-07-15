@@ -1150,7 +1150,6 @@ work <- read.csv("https://ourworldindata.org/grapher/how-important-work-is-to-pe
 
   # Resultat i PISA
 df <- read_excel("data/pisa_data.xls")
-
 df$Medelvärde <- as.numeric(df$Medelvärde)
 df$År <- as.numeric(df$År)
 
@@ -1298,11 +1297,38 @@ saveWidget(img, "images/co2.html")
 
 
 
-  # Energimix (fossilt, kärnkraft och förnybart)
+  # Energimix (fossilt, kärnkraft och förnybart, kwh per capita)
 df <- read.csv("https://ourworldindata.org/grapher/per-capita-energy-source-stacked.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land", "Kod" , "År" , "Fossilt", "Kärnkraft" , "Förnybart")
+
+df <- df %>%
+  pivot_longer(!c(1:3) , names_to = "Kategori" , 
+               values_to = "Antal")
+
+p <- df %>% 
+  filter(Land == "Sweden") %>% 
+  ggplot(aes(x = År, y = Antal , 
+             group = Kategori, colour = Kategori,
+             text = paste("Kategori:" , Kategori , 
+                          "\nKilowatt/h:" , round(Antal)))) +
+  geom_line() +
+  scale_colour_manual(values = c(
+    "Fossilt" = "#5991E5",
+    "Kärnkraft" = "#E56759",
+    "Förnybart" = "#59E5AD"
+  )) +
+  sis_theme +
+  scale_x_continuous(breaks = c(1965, 2023)) +
+  xlab(NULL) + ylab("Kilowatt/h per capita")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/energimix_sverige.html")
+
+# ...Andel från respektive källa, Sverige jämfört med grupper utifrån rikedom
 
 
-  # ... jämfört med andra länder
 
 
 
@@ -1313,11 +1339,50 @@ df <- read.csv("https://ourworldindata.org/grapher/per-capita-energy-source-stac
 
 
 
-
-# Andel av nationalinkomst på bistånd (FN:s mål är 0.7%)
+# Andel av bruttonationalinkomst (GNI) på bistånd (FN:s mål är 0.7%)
 df <- read.csv("https://ourworldindata.org/grapher/foreign-aid-given-as-a-share-of-national-income.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod", "År" , "Andel", "Annotering")
+
+p <- df %>% 
+  filter(Land == "Sweden") %>% 
+  ggplot(aes(x = År, y = Andel  , group = 2,
+             text = paste("År:" , År , 
+                          "\nAndel av GNI:" , round(Andel, 3)))) +
+  geom_line(linewidth = 1 , colour = "#5991E5") +
+  sis_theme +
+  scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
+  scale_y_continuous(limits = c(0 , 1.5) ,
+                     breaks =  0.7) +
+  xlab(NULL) + ylab("Andel av bruttonationalinkomst (GNI), %")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/bistånd_sverige.html")
 
 
 # ... jämfört med andra länder
+p <- df %>%
+  ggplot(aes(x = År, y = Andel, group = Land, 
+             alpha = Land == "Sweden" ,
+             linewidth = Land == "Sweden" ,
+             colour = Land == "Sweden",
+             text = paste("År:" , År , 
+                          "\nLand:" , Land,
+                          "\nAndel av GNI:" , round(Andel, 2)))) +
+  geom_line() +
+  scale_colour_manual(values = c("TRUE" = "#D7E559", "FALSE" = "#5991E5")) +
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0.25)) +
+  scale_linewidth_manual(values = c("TRUE" = 1.35, "FALSE" = 0.5)) +
+  sis_theme +
+  scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
+  scale_y_continuous(limits = c(0 , 1.5) ,
+                     breaks =  0.7) +
+  guides(alpha = "none", linewidth = "none" ,colour = "none") +
+  xlab(NULL) +
+  ylab("Andel av bruttonationalinkomst (GNI), %")
 
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
 
+saveWidget(img, "images/bistånd.html")
