@@ -1250,7 +1250,6 @@ saveWidget(img, "images/co2_sverige.html")
 
 
 # ... jämfört med andra länder
-# "Sett till totala utsläpp står Sverige för 0.X procent"
 p <- df %>%
   filter(Land %in%c(
     "Sweden",
