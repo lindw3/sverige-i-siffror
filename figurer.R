@@ -51,6 +51,7 @@ sis_theme <- theme(plot.background = element_rect(fill = "#e5ad59") ,
 "#E56759"
 "#AD59E5"
 "#59E5AD"
+"#2DCCDE"
 
   # Partifärger
 partifärger_colour <- scale_colour_manual(values = c("Centerpartiet" = "#009933" ,
@@ -1126,6 +1127,7 @@ work <- read.csv("https://ourworldindata.org/grapher/how-important-work-is-to-pe
 
 
 
+
   # Count för hur många länder där arbete är viktigast, fritid är viktigast eller de är likvärdiga
 
 
@@ -1136,10 +1138,56 @@ work <- read.csv("https://ourworldindata.org/grapher/how-important-work-is-to-pe
 
 
   # Resultat i PISA
-df <- read_excel("data/pisa_data.xlsx")
+df <- read_excel("data/pisa_data.xls")
+
+df$Medelvärde <- as.numeric(df$Medelvärde)
+df$År <- as.numeric(df$År)
+
+p <- df %>% 
+  filter(Land == "Sweden" , 
+         År != 2000) %>% 
+  ggplot(aes(x = År, y = Medelvärde  , group = 2,
+             text = paste("År:" , År , 
+                          "\nResultat:" , round(Medelvärde)))) +
+  geom_line(linewidth = 1 , colour = "#5991E5") +
+  sis_theme +
+  scale_x_continuous(breaks = c(2003, 2022)) +
+  scale_y_continuous(limits = c(300 , 510) ,
+                     breaks =  seq(300, 500, 50)) +
+  xlab(NULL) + ylab("PISA-resultat")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/pisa_sverige.html")
 
 
-  # ... jämfört med andra länder
+# ... jämfört med andra länder
+p <- df %>%
+  filter(År != 2000) %>% 
+  ggplot(aes(x = År, y = Medelvärde, group = Land, 
+             alpha = Land == "Sweden" ,
+             linewidth = Land == "Sweden" ,
+             colour = Land == "Sweden",
+             text = paste("År:" , År , 
+                          "\nLand:" , Land,
+                          "\nResultat:" , round(Medelvärde, 2)))) +
+  geom_line() +
+  scale_colour_manual(values = c("TRUE" = "#D7E559", "FALSE" = "#5991E5")) +
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0.25)) +
+  scale_linewidth_manual(values = c("TRUE" = 1.35, "FALSE" = 0.5)) +
+  sis_theme +
+  scale_x_continuous(breaks = c(2003, max(df$År))) +
+  scale_y_continuous(limits = c(300 , max(df$Medelvärde + 10)) ,
+                     breaks =  seq(300, 550, 50)) +
+  guides(alpha = "none", linewidth = "none" ,colour = "none") +
+  xlab(NULL) +
+  ylab("PISA-resultat")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/pisa.html")
 
 
 
@@ -1158,11 +1206,6 @@ df <- read_excel("data/pisa_data.xlsx")
 
 
 
-  # Årliga CO2-utsläpp
-df <- read.csv("https://ourworldindata.org/grapher/annual-co2-emissions-per-country.csv?v=1&csvType=full&useColumnShortNames=true")
-
-
-  # ... jämfört med andra länder
 
 
 
@@ -1172,8 +1215,68 @@ df <- read.csv("https://ourworldindata.org/grapher/annual-co2-emissions-per-coun
 
 
 
-  # CO2-utsläpp per capita
+  # CO2-utsläpp (ton) per capita
+     # Noterbart: Sverige är netimportörer av CO2-utsläpp, så minskningen behöver vägas mot import av CO2 så att den inte "göms" bakom dumpning av co2-utsläpp på andra länder. Dock är minskningen av betydligt större grad än ökningen i importerade utsläpp, vilket ökat något (befolkningen har dock vuxit något också under denna period, vilket driver på utsläppen)
 df <- read_excel("data/co2_percapita.xlsx")
+colnames(df) <- c("Land" , "År" , "Antal")
+df$Antal <- as.numeric(df$Antal)
+
+p <- df %>% 
+  filter(Land == "Sweden") %>% 
+  ggplot(aes(x = År, y = Antal  , group = 2,
+             text = paste("År:" , År , 
+                          "\nKoldioxidutsläpp/person (ton):" , round(Antal, 1)))) +
+  geom_line(linewidth = 1 , colour = "#5991E5") +
+  sis_theme +
+  scale_x_continuous(breaks = c(1834, 1970, 2023)) +
+  scale_y_continuous(limits = c(0 , 12.5) ,
+                     breaks =  seq(0, 12.5, 2.5)) +
+  xlab(NULL) + ylab("Koldioxidutsläpp (ton)")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/co2_sverige.html")
+
+
+# ... jämfört med andra länder
+# "Sett till totala utsläpp står Sverige för 0.X procent"
+p <- df %>%
+  filter(Land %in%c(
+    "Sweden",
+    "Asia",
+    "Africa",
+    "Europe",
+    "North America",
+    "Oceania",
+    "South America"
+  )
+  ) %>% 
+  ggplot(aes(x = År, y = Antal, group = Land, colour = Land,
+             text = paste("År:" , År , 
+                          "\nLand:" , Land,
+                          "\nKoldioxidutsläpp/person (ton):" , round(Antal, 1)))) +
+  geom_line() +
+  scale_colour_manual(values = c(
+    "Africa" = "#5991E5",
+    "Asia" = "#2DCCDE",
+    "Europe" = "#E56759",
+    "North America" = "#AD59E5",
+    "Oceania" = "#59E5AD",
+    "South America" = "#e5ad59",
+    "Sweden" = "#D7E559"
+  )) +
+  sis_theme +
+  scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
+  xlab(NULL) +
+  ylab("Koldioxidutsläpp (ton)")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/co2.html")
+
+
 
 
 

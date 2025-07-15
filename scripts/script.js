@@ -34,19 +34,6 @@ const frågor = [
     bild: '<iframe src="images/förtroendevalda_kön.html" class="iframe" frameborder="0"></iframe>'
   },
 {
-    kategori: "UTBILDNING", 
-    fråga: "Hur mycket mer tjänar i genomsnitt de med eftergymnasial utbildning 3+ år jämfört med de med 3-årig gymnasial utbildning?",
-    korrekt: "25 procent mer",
-    alternativ: [
-      "De tjänar lika",
-      "10 procent mer",
-      "25 procent mer",
-      "50 procent mer"
-    ],
-    förklaring: "Genomsnittslönen ökar med ökad utbildningsnivå, med undantag för när man jämför de med gymnasial utbildning under 3 år med de som har 3-årig gymnasial utbildning. Män tjänar i genomsnitt mer än kvinnor i samtliga utbildningsnivåer. Könsskillnaderna är lägst för forskarutbildade, där män tjänar ca. 8 procent mer än kvinnor.  ",
-    bild: '<iframe src="images/lön_utbildning_kön.html" class="iframe" frameborder="0"></iframe>'
-} ,
-{
     kategori: "FAMILJ",
     fråga: "Hur ser barnafödandet per kvinna ut i Sverige idag jämfört med 1900?",
     korrekt: "Det har minskat med två tredjedelar",
@@ -280,6 +267,49 @@ const frågor = [
     förklaring: "Sedan millenieskiftet har andelen kvinnliga chefer (ledningspositioner och mellanchefer) ökat med nästan 15 procentenheter, och har legat på över 40 procent sedan 2019.",
     bild: '<iframe src="images/kvinnligachefer_sverige.html" class="iframe" frameborder="0"></iframe>',
     förklaring2: "Utifrån ett internationellt perspektiv har Sverige gått från att ligga i mittskiktet vid 00-talet till att vara ett av de länder med högst andel kvinnliga chefer i världen.",
+    bild2: '<iframe src="images/kvinnligachefer.html" class="iframe" frameborder="0"></iframe>'
+  },
+  {
+    kategori: "UTBILDNING", 
+    fråga: "Hur mycket mer tjänar i genomsnitt de med eftergymnasial utbildning 3+ år jämfört med de med 3-årig gymnasial utbildning?",
+    korrekt: "25 procent mer",
+    alternativ: [
+      "De tjänar lika",
+      "10 procent mer",
+      "25 procent mer",
+      "50 procent mer"
+    ],
+    förklaring: "Genomsnittslönen ökar med ökad utbildningsnivå, med undantag för när man jämför de med gymnasial utbildning under 3 år med de som har 3-årig gymnasial utbildning. Män tjänar i genomsnitt mer än kvinnor i samtliga utbildningsnivåer. Könsskillnaderna är lägst för forskarutbildade, där män tjänar ca. 8 procent mer än kvinnor.  ",
+    bild: '<iframe src="images/lön_utbildning_kön.html" class="iframe" frameborder="0"></iframe>'
+},
+{
+    kategori: "UTBILDNING", 
+    fråga: "Sedan den första PISA-mätningen Sverige deltog i 2003, vilket år presterade Sverige bäst?",
+    korrekt: "2003",
+    alternativ: [
+      "2003",
+      "2009",
+      "2015",
+      "2022"
+    ],
+    förklaring: "Sverige har inte lyckats nå upp till det resultat som uppnåddes i den första PISA-mätningen 2003. Resultatet i den senaste mätningen 2022 var Sveriges näst sämsta resultat.",
+    bild: '<iframe src="images/lön_utbildning_kön.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "Jämfört med övriga OECD-länder ligger Sverige i mittskiktet, något högre än genomsnittet. Noterbart är att OECD-genomsnittet har minskat med över 5 procent (27 poäng) sedan 2003.",
+    bild2: '<iframe src="images/kvinnligachefer.html" class="iframe" frameborder="0"></iframe>'
+},
+  {
+    kategori: "KLIMAT",
+    fråga: "Räknat per capita, hur har Sveriges koldioxidutsläpp förändrats jämfört med 1970?",
+    korrekt: "De har minskat med två tredjedelar",
+    alternativ: [
+      "De har ökat med två tredjedelar",
+      "De har ökat med en tredjedel",
+      "De har minskat med en tredjedel",
+      "De har minskat med två tredjedelar"
+    ],
+    förklaring: "Sveriges koldioxidutsläpp har minskat drastiskt sedan 1970 då landet började förlita sig mindre på fossila bränslen för sin elproduktion. Detta behöver dock avvägas mot hur mycket koldioxidutsläpp som kommer från import från andra länder. Även om importerade koldioxidutsläpp har ökat så har det inte alls skett i samma takt som minskningen av inrikes koldioxidutsläpp.",
+    bild: '<iframe src="images/kvinnligachefer_sverige.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "Internationellt sett har Europa, Oceanien och Nordamerika haft liknande trender som Sverige, medan Asien haft en stadig ökning av sina per capita-utsläpp. Två stora anledningar till att koldioxidutsläppen ökar totalt sett i världen är att befolkningsmängden ökar, samt att Kinas utsläpp fortsätter att öka.",
     bild2: '<iframe src="images/kvinnligachefer.html" class="iframe" frameborder="0"></iframe>'
   },
 ]
