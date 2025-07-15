@@ -857,15 +857,26 @@ img <- ggplotly(p, tooltip = "text") %>%
 saveWidget(img, "images/statligautgifter_fördelning_sverige.html")
 
   # OECD-länder
-p <- df %>% 
-  filter(Land == "OECD countries") %>% 
-  ggplot(aes(x = fct_reorder(Kategori, Andel, .desc = TRUE), y = Andel ,
+levels_fill <- df %>%
+  filter(Land == "OECD countries") %>%
+  arrange(desc(Andel)) %>%
+  pull(Kategori)
+
+p <- df %>%
+  filter(Land %in% c("Sweden", "OECD countries")) %>%
+  mutate(Kategori = factor(Kategori, levels = levels_fill)) %>%
+  ggplot(aes(x = Kategori, y = Andel, fill = Land,
              text = paste("Kategori:" , Kategori , 
                           "\nAndel av statliga utgifter, %:" , round(Andel, 2)))) +
-  geom_col(fill = "#5991E5") +
+  geom_col(position = "dodge") +
+  scale_fill_manual(values = c(
+    "OECD countries" = "#E56759",
+    "Sweden" = "#5991E5"
+  )) +
   sis_theme +
   theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
   xlab(NULL) + ylab("Andel av statliga utgifter, %")
+
 
 img <- ggplotly(p, tooltip = "text") %>% 
   config(displayModeBar = F)
