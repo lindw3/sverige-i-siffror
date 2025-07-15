@@ -90,7 +90,7 @@ const frågor = [
     ],
     förklaring: "2024 var Finland, Danmark, Island, Sverige och Nederländerna de fem länder som hade högst livstillfredställelse. Sverige har befunnit sig i toppen sedan den första mätningen 2011.",
     bild: '<iframe src="images/satisfaction.html" class="iframe" frameborder="0"></iframe>',
-    förklaring2: "Att Sverige är ett rikt land är sannolikt en starkt bidragande faktor till detta, då det finns en tydlig korrelationen mellan länders GDP och livstillfredställelse",
+    förklaring2: "Att Sverige är ett rikt land är sannolikt en starkt bidragande faktor till detta, då det finns en tydlig korrelation mellan länders GDP och livstillfredställelse",
     bild2: '<iframe src="images/gdp_satisfaction.html" class="iframe" frameborder="0"></iframe>'
   },
   {
@@ -293,9 +293,9 @@ const frågor = [
       "2022"
     ],
     förklaring: "Sverige har inte lyckats nå upp till det resultat som uppnåddes i den första PISA-mätningen 2003. Resultatet i den senaste mätningen 2022 var Sveriges näst sämsta resultat.",
-    bild: '<iframe src="images/lön_utbildning_kön.html" class="iframe" frameborder="0"></iframe>',
+    bild: '<iframe src="images/pisa_sverige.html" class="iframe" frameborder="0"></iframe>',
     förklaring2: "Jämfört med övriga OECD-länder ligger Sverige i mittskiktet, något högre än genomsnittet. Noterbart är att OECD-genomsnittet har minskat med över 5 procent (27 poäng) sedan 2003.",
-    bild2: '<iframe src="images/kvinnligachefer.html" class="iframe" frameborder="0"></iframe>'
+    bild2: '<iframe src="images/pisa.html" class="iframe" frameborder="0"></iframe>'
 },
   {
     kategori: "KLIMAT",
@@ -308,9 +308,9 @@ const frågor = [
       "De har minskat med två tredjedelar"
     ],
     förklaring: "Sveriges koldioxidutsläpp har minskat drastiskt sedan 1970 då landet började förlita sig mindre på fossila bränslen för sin elproduktion. Detta behöver dock avvägas mot hur mycket koldioxidutsläpp som kommer från import från andra länder. Även om importerade koldioxidutsläpp har ökat så har det inte alls skett i samma takt som minskningen av inrikes koldioxidutsläpp.",
-    bild: '<iframe src="images/kvinnligachefer_sverige.html" class="iframe" frameborder="0"></iframe>',
+    bild: '<iframe src="images/co2_sverige.html" class="iframe" frameborder="0"></iframe>',
     förklaring2: "Internationellt sett har Europa, Oceanien och Nordamerika haft liknande trender som Sverige, medan Asien haft en stadig ökning av sina per capita-utsläpp. Två stora anledningar till att koldioxidutsläppen ökar totalt sett i världen är att befolkningsmängden ökar, samt att Kinas utsläpp fortsätter att öka.",
-    bild2: '<iframe src="images/kvinnligachefer.html" class="iframe" frameborder="0"></iframe>'
+    bild2: '<iframe src="images/co2.html" class="iframe" frameborder="0"></iframe>'
   },
 ]
 
