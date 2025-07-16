@@ -17,7 +17,7 @@ const frågor = [
       "Sverigedemokraterna",
       "Miljöpartiet"
     ],
-    förklaring: "Socialdemokraterna är det dominerande partiet bland såväl fattiga som rika, även om fördelningen är likvärdig mellan Socialdemokraterna och Moderaterna i den högsta inkomstgruppen.",
+    förklaring: "Socialdemokraterna är det dominerande partiet utifrån de flesta indikatorer, även om det 2025 var en något högre andel i den allra högsta inkomstgruppen som sympatiserade med Moderaterna.",
     bild: '<iframe src="images/partisympatier_inkomst.html" class="iframe" frameborder="0"></iframe>'
   },
   {
@@ -90,7 +90,7 @@ const frågor = [
     ],
     förklaring: "2024 var Finland, Danmark, Island, Sverige och Nederländerna de fem länder som hade högst livstillfredställelse. Sverige har befunnit sig i toppen sedan den första mätningen 2011.",
     bild: '<iframe src="images/satisfaction.html" class="iframe" frameborder="0"></iframe>',
-    förklaring2: "Att Sverige är ett rikt land är sannolikt en starkt bidragande faktor till detta, då det finns en tydlig korrelation mellan länders GDP och livstillfredställelse",
+    förklaring2: "Att Sverige är ett rikt land är sannolikt en starkt bidragande faktor till detta, då det finns en tydlig korrelation mellan länders GDP och livstillfredställelse. Vid analys av sambandet mellan GDP och livstillfredställelse kan man se att en ökning med 10,000 i GDP korrelerar med en ökad livstillfredställelse med 0.31.",
     bild2: '<iframe src="images/gdp_satisfaction.html" class="iframe" frameborder="0"></iframe>'
   },
   {
@@ -155,21 +155,6 @@ const frågor = [
   },
  {
     kategori: "EKONOMI",
-    fråga: "Hur stor andel av Sveriges BNP utgör statliga utgifter?",
-    korrekt: "Ungefär 50 procent",
-    alternativ: [
-      "Ungefär 10 procent",
-      "Ungefär 30 procent",
-      "Ungefär 50 procent",
-      "Ungefär 70 procent"
-    ],
-    förklaring: "Sedan mitten på 30-talet har vi sett en ökning av statliga utgifter som andel av BNP, med en extrem topp under finanskrisen i början av 90-talet.",
-    bild: '<iframe src="images/statligautgifter_sverige.html" class="iframe" frameborder="0"></iframe>',
-    förklaring2: "Internationellt sett har vi sett liknande trender, men jämfört med övriga länder har Sverige gått från att ha relativt låga statliga utgifter i förhållande till GDP till att ligga i toppskiktet.",
-    bild2: '<iframe src="images/statligautgifter.html" class="iframe" frameborder="0"></iframe>'
-  },
- {
-    kategori: "EKONOMI",
     fråga: "Vilken kostnadspost utgör störst andel av Sveriges statliga utgifter?",
     korrekt: "Socialt skydd (stöd till sjuka, funktionsnedsatta, arbetslösa, pensionärer etc.)",
     alternativ: [
@@ -193,11 +178,26 @@ const frågor = [
       "Ungefär 50 procent",
       "Ungefär 70 procent"
     ],
-    förklaring: "Logiskt, utifrån frågan om statliga utgifter! I takt med att de statliga utgifterna ökat har mer skatteintäkter behövts. Sveriges skatteintäkter ökade stadigt sedan 1930-talet, för att plana ut runt 50 procent från 90-talet och framåt.",
+    förklaring: "Sveriges skatteintäkter har ökat stadigt sedan 1930-talet samtidigt som de statliga utgifterna ökat i samma takt, för att plana ut runt 50 procent från 90-talet och framåt.",
     bild: '<iframe src="images/skatter_statligainkomster_sverige.html" class="iframe" frameborder="0"></iframe>',
     förklaring2: "För att kunna jämföra med andra länder tittar vi på annan data som i stället gäller skatter som andel av BNP. Denna data finns tillgänglig sedan 1980, och sedan dess har Sverige befunnit sig i toppskiktet.",
     bild2: '<iframe src="images/skatter_statligainkomster.html" class="iframe" frameborder="0"></iframe>'
   },
+{
+    kategori: "EKONOMI",
+    fråga: "Hur har andelen av Sveriges bruttonationalinkomst som går till bistånd förändrats sedan 25 år sedan?",
+    korrekt: "Den har inte förändrats",
+    alternativ: [
+      "Den har minskat med 30 procent",
+      "Den har minskat med 15 procent",
+      "Den har inte förändrats",
+      "Den har ökat med 15 procent"
+    ],
+    förklaring: "Sverige har under de senaste 50 åren gett ett bistånd som överskrider FN:s mål på 0.7 procent av bruttonationalinkomsten. Biståndet nådde sin topp under flyktingkrisen 2015.",
+    bild: '<iframe src="images/bistånd_sverige.html" class="iframe" frameborder="0"></iframe>',
+    förklaring2: "Sedan 1975 har Sverige varit ett av få länder som överskridit FN:s mål, och 2023 var Sverige det land som gav tredje högst bistånd i relation till bruttonationalinkomsten.",
+    bild2: '<iframe src="images/bistånd.html" class="iframe" frameborder="0"></iframe>'
+},
   {
     kategori: "ARBETE",
     fråga: "Hur har antalet arbetstimmar per år (räknat per person i arbete) förändrats sedan slutet på 1800-talet?",
@@ -243,19 +243,6 @@ const frågor = [
   },
   {
     kategori: "ARBETE",
-    fråga: "Inom vilken sektor är skillnaden i genomsnittslön mellan män och kvinnor högst?",
-    korrekt: "Region",
-    alternativ: [
-      "Kommun",
-      "Privat",
-      "Region",
-      "Statlig"
-    ],
-    förklaring: "Inom den regionala sektorn tjänar män i genomsnitt 21 procent mer än kvinnor. Skillnaderna är som minst inom kommunal sektor, där män i genomsnitt tjänar 1 procent mer än kvinnor.",
-    bild: '<iframe src="images/lön_sektor_kön.html" class="iframe" frameborder="0"></iframe>'
-  },
-  {
-    kategori: "ARBETE",
     fråga: "Hur stor andel av chefspositioner innehas av kvinnor?",
     korrekt: "Över 40 procent",
     alternativ: [
@@ -279,7 +266,7 @@ const frågor = [
       "25 procent mer",
       "50 procent mer"
     ],
-    förklaring: "Genomsnittslönen ökar med ökad utbildningsnivå, med undantag för när man jämför de med gymnasial utbildning under 3 år med de som har 3-årig gymnasial utbildning. Män tjänar i genomsnitt mer än kvinnor i samtliga utbildningsnivåer. Könsskillnaderna är lägst för forskarutbildade, där män tjänar ca. 8 procent mer än kvinnor.  ",
+    förklaring: "Genomsnittslönen ökar med ökad utbildningsnivå, med undantag för när man jämför de med gymnasial utbildning under 3 år med de som har 3-årig gymnasial utbildning. ",
     bild: '<iframe src="images/lön_utbildning_kön.html" class="iframe" frameborder="0"></iframe>'
 },
 {
@@ -311,7 +298,7 @@ const frågor = [
     bild: '<iframe src="images/co2_sverige.html" class="iframe" frameborder="0"></iframe>',
     förklaring2: "Internationellt sett har Europa, Oceanien och Nordamerika haft liknande trender som Sverige, medan Asien haft en stadig ökning av sina per capita-utsläpp. Två stora anledningar till att koldioxidutsläppen ändå ökar totalt sett i världen är att befolkningsmängden ökar, samt att Kinas utsläpp fortsätter att öka. Sverige står för ca. 0.1% av världens koldioxidutsläpp.",
     bild2: '<iframe src="images/co2.html" class="iframe" frameborder="0"></iframe>'
-  },
+  }
 ]
 
 
@@ -357,7 +344,8 @@ let currentQuestion = 0;
     });
     nästaFrågaBtn.style.display = "none";
   } else {
-    frågaEl.textContent = "Testet är slut! Du fick X/Y rätt.";
+    frågaEl.textContent = "Testet är slut! Hoppas du lärde dig någonting nytt.";
+    förklaringEl.textContent = "Testing testing";
     alternativKnappar.forEach(btn => {
       btn.style.display = "none";
     });
