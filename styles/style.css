@@ -1,4 +1,4 @@
-               /*HEADER OCH NAVBAR*/
+/*HEADER OCH NAVBAR*/
 
 html, body {
   margin: 0;
@@ -433,7 +433,9 @@ button:hover {
   transition: opacity 1.5s ease;
 }
 
-.förklaring-container.active {
+
+
+.förklaring-container.active  {
   opacity: 1; /* Visa förklaringen när den är aktiv */
 }
 
@@ -500,6 +502,20 @@ button:hover {
   max-height: 70vh; 
   border: none;
   display: block;
+}
+
+.källa-text {
+  font-size: 1rem;
+  color: #888;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+.förklaring-container.active .källa-text,
+.förklaring-bild-container .källa-text {
+  opacity: 1;
 }
 
 .nästa-fråga-container {

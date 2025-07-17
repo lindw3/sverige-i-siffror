@@ -18,7 +18,8 @@ const frågor = [
       "Miljöpartiet"
     ],
     förklaring: "Socialdemokraterna är det dominerande partiet utifrån de flesta indikatorer, även om det 2025 var en något högre andel i den allra högsta inkomstgruppen som sympatiserade med Moderaterna.",
-    bild: '<iframe src="images/partisympatier_inkomst.html" class="iframe" frameborder="0"></iframe>'
+    bild: '<iframe src="images/partisympatier_inkomst.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: SCB:s statistikdatabas, Partisympatiundersökningen (PSU)'
   },
   {
     kategori: "POLITIK",
@@ -31,7 +32,8 @@ const frågor = [
       "Fyra"
     ],
     förklaring: "Två partier, Miljöpartiet och Vänsterpartiet, har fler kvinnliga än manliga kommunalt förtroendevalda under mandatperioden 2023-2026, vilket är de enda partier där detta hänt sedan statistik började föras 2007. Totalt sett har andelen kvinnliga kommunalt förtroendevalda legat stabilt på strax över 40 procent.",
-    bild: '<iframe src="images/förtroendevalda_kön.html" class="iframe" frameborder="0"></iframe>'
+    bild: '<iframe src="images/förtroendevalda_kön.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: SCB:s statistikdatabas, Undersökning av förtroendevalda i kommuner och regioner'
   },
 {
     kategori: "FAMILJ",
@@ -45,8 +47,10 @@ const frågor = [
     ],
     förklaring: "Även om barnafödandet minskat över hela denna tidsperiod ser man att trenden från år till år kan fluktuera kraftigt. Det är även värt att notera att spädbarnsdödligheten och död under de första levnadsåren har minskat kraftigt under samma tidsperiod.",
     bild: '<iframe src="images/barnafödande_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: "Källa: UN WPP (2024); HFD (2024) – bearbetat av Our World in Data",
     förklaring2: "Detta är en trend som man kan se globalt sett också, där rikare länder tenderar ha lägre barnafödande. Den globala populationstillväxten har mer än halverats under de senaste 60 åren.",
-    bild2: '<iframe src="images/barnafödande.html" class="iframe" frameborder="0"></iframe>'
+    bild2: '<iframe src="images/barnafödande.html" class="iframe" frameborder="0"></iframe>',
+    källa2: "Källa: UN WPP (2024); HFD (2024) – bearbetat av Our World in Data"
   },
   {
     kategori: "FAMILJ",
@@ -60,8 +64,10 @@ const frågor = [
     ],
     förklaring: "Mellan 1990 och 2021 ökade genomsnittsåldern för kvinnors första giftermål med 25 procent, vilket uppgår till ca. 7 år.",
     bild: '<iframe src="images/ålder_giftermål_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: OECD (2024) – bearbetat av Our World in Data',
     förklaring2: "När OECD undersökt denna trend för alla OECD-länder kan man notera att denna trend sker i samtliga länder. Sverige är dock, tillsammans med Spanien, det OECD-land med högst genomsnittsålder för kvinnors första giftermål.",
-    bild2: '<iframe src="images/ålder_giftermål.html" class="iframe" frameborder="0"></iframe>'
+    bild2: '<iframe src="images/ålder_giftermål.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: OECD (2024) – bearbetat av Our World in Data'
   },
   {
     kategori: "FAMILJ",
@@ -75,12 +81,14 @@ const frågor = [
     ],
     förklaring: "Mellan 2004-2018 låg andelen singelhushåll i Sverige stabilt på strax över 40 procent.",
     bild: '<iframe src="images/singelhushåll_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: FN - bearbetat av Our World in Data',
     förklaring2: "Globalt sett är denna trend något uppåtgående generellt. De nordiska länderna är de länder med högst andel singelhushåll i världen, där Norge, Danmark, Finland och Sverige ligger i toppen.",
-    bild2: '<iframe src="images/singelhushåll.html" class="iframe" frameborder="0"></iframe>'
+    bild2: '<iframe src="images/singelhushåll.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: FN - bearbetat av Our World in Data'
   },
   {
     kategori: "MÅENDE",
-    fråga: "Vart befinner sig Sverige globalt sett gällande livstillfredställelse?",
+    fråga: "Vart befinner sig Sverige globalt sett gällande livstillfredsställelse?",
     korrekt: "Mellan plats 1-5",
     alternativ: [
       "Mellan plats 1-5",
@@ -88,10 +96,12 @@ const frågor = [
       "Mellan plats 11-15",
       "Mellan plats 16-20"
     ],
-    förklaring: "2024 var Finland, Danmark, Island, Sverige och Nederländerna de fem länder som hade högst livstillfredställelse. Sverige har befunnit sig i toppen sedan den första mätningen 2011.",
+    förklaring: "2024 var Finland, Danmark, Island, Sverige och Nederländerna de fem länder som hade högst livstillfredsställelse. Sverige har befunnit sig i toppen sedan den första mätningen 2011.",
     bild: '<iframe src="images/satisfaction.html" class="iframe" frameborder="0"></iframe>',
-    förklaring2: "Att Sverige är ett rikt land är sannolikt en starkt bidragande faktor till detta, då det finns en tydlig korrelation mellan länders GDP och livstillfredställelse. Vid analys av sambandet mellan GDP och livstillfredställelse kan man se att en ökning med 10,000 i GDP korrelerar med en ökad livstillfredställelse med 0.31.",
-    bild2: '<iframe src="images/gdp_satisfaction.html" class="iframe" frameborder="0"></iframe>'
+    källa: 'Källa: Wellbeing Research Centre - bearbetet av Our World in Data',
+    förklaring2: "Att Sverige är ett rikt land är sannolikt en starkt bidragande faktor till detta, då det finns en tydlig korrelation mellan länders GDP och livstillfredsställelse. Vid analys av sambandet mellan GDP och livstillfredsställelse kan man se att en ökning med 10,000 i GDP korrelerar med en ökad livstillfredsställelse med 0.31.",
+    bild2: '<iframe src="images/gdp_satisfaction.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: Wellbeing Research Centre, Eurostat, OECD & Världsbanken - bearbetat av Our World in Data'
   },
   {
     kategori: "MÅENDE",
@@ -105,8 +115,10 @@ const frågor = [
     ],
     förklaring: "Sedan 1950 har antalet suicidfall minskat från ca. 15 fall per 100 000 invånare till ca. 10 fall per 100 000 invånare. Denna trend noteras i alla åldersgrupper, även om den inte är lika tydlig i åldersgruppen 15-24 år.",
     bild: '<iframe src="images/suicid_sverige.html" class="iframe" frameborder="0"></iframe>',
-    förklaring2: "Ur en internationell synvinkel ligger Sverige i den övre halvan av länderna i världen gällande suicid, men det finns några länder som har betydligt högre suicidfrekvens än Sverige.",
-    bild2: '<iframe src="images/suicid.html" class="iframe" frameborder="0"></iframe>'
+    källa: 'Källa: WHO - bearbetat av Our World in Data',
+    förklaring2: "Ur en internationell synvinkel ligger Sverige i den övre halvan av länderna i världen gällande suicid.",
+    bild2: '<iframe src="images/suicid.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: WHO - bearbetat av Our World in Data'
   },
   {
     kategori: "MÅENDE",
@@ -120,8 +132,10 @@ const frågor = [
     ],
     förklaring: "Utifrån 21 olika kategoriseringar uppskattades dessa två stå för nästan 60 procent av dödsfallen i Sverige under 2021. Nedan visas de fem vanligaste kategoriseringarna.",
     bild: '<iframe src="images/dödsorsaker_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: IHME, Global Burden of Disease',
     förklaring2: "Vilka dödsorsaker som är vanligast, och till vilken magnitud dessa sjukdomar leder till död, skiljer sig mycket åt beroende på länders välstånd. Kardiovaskulära sjukdomar och cancer är bland de vanligaste dödsorsakerna även i länder med lägre välstånd (mätt i Social Development Index, SDI), men luftvägsinfektioner och tuberkulos är vanligast.",
-    bild2: '<iframe src="images/dödsorsaker_sverige_lowsdi.html" class="iframe" frameborder="0"></iframe>'
+    bild2: '<iframe src="images/dödsorsaker_sverige_lowsdi.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: IHME, Global Burden of Disease'
   },
  {
     kategori: "EKONOMI",
@@ -135,8 +149,10 @@ const frågor = [
     ],
     förklaring: "Enligt estimeringar från Madisson Project var Sveriges GDP per capita i stort sett oförändrad fram till industrialiseringen på 1870-talet, då den ökade dramatiskt. Ökningen har varit särskilt kraftig sedan efterkrigstiden.",
     bild: '<iframe src="images/gdp_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: Maddison Project Database - bearbetat av Our World in Data',
     förklaring2: "Denna trend har vi sett i stora drag globalt, även om det finns länder som inte har noterat denna uppåtgående trend.",
-    bild2: '<iframe src="images/gdp.html" class="iframe" frameborder="0"></iframe>'
+    bild2: '<iframe src="images/gdp.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: Eurostat, OECD & Världsbanken - bearbetat av Our World in Data'
   },
  {
     kategori: "EKONOMI",
@@ -150,8 +166,10 @@ const frågor = [
     ],
     förklaring: "Gini-koefficienten har ökat i stadig takt sedan 1975, vilket innebär att de totala inkomsterna koncentrerats till en mindre andel av befolkningen.",
     bild: '<iframe src="images/gini_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: World Inequality Database - bearbetat av Our World in Data',
     förklaring2: "Ur ett internationellt hänseende har Sverige förhållandevis jämlika inkomster. Värt att tillägga är att Gini-koefficienten inte tar hänsyn till de omfördelande effekter som offentligt finansierad välfärd innebär, där det finns stora skillnader mellan länder. Den tar inte heller hänsyn till förmögenheter, vilket innebär att Sveriges omfattande pensionssystem faller bort från siffrorna.",
-    bild2: '<iframe src="images/gini.html" class="iframe" frameborder="0"></iframe>'
+    bild2: '<iframe src="images/gini.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: World Inequality Database - bearbetat av Our World in Data'
   },
  {
     kategori: "EKONOMI",
@@ -165,8 +183,10 @@ const frågor = [
     ],
     förklaring: "Socialt skydd utgör med råge den största kostnadsposten i Sveriges statliga utgifter, där Sveriges omfattande pensionssystem är en stor del av posten.",
     bild: '<iframe src="images/statligautgifter_fördelning_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: OECD – bearbetat av Our World in Data',
     förklaring2: "För OECD-länderna i stort är fortfarande socialt skydd den största kostnadsposten, även om den inte utgör en lika stor andel av de totala kostnaderna som i Sverige. I stället investeras en större andel i hälso- och sjukvård, försvar och allmän ordning och säkerhet.",
-    bild2: '<iframe src="images/statligautgifter_fördelning.html" class="iframe" frameborder="0"></iframe>'
+    bild2: '<iframe src="images/statligautgifter_fördelning.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: OECD – bearbetat av Our World in Data'
   },
  {
     kategori: "EKONOMI",
@@ -180,8 +200,10 @@ const frågor = [
     ],
     förklaring: "Sveriges skatteintäkter har ökat stadigt sedan 1930-talet samtidigt som de statliga utgifterna ökat i samma takt, för att plana ut runt 50 procent från 90-talet och framåt.",
     bild: '<iframe src="images/skatter_statligainkomster_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: Piketty, T. (2014). Capital in the 21st Century - bearbetat av Our World in Data',
     förklaring2: "För att kunna jämföra med andra länder tittar vi på annan data som i stället gäller skatter som andel av BNP. Denna data finns tillgänglig sedan 1980, och sedan dess har Sverige befunnit sig i toppskiktet.",
-    bild2: '<iframe src="images/skatter_statligainkomster.html" class="iframe" frameborder="0"></iframe>'
+    bild2: '<iframe src="images/skatter_statligainkomster.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: UNU-WIDER Government Revenue Dataset - bearbetat av Our World in Data'
   },
 {
     kategori: "EKONOMI",
@@ -195,8 +217,10 @@ const frågor = [
     ],
     förklaring: "Sverige har under de senaste 50 åren gett ett bistånd som överskrider FN:s mål på 0.7 procent av bruttonationalinkomsten. Biståndet nådde sin topp under flyktingkrisen 2015.",
     bild: '<iframe src="images/bistånd_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: OECD - bearbetat av Our World in Data',
     förklaring2: "Sedan 1975 har Sverige varit ett av få länder som överskridit FN:s mål, och 2023 var Sverige det land som gav tredje högst bistånd i relation till bruttonationalinkomsten.",
-    bild2: '<iframe src="images/bistånd.html" class="iframe" frameborder="0"></iframe>'
+    bild2: '<iframe src="images/bistånd.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: OECD - bearbetat av Our World in Data'
 },
   {
     kategori: "ARBETE",
@@ -210,8 +234,10 @@ const frågor = [
     ],
     förklaring: "1870 uppskattades en genomsnittlig arbetare arbeta i nästan 3500 timmar per år. Sedan dess minskade antalet arbetstimmar drastiskt, för att planas ut på ca. 15-1600 timmar per år sedan 1980.",
     bild: '<iframe src="images/arbetstimmar_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: OECD - bearbetat av Our World in Data',
     förklaring2: "Jämfört med andra länder är Sverige ett av de länder där personer i arbete arbetar minst timmar per år. Sverige är, efter Tyskland och Italien, det land som har flest semesterdagar och röda dagar, vilket sannolikt bidrar till detta.",
-    bild2: '<iframe src="images/arbetstimmar.html" class="iframe" frameborder="0"></iframe>'
+    bild2: '<iframe src="images/arbetstimmar.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: OECD - bearbetat av Our World in Data'
   },
   {
     kategori: "ARBETE",
@@ -224,7 +250,8 @@ const frågor = [
       "90 procent"
     ],
     förklaring: "Totalt sett är 70 procent av alla anställda inom näringslivet. Det finns dock stora skillnader mellan män och kvinnor, där kvinnor är överrepresenterade inom kommun och region medan män är överrepresenterade inom privat sektor.",
-    bild: '<iframe src="images/anställning_sektor_kön.html" class="iframe" frameborder="0"></iframe>'
+    bild: '<iframe src="images/anställning_sektor_kön.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'SCB:s statistikdatabas, Anställningar'
   },
   {
     kategori: "ARBETE",
@@ -238,8 +265,10 @@ const frågor = [
     ],
     förklaring: "Sedan 90-talet har det ojusterade lönegapet mellan mäns och kvinnors genomsnittslöner minskat, där män tjänat 10% mer än kvinnor i genomsnitt sedan 2019. När man justerar för ålder, utbildning, arbetstid och sektor halveras lönegapet mellan män och kvinnor.",
     bild: '<iframe src="images/lönegap_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: SCB:s statistikdatabas, Lönestrukturstatistik, hela ekonomin', 
     förklaring2: "Vid jämförelse med andra länder (data finns fram till 2016) kan man se att det är många länder som 'kommit ikapp' Sverige och minskat lönegapet under andra halvan av 1900-talet.",
-    bild2: '<iframe src="images/lönegap.html" class="iframe" frameborder="0"></iframe>'
+    bild2: '<iframe src="images/lönegap.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: OECD - bearbetat av Our World in Data & SCB:s statistikdatabas'
   },
   {
     kategori: "ARBETE",
@@ -253,8 +282,10 @@ const frågor = [
     ],
     förklaring: "Sedan millenieskiftet har andelen kvinnliga chefer (ledningspositioner och mellanchefer) ökat med nästan 15 procentenheter, och har legat på över 40 procent sedan 2019.",
     bild: '<iframe src="images/kvinnligachefer_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: International Labour Organization - bearbetat av Our World in Data',
     förklaring2: "Utifrån ett internationellt perspektiv har Sverige gått från att ligga i mittskiktet vid 00-talet till att vara ett av de länder med högst andel kvinnliga chefer i världen.",
-    bild2: '<iframe src="images/kvinnligachefer.html" class="iframe" frameborder="0"></iframe>'
+    bild2: '<iframe src="images/kvinnligachefer.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: International Labour Organization - bearbetat av Our World in Data'
   },
   {
     kategori: "UTBILDNING", 
@@ -267,7 +298,8 @@ const frågor = [
       "50 procent mer"
     ],
     förklaring: "Genomsnittslönen ökar med ökad utbildningsnivå, med undantag för när man jämför de med gymnasial utbildning under 3 år med de som har 3-årig gymnasial utbildning. ",
-    bild: '<iframe src="images/lön_utbildning_kön.html" class="iframe" frameborder="0"></iframe>'
+    bild: '<iframe src="images/lön_utbildning_kön.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: SCB:s statistikdatabas, Lönestrukturstatistik, hela ekonomin'
 },
 {
     kategori: "UTBILDNING", 
@@ -281,8 +313,10 @@ const frågor = [
     ],
     förklaring: "Sverige har inte lyckats nå upp till det resultat som uppnåddes i den första PISA-mätningen 2003. Resultatet i den senaste mätningen 2022 var Sveriges näst sämsta resultat.",
     bild: '<iframe src="images/pisa_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: OECD PISA',
     förklaring2: "Jämfört med övriga OECD-länder ligger Sverige i mittskiktet, något högre än genomsnittet. Noterbart är att OECD-genomsnittet har minskat med över 5 procent (27 poäng) sedan 2003.",
-    bild2: '<iframe src="images/pisa.html" class="iframe" frameborder="0"></iframe>'
+    bild2: '<iframe src="images/pisa.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: OECD PISA'
 },
   {
     kategori: "KLIMAT",
@@ -294,10 +328,12 @@ const frågor = [
       "De har minskat med en tredjedel",
       "De har minskat med två tredjedelar"
     ],
-    förklaring: "Sveriges koldioxidutsläpp har minskat drastiskt sedan 1970 då landet började förlita sig mindre på fossila bränslen för sin elproduktion. Detta behöver dock avvägas mot hur mycket koldioxidutsläpp som kommer från import från andra länder. Även om importerade koldioxidutsläpp har ökat så har det inte alls skett i samma takt som minskningen av inrikes koldioxidutsläpp.",
+    förklaring: "Sveriges koldioxidutsläpp har minskat drastiskt sedan 1970 då landet började förlita sig mindre på fossila bränslen för sin elproduktion. Detta behöver dock vägas mot hur mycket koldioxidutsläpp som kommer från import från andra länder. Även om importerade koldioxidutsläpp har ökat så har det inte alls skett i samma takt som minskningen av inrikes koldioxidutsläpp.",
     bild: '<iframe src="images/co2_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Global Carbon Budget - bearbetat av Our World in Data',
     förklaring2: "Internationellt sett har Europa, Oceanien och Nordamerika haft liknande trender som Sverige, medan Asien haft en stadig ökning av sina per capita-utsläpp. Två stora anledningar till att koldioxidutsläppen ändå ökar totalt sett i världen är att befolkningsmängden ökar, samt att Kinas utsläpp fortsätter att öka. Sverige står för ca. 0.1% av världens koldioxidutsläpp.",
-    bild2: '<iframe src="images/co2.html" class="iframe" frameborder="0"></iframe>'
+    bild2: '<iframe src="images/co2.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Global Carbon Budget - bearbetat av Our World in Data'
   }
 ]
 
@@ -342,10 +378,17 @@ let currentQuestion = 0;
         alternativKnappar[i].style.backgroundColor = "";
       }
     });
+    // Ändra knapptext om det är sista frågan
+    if (index === frågor.length - 1) {
+      nästaFrågaBtn.textContent = "Avsluta testet";
+    } else {
+      nästaFrågaBtn.textContent = "Nästa fråga";
+    }
     nästaFrågaBtn.style.display = "none";
   } else {
     frågaEl.textContent = "Testet är slut! Hoppas du lärde dig någonting nytt.";
     förklaringEl.textContent = "Testing testing";
+    förklaringEl.classList.add("active");
     alternativKnappar.forEach(btn => {
       btn.style.display = "none";
     });
@@ -391,15 +434,15 @@ bildEl.classList.remove("active");
 förklaringEl.textContent = frågor[currentQuestion].förklaring;
 
 const bildData = frågor[currentQuestion].bild;
-
-      // OM bildData är en iframe så = insert as HTML, om img = insert as img
+const källa = frågor[currentQuestion].källa;
 if (typeof bildData === "string" && bildData.trim().startsWith("<iframe")) {
-bildEl.innerHTML = `
-  <div class="förklaring-bild-container">
-    ${bildData}
-    <a href="#" id="fullscreen-link">Visa i helskärm</a>
-  </div>
-`;
+  bildEl.innerHTML = `
+    <div class="förklaring-bild-container">
+      ${bildData}
+      ${källa ? `<div class="källa-text">${källa}</div>` : ""}
+      <a href="#" id="fullscreen-link">Visa i helskärm</a>
+    </div>
+  `;
 
   // Lägg till eventlistener för helskärm
   const iframe = bildEl.querySelector("iframe");
@@ -417,7 +460,10 @@ bildEl.innerHTML = `
     });
   }
 } else {
-  bildEl.innerHTML = `<img id="förklaring-bild-img" src="${bildData}" alt="Förklaring bild" style="max-width:100%;height:auto;cursor:pointer;">`;
+  bildEl.innerHTML = `
+    <img id="förklaring-bild-img" src="${bildData}" alt="Förklaring bild" style="max-width:100%;height:auto;cursor:pointer;">
+    ${källa ? `<div class="källa-text">${källa}</div>` : ""}
+  `;
 
       // Fullskärm för img alternativt html
   const img = document.getElementById("förklaring-bild-img");
@@ -447,6 +493,7 @@ setTimeout(() => {
       // Visa andra förklaring och bild om de finns
 const förklaring2 = frågor[currentQuestion].förklaring2;
 const bildData2 = frågor[currentQuestion].bild2;
+const källa2 = frågor[currentQuestion].källa2;
 
 if (förklaring2 || bildData2) {
   let extraEl = document.getElementById("förklaring-extra");
@@ -468,6 +515,7 @@ if (förklaring2 || bildData2) {
       div.className = "förklaring-bild-container";
       div.innerHTML = `
         ${bildData2}
+        ${källa2 ? `<div class="källa-text">${källa2}</div>` : ""}
         <a href="#" class="fullscreen-link-2" style="margin-top:8px;color:#5991E5;cursor:pointer;text-decoration:underline;display:block;">Visa i helskärm</a>
       `;
       extraEl.appendChild(div);
@@ -494,6 +542,12 @@ if (förklaring2 || bildData2) {
       img.style.maxWidth = "100%";
       img.style.height = "auto";
       extraEl.appendChild(img);
+      if (källa2) {
+        const källaDiv = document.createElement("div");
+        källaDiv.className = "källa-text";
+        källaDiv.textContent = källa2;
+        extraEl.appendChild(källaDiv);
+      }
     }
   }
 } else {
@@ -505,6 +559,7 @@ if (förklaring2 || bildData2) {
 
   nästaFrågaBtn.addEventListener("click", () => {
     currentQuestion++;
+    window.scrollTo({ top: 0, behavior: "smooth" }); // Scrolla upp till toppen av sidan
     visaFråga(currentQuestion);
   });
 });

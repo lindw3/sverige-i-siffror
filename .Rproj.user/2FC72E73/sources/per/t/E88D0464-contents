@@ -132,8 +132,7 @@ p <- df %>%
                                "61-80 %" = "#AD59E5" ,
                                "81-100 %" = "#59E5AD"))
 
-img <- ggplotly(p, tooltip = "text") %>%
-  config(displayModeBar = F)
+img <- ggplotly(p, tooltip = "text")
 
 saveWidget(img, "images/partisympatier_inkomst.html")
 
@@ -158,8 +157,7 @@ p <- df %>%
   partifärger_colour +
   sis_theme
 
-img <- ggplotly(p, tooltip = "text") %>%
-  config(displayModeBar = F)
+img <- ggplotly(p, tooltip = "text")
 
 saveWidget(img, "images/förtroendevalda_kön.html")
 
@@ -397,6 +395,31 @@ p <- df %>%
                           "\nLivstillfredsställelse:", round(Livstillfredsställelse,2),
                           "\nGDP: ", comma(round(GDP))))) +
   geom_point(aes(colour = Region)) +
+  sis_theme +
+  labs(colour = "Region") +
+  xlab("GDP per capita") + ylab("Livstillfredsställelse, skala 1-10") +
+  scale_color_manual(values = c(
+    "Africa" = "#5991E5",
+    "Asia" = "#D7E559",
+    "Europe" = "#E56759",
+    "North America" = "#AD59E5",
+    "Oceania" = "#59E5AD",
+    "South America" = "#e5ad59"
+  )) +
+  scale_x_log10(labels = label_number(big.mark = ",")) +
+  scale_y_continuous(limits = c(1, 10) ,
+                     breaks = seq(2 , 10 , 2))
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/gdp_satisfaction.html")
+
+
+     # Analys: koppling mellan GDP och livstillfredsställelse
+p <- df %>% 
+  ggplot(aes(x = GDP, y = Livstillfredsställelse)) +
+  geom_point(aes(colour = Region)) +
   geom_smooth(method = "lm" , se = FALSE, colour = "red") +
   sis_theme +
   labs(colour = "Region") +
@@ -410,16 +433,13 @@ p <- df %>%
     "South America" = "#e5ad59"
   )) +
   scale_x_log10(labels = label_number(big.mark = ",")) +
-  scale_y_log10(labels = label_number(big.mark = ","))
+  scale_y_continuous(limits = c(1, 10) ,
+                     breaks = seq(2 , 10 , 2))
 
 model <- df %>% 
-  mutate(GDP = GDP / 10000)
+  mutate(GDP = GDP / 10000)  # För varje 10-tusental ökning av GDP, hur förändras livstillfredsställelse?
 lm <- lm(model$Livstillfredsställelse ~ model$GDP)
 
-img <- ggplotly(p, tooltip = "text") %>% 
-  config(displayModeBar = F)
-
-saveWidget(img, "images/gdp_satisfaction.html")
 
 
 
@@ -753,6 +773,76 @@ img <- ggplotly(p, tooltip = "text") %>%
 saveWidget(img, "images/gini.html")
 
 
+    # Analys: Koppling mellan Gini och livstillfredsställelse
+gini <- read_excel("data/gini.xlsx")
+colnames(gini) <- c("Land" , "År" , "Gini")
+gini$Gini <- as.numeric(gini$Gini)
+gini <- gini %>% 
+  drop_na(Gini) %>% 
+  filter(År == 2021)
+
+df <- read.csv("https://ourworldindata.org/grapher/gdp-vs-happiness.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod" , "År" , "Livstillfredsställelse" , "GDP", "Region")
+
+df <- df %>% 
+  filter(År == 2021)
+
+df <- left_join(df, gini, by = "Land") %>% 
+  drop_na(Gini)
+
+p <- df %>% 
+  ggplot(aes(x = Gini, y = Livstillfredsställelse ,
+             text = paste(Land, 
+                          "\nLivstillfredsställelse:", round(Livstillfredsställelse , 2),
+                          "\nGini: ", comma(round(Gini))))) +
+  geom_point(colour = "#5991E5") +
+  sis_theme +
+  xlab("Gini-koefficient") + ylab("Livstillfredsställelse, skala 1-10") +
+  scale_x_continuous(limits = c(0.2 , 0.6),
+                     breaks = seq(0.2, 0.6, 0.1))
+  scale_y_continuous(limits = c(1, 10) ,
+                     breaks = seq(2 , 10 , 2))
+
+model <- df %>% 
+  mutate(Gini = Gini*10) # För varje 0.1-steg i Gini - hur mycket förändras livstillfredställelse?
+model <- lm(model$Livstillfredsställelse ~ model$Gini)
+
+
+   # Analys: Koppling mellan Gini och GDP
+gini <- read_excel("data/gini.xlsx")
+colnames(gini) <- c("Land" , "År" , "Gini")
+gini$Gini <- as.numeric(gini$Gini)
+gini <- gini %>% 
+  drop_na(Gini) %>% 
+  filter(År == 2021)
+
+df <- read.csv("https://ourworldindata.org/grapher/gdp-vs-happiness.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod" , "År" , "Livstillfredsställelse" , "GDP", "Region")
+
+df <- df %>% 
+  filter(År == 2021)
+
+df <- left_join(df, gini, by = "Land") %>% 
+  drop_na(Gini, GDP)
+
+p <- df %>% 
+  ggplot(aes(x = Gini, y = GDP)) +
+  geom_point(colour = "#5991E5") +
+  geom_smooth(method = "lm" , colour = "#E56759" , se = FALSE) +
+  sis_theme +
+  xlab("Gini-koefficient") + ylab("GDP") +
+  scale_x_continuous(limits = c(0.2 , 0.6),
+                     breaks = seq(0.2, 0.6, 0.1)) +
+  scale_y_log10(labels = comma)
+
+model <- df %>% 
+  mutate(GDP = GDP / 10000) # För varje 10-tusental ökad GDP, hur förändras Gini?
+model <- lm(model$Gini ~ model$GDP)
+
+
+
+
+
 
 
 
@@ -783,7 +873,8 @@ df <- df %>%
 p <- df %>% 
   filter(Land == "Sweden") %>% 
   ggplot(aes(x = fct_reorder(Kategori, Andel, .desc = TRUE), y = Andel ,
-             text = paste("Kategori:" , Kategori , 
+             text = paste("Land:" , Land,
+                          "\nKategori:" , Kategori , 
                           "\nAndel av statliga utgifter:" , round(Andel, 2) , "%"))) +
   geom_col(fill = "#5991E5") +
   sis_theme +

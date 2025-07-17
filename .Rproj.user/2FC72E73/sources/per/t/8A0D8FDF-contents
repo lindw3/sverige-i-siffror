@@ -1,0 +1,2304 @@
+---
+title: "Rapport: RF-SISU Upplands Föreningsenkät 2025"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    navbar:
+      - { title: "Vår hemsida", href: "https://www.rfsisu.se/distrikt/uppland", align: right }
+    logo: "C:\\Users\\WILIDF17\\OneDrive - Sveriges Riksidrottsförbund\\Skrivbordet\\R\\RF-SISU Uppland\\Bilder\\rfsisu_183x48px_neg-text.png"
+    theme:
+      version: 4
+      bg: "white"
+      fg: "#1e3479" 
+      primary: "#006BB1" 
+      navbar-bg: "#1e3479"
+      base_font: Arial
+      heading_font: Arial
+      code_font: Arial
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(ggplot2)
+library(data.table)
+library(DT)
+library(scales)
+library(dplyr)
+library(tidyr)
+library(ggimage)
+library(magrittr)
+library(knitr)
+library(manipulate)
+library(flexdashboard)
+library(patchwork)
+library(gridExtra)
+library(readxl)
+library(openxlsx)
+library(plotly)
+library(sf)
+library(gganimate)
+library(gifski)
+library(stringr)
+```
+
+```{r data , echo = FALSE}
+load("C:\\Users\\WILIDF17\\OneDrive - Sveriges Riksidrottsförbund\\Dokument\\GitHub\\RF-SISU Uppland\\Foreningsenkaten\\.RData")
+
+```
+
+```{r if_storlek, echo = FALSE}
+if_storlek <- read_excel("C:\\Users\\WILIDF17\\OneDrive - Sveriges Riksidrottsförbund\\Dokument\\GitHub\\RF-SISU Uppland\\Foreningsenkaten\\data\\if_storlek.xlsx")
+
+df <- if_storlek %>% 
+  filter(Föreningsnr. %in% fe_2025$föreningsnr)
+colnames(df) <- c("föreningsnr", "unika_tot", "median", "storlek")
+  
+
+fe_2025 <- fe_2025 %>% 
+  left_join(df %>% 
+              select(storlek, föreningsnr), by = c("föreningsnr"))
+```
+
+
+
+```{css}
+  {
+  height: 100px;
+}
+
+
+.html-widget.gauge {
+    height: 100px
+}
+
+.html-widget.gauge svg {
+  height: 100px
+}
+
+
+.value-box {
+  height: 100px;
+}
+
+.value-box .value {
+    color: white;
+}
+.value-box .caption {
+    color: white;
+}
+
+
+.hoverlayer{
+    text{
+        fill: #fff !important;
+    }
+}
+```
+
+
+
+# Översikt {data-orientation="rows"}
+
+## Rad 1 {data-height="250"}
+
+###
+
+Detta är en rapport för RF-SISU Upplands föreningsenkät 2025. Enkäten skickas årligen ut till samtliga av Upplands idrottsföreningar. I år hade föreningsenkäten temat **inkludering och jämställdhet**, med ett ytterligare antal frågor i ämnet.
+<br><br>
+Använd navigationspanelen högst upp för att se svaren utifrån olika områden. *Får figurerna inte plats på sidan? Testa att zooma ut genom att hålla in `Ctrl` + `-`.*
+<br><br>
+Vid frågor, hör av dig till [william.lind\@rfsisu.se](mailto:william.lind@rfsisu.se){.email}
+
+## Rad 2 {data-height="100"}
+
+### Enkätperiod {data-height="100"}
+
+```{r}
+enkätperiod <- "28 februari - 15 juni"
+valueBox(enkätperiod, icon = "ion-calendar" , color = "#1e3479")
+```
+
+### Antal svarande idrottsföreningar {data-height="100"}
+
+```{r}
+antalsvar <- nrow(fe_2025)
+valueBox(antalsvar, icon = "ion-chatbubble" , color = "#994346")
+```
+
+### Antal svarande idrotter
+
+```{r}
+df <- strsplit(as.character(fe_2025$idrott), ";") # Separera idrotterna för att kunna räkna dem separat
+df <- unlist(df) 
+df <- table(df) 
+df <- as_tibble(df)
+df <- df[df$df != "Gång och vandring", ] # Ta bort Gång och vandring som inte längre är en idrott
+
+antalidrotter <- length(unique(df[["df"]]))
+valueBox(antalidrotter, icon = "fa-basketball" , color = "#1EAFA0")
+```
+
+## Rad 3 {data-height="650" .tabset .tabset-pills}
+
+### Svarsfrekvens, årsjämförelse
+
+```{r , fig.width = 15}
+df <- data.frame(år = c("2018" , "2019" , "2020" , "2022" , "2023" , "2024" , "2025") , 
+                 svar = c(nrow(fe_2018) , nrow(fe_2019) , nrow(fe_2020) , 
+                          nrow(fe_2022) , nrow(fe_2023) , nrow(fe_2024) , nrow(fe_2025)))
+
+ggplot(df , aes(x = år , y = svar , text = paste(år , "\nSvar:" , svar))) + 
+         geom_col(aes(fill = år)) +
+         rfsisu_theme +
+         labs(fill = "År" , 
+              caption = "Antal svar varje år. Notera att ingen föreningsenkät genomfördes under 2021.") +
+         xlab(NULL) + ylab("Antal svar") +
+         scale_y_continuous(breaks = seq(0 , 600 , 100)) +
+         scale_fill_manual(values = c("2018" = "#1EAFA0" , "2019" = "#1e3479" , "2020" = "#B51E17" , 
+                                      "2022" = "#63E4D7" , "2023" = "#00A7E0" , "2024" = "#994346" ,
+                                      "2025" = "#003559")) + 
+         theme(legend.position = "none")   -> p_svar_årsjmf
+
+ggplotly(p_svar_årsjmf , tooltip = "text") %>% config(displayModeBar = FALSE) %>% 
+  layout(  
+    annotations = list(
+      x = 'left',  
+      y = 'bottom',  
+      text = "Antal svar utifrån år. Observera att ingen föreningsenkät genomfördes 2021.", 
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',  
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+```
+
+# Svar {data-orientation="columns"}
+## Kolumn 1 {.tabset .tabset-pills data-width="600"}
+### Idrottssektioner per idrott
+```{r}
+df <- strsplit(as.character(fe_2025$idrott), ";") # Separera idrotterna för att kunna räkna dem separat
+df <- unlist(df) 
+df <- table(df) 
+df <- as_tibble(df)
+df <- df[df$df != "Gång och vandring", ] # Ta bort Gång och vandring som inte längre är en idrott
+
+df <- df %>%
+  mutate(andel = round(n/nrow(fe_2025) , digits = 3))
+
+ggplot(df , aes(x = reorder(df , -n) , y = n , 
+                          text = paste(df , "\nSvar:" , n , "\nAndel:" , andel  * 100 , "%"))) +  
+  geom_bar(stat = "identity" , fill = "#006BB1") +
+  rfsisu_theme +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
+  xlab(NULL) + ylab("Antal")    -> p_ifidrott2025
+
+ggplotly(p_ifidrott2025 , tooltip = "text") %>% config(displayModeBar = FALSE)
+```
+
+
+
+## Kolumn 2 {.tabset .tabset-pills data-width="400"}
+### Idrottsföreningar per kommun
+
+```{r}
+df <- fe_2025 %>%                                  
+  group_by(kommun) %>%
+  tally () %>%
+  mutate(
+    andel = round(n/sum(n) , digits = 2) , 
+    idrottsföreningar = c(
+                          sum(grepl("Enköping", idrottsföreningar$Kommun)) ,
+                          sum(grepl("Heby", idrottsföreningar$Kommun)) ,
+                          sum(grepl("Håbo", idrottsföreningar$Kommun)) ,
+                          sum(grepl("Knivsta", idrottsföreningar$Kommun)) ,
+                          sum(grepl("Norrtälje", idrottsföreningar$Kommun)) ,
+                          sum(grepl("Sigtuna", idrottsföreningar$Kommun)) ,
+                          sum(grepl("Tierp", idrottsföreningar$Kommun)) ,
+                          sum(grepl("Uppsala", idrottsföreningar$Kommun)) ,
+                          sum(grepl("Älvkarleby", idrottsföreningar$Kommun)) ,
+                          sum(grepl("Östhammar", idrottsföreningar$Kommun))
+                               ) , 
+    andelkommun = round(n/idrottsföreningar , digits = 2)
+         )
+
+ggplot(df , aes(x = kommun , y = n , 
+                text = paste(kommun , "\nSvar:" , n , "\nAndel:" , andel  * 100 , "%"))) +
+  geom_col(fill = "#006BB1") +
+  rfsisu_theme +
+  labs(caption = "Antal svarande idrottsföreningar utifrån kommun.") +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
+  xlab(NULL) + ylab("Antal")  -> p_ifkommun2025
+
+ggplotly(p_ifkommun2025 , tooltip = "text") %>% config(displayModeBar = FALSE)
+```
+
+### Andel svarande idrottsföreningar per kommun
+
+```{r}
+ggplot(df , aes (x = kommun , y = andelkommun , 
+                 text = paste(kommun , "\nAndel:" , andelkommun  * 100 , "%"))) +
+  geom_col(fill = "#006BB1") +
+  rfsisu_theme +
+  labs(caption = "Andel svarande IF per kommun.") +
+  xlab(NULL) + ylab("Andel, %") +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
+  scale_y_continuous(labels = scales::label_percent() , limits = c(0,1))  -> p_andelsvarkommun2025
+
+ggplotly(p_andelsvarkommun2025 , tooltip = "text") %>% config(displayModeBar = FALSE)
+```
+
+
+
+
+
+
+
+
+
+
+# Styrelser som helhet {data-navmenu="Föreningsledare" data-orientation="rows"}
+```{r}
+
+   ## FILTRERA UT OUTLIERS UTIFRÅN IQR FÖR ATT SEDAN TA MEDELVÄRDET
+
+meanstyrelse_k25 <- fe_2025 %>% 
+  filter(styrelse_k25 < 5) %$% 
+  mean(styrelse_k25 , na.rm = TRUE)     
+
+meanstyrelse_k45 <- fe_2025 %>% 
+  filter(styrelse_k45 < 6) %$% 
+  mean(styrelse_k45 , na.rm = TRUE)
+
+meanstyrelse_k64 <- fe_2025 %>% 
+  filter(styrelse_k64 < 8) %$% 
+  mean(styrelse_k64 , na.rm = TRUE)
+
+meanstyrelse_k65 <- fe_2025 %>% 
+  filter(styrelse_k65 < 5) %$% 
+  mean(styrelse_k65 , na.rm = TRUE)
+
+meanstyrelse_m25 <- fe_2025 %>% 
+  filter(styrelse_m25 < 5) %$% 
+  mean(styrelse_m25 , na.rm = TRUE)  
+
+meanstyrelse_m45 <- fe_2025 %>% 
+  filter(styrelse_m45 < 6) %$% 
+  mean(styrelse_m45 , na.rm = TRUE)
+
+meanstyrelse_m64 <- fe_2025 %>% 
+  filter(styrelse_m64 < 9) %$% 
+  mean(styrelse_m64 , na.rm = TRUE)
+
+meanstyrelse_m65 <- fe_2025 %>% 
+  filter(styrelse_m65 < 6) %$% 
+  mean(styrelse_m65 , na.rm = TRUE)
+
+
+meanstyrelse_k <- meanstyrelse_k25 + meanstyrelse_k45 + meanstyrelse_k64 + meanstyrelse_k65 
+meanstyrelse_m <- meanstyrelse_m25 + meanstyrelse_m45 + meanstyrelse_m64 + meanstyrelse_m65 
+
+```
+
+## Rad 1 {data-height="100"}
+
+### Snittantal kvinnor i styrelsen/IF {data-width="1000"}
+
+```{r}
+medelkvinnor_styrelse <- round(meanstyrelse_k , digits = 2)
+valueBox(medelkvinnor_styrelse, icon = "ion-female" , color = "#1e3479")
+```
+
+###  {data-height="100"}
+
+```{r}
+andelkvinnor <- round(meanstyrelse_k / (meanstyrelse_m + meanstyrelse_k) * 100 , digits = 0)
+gauge(andelkvinnor, min = 0, max = 100, symbol = '%', gaugeSectors(success = c(40, 60), 
+                                                         warning = c(0 , 39), 
+                                                         danger = c(61 , 100) , 
+                                                         colors = c("#1e3479" , "#1e3479" , "#1e3479")
+))
+```
+
+###  {data-height="100"}
+
+```{r}
+andelmän <- round(meanstyrelse_m / (meanstyrelse_m + meanstyrelse_k) * 100 , digits = 0)
+gauge(andelmän, min = 0, max = 100, symbol = '%', gaugeSectors(success = c(40, 60), 
+                                                         warning = c(0 , 39), 
+                                                         danger = c(61 , 100) , 
+                                                         colors = c("#1e3479" , "#1e3479" , "#1e3479")
+))
+```
+
+### Snittantal män i styrelsen/IF {data-width="1000"}
+
+```{r}
+medelmän_styrelse <- round(meanstyrelse_m , digits = 2)
+valueBox(medelmän_styrelse, icon = "ion-male" , color = "#1e3479")
+```
+
+## Rad 2 {data-height="900"}
+
+### Genomsnittligt antal styrelsemedlemmar utifrån målgrupp
+
+```{r}
+df <- data.frame(ålder = c(
+                           "-25 år", "26-45 år", "46-64 år", "65+ år" ,
+                           "-25 år" , "26-45 år" , "46-64 år" , "65+ år"
+                           ), 
+                 kön = c(
+                   "Kvinnor" , "Kvinnor" , "Kvinnor", "Kvinnor" ,
+                   "Män" , "Män" , "Män" , "Män"
+                 ) ,
+                 mean = c(
+                   meanstyrelse_k25 , 
+                   meanstyrelse_k45 , 
+                   meanstyrelse_k64 , 
+                   meanstyrelse_k65 , 
+                   meanstyrelse_m25 , 
+                   meanstyrelse_m45 , 
+                   meanstyrelse_m64 , 
+                   meanstyrelse_m65
+                   )
+                 )
+df$mean <- round(df$mean , digits = 2)
+
+ggplot(df, aes(x = ålder , y = mean , fill = kön ,
+               text = paste(kön , ålder , "\nGenomsnitt:" , mean))) +       
+       geom_col() +
+       scale_fill_manual(values = c(
+         "Män" = "#1EAFA0",
+         "Kvinnor" = "#994346"
+       )) +
+       rfsisu_theme +
+       xlab(NULL) + ylab ("Medelantal") + labs(fill = "Kön") +
+       ylim(0 , 3)   ->  p_styrelse2025
+
+ggplotly(p_styrelse2025 , tooltip = "text") %>% config(displayModeBar = FALSE)
+
+```
+
+### Genomsnittligt antal styrelsemedlemmar, årsjämförelse
+
+```{r}
+df <- data.frame(år = c("2018" , "2019" , "2020" , "2022" , "2023" , "2024" , "2025") ,
+                                  mean = c(mean(fe_2018$styrelse_tot , na.rm = TRUE) ,
+                                           mean(fe_2019$styrelse_tot , na.rm = TRUE) ,
+                                           mean(fe_2020$styrelse_tot , na.rm = TRUE) ,
+                                           mean(fe_2022$styrelse_tot , na.rm = TRUE) ,
+                                           mean(fe_2023$styrelse_tot , na.rm = TRUE) ,
+                                           mean(fe_2024$styrelse_tot , na.rm = TRUE) ,
+                                           mean(fe_2025$styrelse_tot , na.rm = TRUE)))
+df$mean <- round(df$mean , digits = 2)
+
+ggplot(df , aes(x = år , y = mean , text = paste(år , "\nGenomsnitt:" , mean))) +
+  geom_col(aes(fill = år), show.legend=FALSE) +
+  rfsisu_theme +
+  labs(caption = "Genomsnittligt antal styrelsemedlemmar utifrån år." , fill = "År") +
+  xlab(NULL) + ylab ("Medelantal") +
+  scale_fill_manual(values = c("2018" = "#1EAFA0" , "2019" = "#1e3479" , "2020" = "#B51E17" , 
+                               "2022" = "#63E4D7" , "2023" = "#00A7E0" , "2024" = "#994346" ,
+                               "2025" = "#003559"))  ->  p_meanstyrelse_årsjmf
+
+ggplotly(p_meanstyrelse_årsjmf , tooltip = "text") %>% config(displayModeBar = FALSE)
+```
+
+### Genomsnittligt antal styrelsemedlemmar utifrån antal aktiva
+```{r}
+df <- fe_2025 %>% 
+  group_by(storlek) %>% 
+  drop_na(storlek) %>% 
+  summarize(mean = round(mean(styrelse_tot, na.rm = TRUE), 2))
+
+ggplot(df , aes(x = factor(storlek) , y = mean , 
+                text = paste("Antal aktiva:" , storlek , "\nGenomsnitt:" , mean))) +
+  geom_col(fill = "#006BB1") +
+  rfsisu_theme +
+  xlab(NULL) + ylab ("Medelantal")  ->  p_meanstyrelse_storlek
+
+ggplotly(p_meanstyrelse_storlek , tooltip = "text") %>% config(displayModeBar = FALSE)
+
+```
+
+
+
+
+
+
+
+# Styrelser utifrån bakgrund {data-navmenu="Föreningsledare" data-orientation="columns"}
+
+
+## Kolumn 1 {.tabset .tabset-pills}
+
+### Andel styrelsemedlemmar med svensk/utländsk bakgrund utifrån kön
+
+```{r}
+df <- fe_2025 %>% 
+  drop_na(kvinnor_utländskbakgrund , män_utländskbakgrund , styrelse_tot) %>% 
+  reframe(
+    Bakgrund = c("Svensk bakgrund" , "Svensk bakgrund" ,
+                 "Utländsk bakgrund" , "Utländsk bakgrund") ,
+    Kön = c("Kvinnor" , "Män" ,
+            "Kvinnor" , "Män") ,
+    Andel = c
+          (
+            sum(styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65 - kvinnor_utländskbakgrund) / 
+            sum(styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65)  ,
+            
+            sum(styrelse_m25 + styrelse_m45 + styrelse_m64 + styrelse_m65 - män_utländskbakgrund) / 
+            sum(styrelse_m25 + styrelse_m45 + styrelse_m64 + styrelse_m65)  ,
+            
+            sum(kvinnor_utländskbakgrund) / 
+              sum(styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65), 
+            
+            sum(män_utländskbakgrund) / 
+              sum(styrelse_m25 + styrelse_m45 + styrelse_m64 + styrelse_m65)
+          )
+          )
+
+
+df %>%
+ggplot(aes(x = Kön , y = Andel, fill = Bakgrund, group = Bakgrund,
+             text = paste(Kön, "\n" , Bakgrund,  "\nAndel:" , round(Andel * 100 , digits = 1) , "%"))) +
+  geom_bar(position = "stack" , stat = "identity") +
+  rfsisu_theme +
+  xlab(NULL) + 
+  scale_fill_manual(values = c("Svensk bakgrund" = "#1EAFA0" , "Utländsk bakgrund" = "#994346")) +
+  scale_y_continuous(labels = scales::label_percent() ,
+                     limits = c(0 , 1)) -> p_utländskbakgrund_styrelse_kön
+
+ggplotly(p_utländskbakgrund_styrelse_kön , tooltip = "text") %>% config(displayModeBar = FALSE) %>% 
+  layout(  
+    annotations = list(
+      x = 'left',  
+      y = 'bottom',  
+      text = "Utländsk bakgrund har den som är utrikes född eller inrikes född med två utrikes födda föräldrar.", 
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',  
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+
+
+```
+
+
+
+
+### Könsfördelning i styrelser utifrån bakgrund
+
+```{r}
+df1 <- fe_2025 %>% 
+  drop_na(kvinnor_utländskbakgrund , män_utländskbakgrund) %>% 
+  reframe(
+    Bakgrund = c("Utländsk bakgrund" , "Utländsk bakgrund") ,
+    Kön = c("Kvinnor" , "Män") ,
+    Andel = c
+          (
+            sum(kvinnor_utländskbakgrund) /
+            sum(kvinnor_utländskbakgrund + män_utländskbakgrund),
+            sum(män_utländskbakgrund) / 
+            sum(kvinnor_utländskbakgrund + män_utländskbakgrund)
+          )
+          )
+
+df2 <- fe_2025 %>%
+  drop_na(styrelse_tot, kvinnor_utländskbakgrund , män_utländskbakgrund) %>%
+  reframe(
+    Bakgrund = c("Svensk bakgrund" , "Svensk bakgrund") ,
+    Kön = c("Kvinnor" , "Män") ,
+    Andel = c
+          (
+            sum(styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65 - 
+                  kvinnor_utländskbakgrund) /
+            sum(styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65 +
+                styrelse_m25 + styrelse_m45 + styrelse_m64 + styrelse_m65 - 
+                  kvinnor_utländskbakgrund - män_utländskbakgrund),
+            sum(styrelse_m25 + styrelse_m45 + styrelse_m64 + styrelse_m65 - 
+                  män_utländskbakgrund) / 
+            sum(styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65 +
+                styrelse_m25 + styrelse_m45 + styrelse_m64 + styrelse_m65 - 
+                  män_utländskbakgrund - kvinnor_utländskbakgrund)
+          )
+          )
+
+df1 %>% full_join(df2) %>%
+ggplot(aes(x = Bakgrund , y = Andel, fill = Kön, group = Kön,
+             text = paste(Kön , "\n" , Bakgrund , "\nAndel:" , round(Andel * 100 , digits = 1) , "%"))) +
+  geom_bar(position = "stack" , stat = "identity") +
+  rfsisu_theme +
+  xlab(NULL) + 
+  scale_fill_manual(values = c("Kvinnor" = "#1EAFA0" , "Män" = "#994346")) +
+  scale_y_continuous(labels = scales::label_percent() ,
+                     limits = c(0 , 1)) -> p_utländskbakgrund_styrelse
+
+ggplotly(p_utländskbakgrund_styrelse , tooltip = "text") %>% 
+  config(displayModeBar = FALSE) %>% 
+  layout(
+    annotations = list(
+      x = 'left',  
+      y = 'bottom',  
+      text = "Utländsk bakgrund har den som är utrikes född eller inrikes född med två utrikes födda föräldrar.", 
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',  
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+
+```
+
+
+
+
+
+## Kolumn 2 {.tabset .tabset-pills}
+
+### Andel styrelser med minst en person med utländsk bakgrund, jämförelse med 2020
+
+```{r}
+utländskbakgrund_styrelse_2020 <- data.frame("2020" = 0.244)
+names(utländskbakgrund_styrelse_2020) <- "2020"
+
+utländskbakgrund_styrelse_2025 <- fe_2025 %>% 
+  drop_na(kvinnor_utländskbakgrund , män_utländskbakgrund) %>% 
+  summarize(n = n() ,
+            utländskbakgrund = sum(kvinnor_utländskbakgrund == 1 | 
+                                   män_utländskbakgrund == 1)) %>% 
+  mutate("2025" = utländskbakgrund/n) %>% 
+  select("2025")
+
+utländskbakgrund_styrelse_2025 %>% 
+  cross_join(utländskbakgrund_styrelse_2020) %>% 
+  pivot_longer(
+    cols = everything(),
+    names_to = "Kategori" ,
+    values_to = "Andel"
+    ) %>% 
+  ggplot(aes(x = Kategori , y = Andel , 
+             text = paste(Kategori , "\nAndel:" , round(Andel * 100 , digits = 1) , "%"))) +
+  geom_col(fill = "#006BB1") +
+  rfsisu_theme +
+  xlab(NULL) + 
+  scale_y_continuous(labels = scales::label_percent() ,
+                     limits = c(0 , 1)) -> p_utländskbakgrund_styrelse_jmf
+
+ggplotly(p_utländskbakgrund_styrelse_jmf , tooltip = "text") %>% config(displayModeBar = FALSE) %>% 
+  layout(  
+    annotations = list(
+      x = 'left',  
+      y = 'bottom',  
+      text = "Utländsk bakgrund har den som är utrikes född eller inrikes född med två utrikes födda föräldrar.", 
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',  
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+
+```
+
+
+
+
+
+
+
+
+
+# Föreningsledare per kommun {data-navmenu="Föreningsledare" data-orientation="columns"}
+
+## Kolumn 1 {.tabset .tabset-pills}
+
+### Styrelsemedlemmar per kommun, 2025
+
+```{r}
+kommuneruppland %>% 
+  filter(år == 2025) %>% 
+ggplot(aes(text = paste(kommunnamn , "\nGenomsnitt:" , styrelse))) +
+  geom_sf(aes(fill = styrelse)) +
+  rfsisu_theme +
+  scale_fill_gradient(low = "#8DE2FF" , high = "#1e3479") +
+  labs(fill = "Medelantal i styrelsen") +
+  theme(panel.grid.major = NULL,
+        panel.grid.minor = NULL , 
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())   -> p_map_styrelse2025
+
+ggplotly(p_map_styrelse2025 , tooltip = "text") %>% 
+         config(displayModeBar = FALSE) %>% 
+  layout(
+    annotations = list(
+      x = 'left',
+      y = 'bottom',
+      text = "Genomsnittligt antal styrelsemedlemmar per kommun.",
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+```
+
+### Styrelsemedlemmar per kommun, årsjämförelse
+
+```{r}
+styrelse_perkommun2018 <- fe_2018 %>%
+  group_by(kommun) %>%
+  summarise(mean = round(mean(styrelse_tot , na.rm = TRUE) , digits = 2))
+
+styrelse_perkommun2019 <- fe_2019 %>%
+  group_by(kommun) %>%
+  summarise(mean = round(mean(styrelse_tot , na.rm = TRUE) , digits = 2))
+
+styrelse_perkommun2020 <- fe_2020 %>%
+  group_by(kommun) %>%
+  summarise(mean = round(mean(styrelse_tot , na.rm = TRUE) , digits = 2))
+
+styrelse_perkommun2022 <- fe_2022 %>%
+  group_by(kommun) %>%
+  summarise(mean = round(mean(styrelse_tot , na.rm = TRUE) , digits = 2))
+
+styrelse_perkommun2023 <- fe_2023 %>%
+  group_by(kommun) %>%
+  summarise(mean = round(mean(styrelse_tot , na.rm = TRUE) , digits = 2))
+
+styrelse_perkommun2024 <- fe_2024 %>%
+  group_by(kommun) %>%
+  summarise(mean = round(mean(styrelse_tot , na.rm = TRUE) , digits = 2))
+
+styrelse_perkommun2025 <- fe_2025 %>%
+  group_by(kommun) %>%
+  summarise(mean = round(mean(styrelse_tot , na.rm = TRUE) , digits = 2))
+
+
+df <- jmf_år_7(styrelse_perkommun2018 , styrelse_perkommun2019 , styrelse_perkommun2020 , 
+         styrelse_perkommun2022 , styrelse_perkommun2023 , styrelse_perkommun2024 , styrelse_perkommun2025)
+df$mean <- round(df$mean , digits = 2)
+df$år =  c("2018" , "2018" , "2018" , "2018" , "2018" , "2018" , "2018" , "2018" , "2018" , "2018" , 
+           "2019" , "2019" , "2019" , "2019" , "2019" , "2019" , "2019" , "2019" , "2019" , "2019" , 
+           "2020" , "2020" , "2020" , "2020" , "2020" , "2020" , "2020" , "2020" , "2020" , "2020" , 
+           "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , 
+           "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , 
+           "2024" , "2024" , "2024" , "2024" , "2024" , "2024" , "2024" , "2024" , "2024" , "2024" ,
+           "2025" , "2025" , "2025" , "2025" , "2025" , "2025" , "2025" , "2025" , "2025" , "2025")
+
+df %>% 
+  ggplot(aes(x = år , y = mean , group = kommun , colour = kommun , 
+             text = paste("\nÅr:" , år , "\nKommun:" , kommun , "\nGenomsnitt:" , mean))) +
+  geom_line(linewidth = 1.2) +
+  rfsisu_theme +
+  labs(x = NULL , y = "Styrelsemedlemmar/IF" , color = "Kommun") +
+  scale_color_manual(values = c("Enköping" = "#00A7E0" , "Heby" = "#003559" , "Håbo" = "#1EAFA0" , 
+                                "Knivsta" = "#007B5E" , "Norrtälje" = "#E4352D" , "Sigtuna" = "#BE1219" ,  
+                                "Tierp" = "#8DE2FF" ,  "Uppsala" = "#63E4D7" , "Älvkarleby" = "#F4AEAB" , 
+                                "Östhammar" = "#5F090D")) +
+  scale_y_continuous(limits = c(0 , 9) , breaks = seq(0 , 9 , 1)) -> p_styrelse_perkommun_årsjmf
+
+
+ggplotly(p_styrelse_perkommun_årsjmf , tooltip = "text") %>% config(displayModeBar = FALSE)
+```
+
+### Valberedning per kommun, 2025
+```{r}
+kommuneruppland %>% 
+  filter(år == 2025) %>% 
+ggplot(aes(text = paste(kommunnamn , "\nGenomsnitt:" , valberedning))) +
+  geom_sf(aes(fill = valberedning)) +
+  rfsisu_theme +
+  scale_fill_gradient(low = "#8DE2FF" , high = "#1e3479") +
+  labs(fill = "Medelantal i valberedningen") +
+  theme(panel.grid.major = NULL,
+        panel.grid.minor = NULL , 
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())   -> p_map_valberedning2025
+
+ggplotly(p_map_valberedning2025 , tooltip = "text") %>% 
+         config(displayModeBar = FALSE) %>% 
+  layout(
+    annotations = list(
+      x = 'left',
+      y = 'bottom',
+      text = "Genomsnittligt antal valberedare per kommun.",
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+
+```
+
+### Valberedare per kommun, årsjämförelse
+```{r}
+valberedning_perkommun2018 <- fe_2018 %>%
+  group_by(kommun) %>%
+  summarise(mean = round(mean(valberedning_tot , na.rm = TRUE) , digits = 2))
+
+valberedning_perkommun2019 <- fe_2019 %>%
+  group_by(kommun) %>%
+  summarise(mean = round(mean(valberedning_tot , na.rm = TRUE) , digits = 2))
+
+valberedning_perkommun2020 <- fe_2020 %>%
+  group_by(kommun) %>%
+  summarise(mean = round(mean(valberedning_tot , na.rm = TRUE) , digits = 2))
+
+valberedning_perkommun2022 <- fe_2022 %>%
+  group_by(kommun) %>%
+  summarise(mean = round(mean(valberedning_tot , na.rm = TRUE) , digits = 2))
+
+valberedning_perkommun2023 <- fe_2023 %>%
+  group_by(kommun) %>%
+  summarise(mean = round(mean(valberedning_tot , na.rm = TRUE) , digits = 2))
+
+valberedning_perkommun2024 <- fe_2024 %>%
+  group_by(kommun) %>%
+  summarise(mean = round(mean(valberedning_tot , na.rm = TRUE) , digits = 2))
+
+valberedning_perkommun2025 <- fe_2025 %>%
+  group_by(kommun) %>%
+  summarise(mean = round(mean(valberedning_tot , na.rm = TRUE) , digits = 2))
+
+
+df <- jmf_år_7(valberedning_perkommun2018 , valberedning_perkommun2019 , 
+               valberedning_perkommun2020 , valberedning_perkommun2022 , 
+               valberedning_perkommun2023 , valberedning_perkommun2024 , 
+               valberedning_perkommun2025)
+df$mean <- round(df$mean , digits = 2)
+df$år =  c("2018" , "2018" , "2018" , "2018" , "2018" , "2018" , "2018" , "2018" , "2018" , "2018" , 
+           "2019" , "2019" , "2019" , "2019" , "2019" , "2019" , "2019" , "2019" , "2019" , "2019" , 
+           "2020" , "2020" , "2020" , "2020" , "2020" , "2020" , "2020" , "2020" , "2020" , "2020" , 
+           "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , 
+           "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , 
+           "2024" , "2024" , "2024" , "2024" , "2024" , "2024" , "2024" , "2024" , "2024" , "2024" ,
+           "2025" , "2025" , "2025" , "2025" , "2025" , "2025" , "2025" , "2025" , "2025" , "2025")
+
+df %>% 
+  ggplot(aes(x = år , y = mean , group = kommun , colour = kommun , 
+             text = paste("\nÅr:" , år , "\nKommun:" , kommun , "\nGenomsnitt:" , mean))) +
+  geom_line(linewidth = 1.2) +
+  rfsisu_theme +
+  labs(x = NULL , y = "Valberedare/IF" , color = "Kommun") +
+  scale_color_manual(values = c("Enköping" = "#00A7E0" , "Heby" = "#003559" , "Håbo" = "#1EAFA0" , 
+                                "Knivsta" = "#007B5E" , "Norrtälje" = "#E4352D" , "Sigtuna" = "#BE1219" ,  
+                                "Tierp" = "#8DE2FF" ,  "Uppsala" = "#63E4D7" , "Älvkarleby" = "#F4AEAB" , 
+                                "Östhammar" = "#5F090D")) +
+  scale_y_continuous(limits = c(0 , 3) , breaks = seq(0 , 3 , 0.5)) -> p_valberedning_perkommun_årsjmf
+
+
+ggplotly(p_valberedning_perkommun_årsjmf , tooltip = "text") %>% config(displayModeBar = FALSE)
+
+```
+
+
+
+
+
+## Kolumn 2 {.tabset .tabset-pills}
+### Föreningsledare per kommun
+
+```{r}
+df <- fe_2025 %>% 
+  group_by(kommun) %>% 
+  summarize(medelstyrelse = as.numeric(format(mean(styrelse_tot , na.rm = TRUE) , digits = 3)) , 
+            medelvalberedning = as.numeric(format(mean(valberedning_tot , na.rm = TRUE) , digits = 3)) , 
+            antalif = n())
+  
+  ggplot(df, aes(x = medelstyrelse , y = medelvalberedning , 
+                text = paste(kommun , 
+                             "\nStyrelse:" , medelstyrelse , 
+                             "\nValberedning:" , medelvalberedning))) + 
+    geom_point(aes(colour = kommun , size = antalif)) +
+    rfsisu_theme +
+    labs(caption = "Snittantal i styrelse (x-axeln) och valberedning (y-axeln) utifrån kommun. \nCirklarnas storlek speglar antal svar." , colour = "Kommun") +
+    xlab("Styrelse, medelvärde") + ylab("Valberedning, medelvärde") +
+    scale_x_continuous(limits = c(1 , 9) , breaks = seq(1 , 9 , 1)) +
+    scale_y_continuous(limits = c(0 , 3) , breaks = seq(0 , 3 , 0.5)) +
+    guides(color = guide_legend(override.aes = list(size = 2))) +
+    scale_size_area(max_size = 10 , name = NULL , labels = NULL , breaks = NULL) +
+    scale_color_manual(values = c("Enköping" = "#00A7E0" , "Heby" = "#003559" , "Håbo" = "#1EAFA0" , 
+                                  "Knivsta" = "#007B5E" , "Norrtälje" = "#E4352D" , "Sigtuna" = "#BE1219" ,  
+                                  "Tierp" = "#8DE2FF" ,  "Uppsala" = "#63E4D7" , "Älvkarleby" = "#F4AEAB" , 
+                                  "Östhammar" = "#5F090D")) -> p_fledare_kommun
+
+ggplotly(p_fledare_kommun , tooltip = "text") %>% config(displayModeBar = FALSE) %>% 
+  layout(  
+    annotations = list(
+      x = 'left',  
+      y = 'bottom',  
+      text = "Genomsnittsantal i styrelse och valberedning per kommun. Cirklarnas storlek speglar antal svarande föreningar.", 
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',  
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+```
+
+# Jämställdhet i styrelser {data-navmenu="Föreningsledare" data-orientation="columns"}
+## Kolumn 1 {.tabset .tabset-pills}
+### Jämställdhet i styrelser
+
+```{r}
+styrelse_jämställd2018 <- fe_2018 %>%  
+  filter(between((styrelse_k)
+                 / (styrelse_k + styrelse_m) , 
+                 0.4 , 0.6))
+
+ingakvinnorstyrelse2018 <- fe_2018 %>%  
+  filter(styrelse_k == 0)
+
+ingamänstyrelse2018 <- fe_2018 %>%  
+  filter(styrelse_m == 0)
+
+
+styrelse_jämställd2019 <- fe_2019 %>%  
+  filter(between((styrelse_k)
+                 / (styrelse_k + styrelse_m) , 
+                 0.4 , 0.6))
+
+ingakvinnorstyrelse2019 <- fe_2019 %>%  
+  filter(styrelse_k == 0)
+
+ingamänstyrelse2019 <- fe_2019 %>%  
+  filter(styrelse_m == 0)
+
+
+styrelse_jämställd2020 <- fe_2020 %>%  
+  filter(between((styrelse_k)
+                 / (styrelse_k + styrelse_m) , 
+                 0.4 , 0.6))
+
+ingakvinnorstyrelse2020 <- fe_2020 %>%  
+  filter(styrelse_k == 0)
+
+ingamänstyrelse2020 <- fe_2020 %>%  
+  filter(styrelse_m == 0)
+
+
+styrelse_jämställd2022 <- fe_2022 %>%  
+  filter(between((styrelse_k25 + styrelse_k64 + styrelse_k65)
+                 / (styrelse_k25 + styrelse_k64 + styrelse_k65 + 
+                      styrelse_m25 + styrelse_m64 + styrelse_m65) , 
+                 0.4 , 0.6))
+
+ingakvinnorstyrelse2022 <- fe_2022 %>%  
+  filter((styrelse_k25 + styrelse_k64 + styrelse_k65) == 0)
+
+ingamänstyrelse2022 <- fe_2022 %>%  
+  filter((styrelse_m25 + styrelse_m64 + styrelse_m65) == 0)
+
+
+styrelse_jämställd2023 <- fe_2023 %>%  
+  filter(between((styrelse_k25 + styrelse_k64 + styrelse_k65)
+                 / (styrelse_k25 + styrelse_k64 + styrelse_k65 + 
+                      styrelse_m25 + styrelse_m64 + styrelse_m65) , 
+                 0.4 , 0.6))
+
+ingakvinnorstyrelse2023 <- fe_2023 %>%  
+  filter((styrelse_k25 + styrelse_k64 + styrelse_k65) == 0)
+
+ingamänstyrelse2023 <- fe_2023 %>%  
+  filter((styrelse_m25 + styrelse_m64 + styrelse_m65) == 0)
+
+
+styrelse_jämställd2024 <- fe_2024 %>%  
+  filter(between((styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65)
+                 / (styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65 + 
+                      styrelse_m25 + styrelse_m45 + styrelse_m64 + styrelse_m65) , 
+                 0.4 , 0.6))
+
+ingakvinnorstyrelse2024 <- fe_2024 %>%  
+  filter((styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65) == 0)
+
+ingamänstyrelse2024 <- fe_2024 %>%  
+  filter((styrelse_m25 + styrelse_m45 + styrelse_m64 + styrelse_m65) == 0)
+
+
+styrelse_jämställd2025 <- fe_2025 %>%  
+  filter(between((styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65)
+                 / (styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65 + 
+                      styrelse_m25 + styrelse_m45 + styrelse_m64 + styrelse_m65) , 
+                 0.4 , 0.6))
+
+ingakvinnorstyrelse2025 <- fe_2025 %>%  
+  filter((styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65) == 0)
+
+ingamänstyrelse2025 <- fe_2025 %>%  
+  filter((styrelse_m25 + styrelse_m45 + styrelse_m64 + styrelse_m65) == 0)
+
+
+data.frame(kategori = c("Jämställt \n(60/40)" , "Inga kvinnor" , "Inga män") , 
+           andel = c(nrow(styrelse_jämställd2018) / nrow(fe_2018) , 
+                     nrow(ingakvinnorstyrelse2018) / nrow(fe_2018) , 
+                     nrow(ingamänstyrelse2018) / nrow(fe_2018)))  -> jämställdhetstyrelse2018
+jämställdhetstyrelse2018$andel <- round(jämställdhetstyrelse2018$andel , digits = 3)
+
+data.frame(kategori = c("Jämställt \n(60/40)" , "Inga kvinnor" , "Inga män") , 
+           andel = c(nrow(styrelse_jämställd2019) / nrow(fe_2019) , 
+                     nrow(ingakvinnorstyrelse2019) / nrow(fe_2019) , 
+                     nrow(ingamänstyrelse2019) / nrow(fe_2019)))  -> jämställdhetstyrelse2019
+jämställdhetstyrelse2019$andel <- round(jämställdhetstyrelse2019$andel , digits = 3)
+
+data.frame(kategori = c("Jämställt \n(60/40)" , "Inga kvinnor" , "Inga män") , 
+           andel = c(nrow(styrelse_jämställd2020) / nrow(fe_2020) , 
+                     nrow(ingakvinnorstyrelse2020) / nrow(fe_2020) , 
+                     nrow(ingamänstyrelse2020) / nrow(fe_2020)))  -> jämställdhetstyrelse2020
+jämställdhetstyrelse2020$andel <- round(jämställdhetstyrelse2020$andel , digits = 3)
+
+data.frame(kategori = c("Jämställt \n(60/40)" , "Inga kvinnor" , "Inga män") , 
+           andel = c(nrow(styrelse_jämställd2022) / nrow(fe_2022) , 
+                     nrow(ingakvinnorstyrelse2022) / nrow(fe_2022) , 
+                     nrow(ingamänstyrelse2022) / nrow(fe_2022)))  -> jämställdhetstyrelse2022
+jämställdhetstyrelse2022$andel <- round(jämställdhetstyrelse2022$andel , digits = 3)
+
+data.frame(kategori = c("Jämställt \n(60/40)" , "Inga kvinnor" , "Inga män") , 
+           andel = c(nrow(styrelse_jämställd2023) / nrow(fe_2023) , 
+                     nrow(ingakvinnorstyrelse2023) / nrow(fe_2023) , 
+                     nrow(ingamänstyrelse2023) / nrow(fe_2023)))  -> jämställdhetstyrelse2023
+jämställdhetstyrelse2023$andel <- round(jämställdhetstyrelse2023$andel , digits = 3)
+
+data.frame(kategori = c("Jämställt \n(60/40)" , "Inga kvinnor" , "Inga män") , 
+           andel = c(nrow(styrelse_jämställd2024) / nrow(fe_2024) , 
+                     nrow(ingakvinnorstyrelse2024) / nrow(fe_2024) , 
+                     nrow(ingamänstyrelse2024) / nrow(fe_2024)))  -> jämställdhetstyrelse2024
+jämställdhetstyrelse2024$andel <- round(jämställdhetstyrelse2024$andel , digits = 3)
+
+data.frame(kategori = c("Jämställt \n(60/40)" , "Inga kvinnor" , "Inga män") , 
+           andel = c(nrow(styrelse_jämställd2025) / nrow(fe_2025) , 
+                     nrow(ingakvinnorstyrelse2025) / nrow(fe_2025) , 
+                     nrow(ingamänstyrelse2025) / nrow(fe_2025)))  -> jämställdhetstyrelse2025
+jämställdhetstyrelse2025$andel <- round(jämställdhetstyrelse2025$andel , digits = 3)
+
+df <- jmf_år_7(jämställdhetstyrelse2018 , jämställdhetstyrelse2019 , jämställdhetstyrelse2020 ,
+         jämställdhetstyrelse2022 , jämställdhetstyrelse2023 , jämställdhetstyrelse2024 , jämställdhetstyrelse2025)
+df$andel <- round(df$andel , digits = 3)
+df$år =  c("2018" , "2018" , "2018" , "2019" , "2019" , "2019" , "2020" , "2020" , "2020" ,
+           "2022" , "2022" , "2022" , "2023" , "2023" , "2023" , "2024" , "2024" , "2024" ,
+           "2025" , "2025" , "2025")
+
+ggplot(df, aes(x = år , y = andel , color = kategori , group = kategori ,
+               text = paste(år , "\nKategori:" , kategori , "\nAndel:" , andel  * 100 , "%"))) +     
+  geom_line(linewidth = 1.5) +
+  rfsisu_theme +
+  labs(caption = "Andel styrelser som saknar kvinnor, saknar män eller är jämställda (60/40) utifrån år." ,
+       color = "Kategori") +
+  xlab(NULL) + ylab ("Andel") +
+  scale_color_manual(values = c("Jämställt \n(60/40)" = "#1EAFA0" , 
+                                "Inga kvinnor" = "#1e3479" , 
+                                "Inga män" = "#994346")) +
+  scale_y_continuous(labels = scales::label_percent())  -> p_jämställdhetstyrelse_årsjmf
+
+ggplotly(p_jämställdhetstyrelse_årsjmf , tooltip = "text") %>% config(displayModeBar = FALSE) %>% 
+  layout(  
+    annotations = list(
+      x = 'left',  
+      y = 'bottom',  
+      text = "Andel styrelser som saknar kvinnor, saknar män eller är jämställda (60/40) utifrån år.", 
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',  
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+```
+
+
+
+### Jämställdhet utifrån antal aktiva
+```{r}
+styrelse_jämställd_storlek <- fe_2025 %>%  
+  filter(between((styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65)
+                 / (styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65 + 
+                      styrelse_m25 + styrelse_m45 + styrelse_m64 + styrelse_m65) , 
+                 0.4 , 0.6)) %>% 
+  group_by(storlek) %>%
+  drop_na(storlek) %>% 
+  tally()
+
+df <- fe_2025 %>% 
+  group_by(storlek) %>% 
+  drop_na(storlek) %>% 
+  summarize(antalif = n()) %>% 
+  mutate(antaljämställda = c(styrelse_jämställd_storlek$n)) %>% 
+  mutate(andeljämställda = as.numeric(round(antaljämställda / antalif, 3)))
+
+df %>%
+  ggplot(aes(x = factor(storlek) , y = andeljämställda , 
+             text = paste("Antal aktiva:", storlek, 
+                          "\nAndel:" , andeljämställda  * 100 , "%"))) +
+  geom_col(fill = "#006BB1") +
+  rfsisu_theme +
+  labs(x = NULL , y = "Andel jämställda IF") +
+  scale_y_continuous(limits = c(0 , 1) , 
+                     labels = scales::label_percent()) -> p_jämställdhetstyrelse_storlek
+
+ggplotly(p_jämställdhetstyrelse_storlek , tooltip = "text") %>% 
+  config(displayModeBar = FALSE)
+
+```
+
+
+
+
+## Kolumn 2 {.tabset .tabset-pills}
+
+### Jämställdhet per kommun, 2025
+```{r}
+jämställdhetstyrelse2025 <- kommuneruppland %>% 
+  filter(år == 2025) %>% 
+  ggplot(aes(text = paste(kommunnamn , "\nAndel:" , jämställdhetstyrelse * 100 , "%"))) +
+  geom_sf(aes(fill = jämställdhetstyrelse)) +
+  rfsisu_theme +
+  scale_fill_gradient(low = "#8DE2FF" , high = "#1e3479" , labels = scales::label_percent()) +
+  labs(fill = "Andel jämställda") +
+  theme(panel.grid.major = NULL,
+        panel.grid.minor = NULL , 
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+ggplotly(jämställdhetstyrelse2025 , tooltip = "text") %>% 
+  config(displayModeBar = FALSE)
+```
+
+### Jämställdhet per kommun, årsjämförelse
+
+```{r}
+styrelse_jämställd2018 <- fe_2018 %>%  
+  filter(between((styrelse_k)
+                 / (styrelse_k + styrelse_m) , 
+                 0.4 , 0.6)) %>% 
+  group_by(kommun) %>% 
+  tally()
+
+
+fe_2018 %>% 
+  group_by(kommun) %>% 
+  summarize(antalif = n()) %>% 
+  mutate(antaljämställda = c(styrelse_jämställd2018$n)) %>% 
+  mutate(andeljämställda = as.numeric(format(antaljämställda / antalif) , 
+                                      digits = 1)) -> jämställdhetstyrelse_kommun_2018
+
+
+styrelse_jämställd2019 <- fe_2019 %>%  
+  filter(between((styrelse_k)
+                 / (styrelse_k + styrelse_m) , 
+                 0.4 , 0.6)) %>% 
+  group_by(kommun) %>% 
+  tally()
+
+fe_2019 %>% 
+  group_by(kommun) %>% 
+  summarize(antalif = n()) %>% 
+  mutate(antaljämställda = c(styrelse_jämställd2019$n)) %>% 
+  mutate(andeljämställda = as.numeric(format(antaljämställda / antalif) , 
+                                      digits = 1)) -> jämställdhetstyrelse_kommun_2019
+
+
+styrelse_jämställd2020 <- fe_2020 %>%  
+  filter(between((styrelse_k)
+                 / (styrelse_k + styrelse_m) , 
+                 0.4 , 0.6)) %>% 
+  group_by(kommun) %>% 
+  tally()
+
+fe_2020 %>% 
+  group_by(kommun) %>% 
+  summarize(antalif = n()) %>% 
+  mutate(antaljämställda = c(styrelse_jämställd2020$n)) %>% 
+  mutate(andeljämställda = as.numeric(format(antaljämställda / antalif) , 
+                                      digits = 1)) -> jämställdhetstyrelse_kommun_2020
+
+
+styrelse_jämställd2022 <- fe_2022 %>%  
+  filter(between((styrelse_k25 + styrelse_k64 + styrelse_k65)
+                 / (styrelse_k25 + styrelse_k64 + styrelse_k65 + 
+                      styrelse_m25 + styrelse_m64 + styrelse_m65) , 
+                 0.4 , 0.6)) %>% 
+  group_by(kommun) %>% 
+  tally()
+
+
+fe_2022 %>% 
+  group_by(kommun) %>% 
+  summarize(antalif = n()) %>% 
+  mutate(antaljämställda = c(styrelse_jämställd2022$n)) %>% 
+  mutate(andeljämställda = as.numeric(format(antaljämställda / antalif) , 
+                                      digits = 1)) -> jämställdhetstyrelse_kommun_2022
+
+
+styrelse_jämställd2023 <- fe_2023 %>%  
+  filter(between((styrelse_k25 + styrelse_k64 + styrelse_k65)
+                 / (styrelse_k25 + styrelse_k64 + styrelse_k65 + 
+                      styrelse_m25 + styrelse_m64 + styrelse_m65) , 
+                 0.4 , 0.6)) %>% 
+  group_by(kommun) %>% 
+  tally()
+
+fe_2023 %>% 
+  group_by(kommun) %>% 
+  summarize(antalif = n()) %>% 
+  mutate(antaljämställda = c(styrelse_jämställd2023$n)) %>% 
+  mutate(andeljämställda = as.numeric(format(antaljämställda / antalif) , 
+                                      digits = 1)) -> jämställdhetstyrelse_kommun_2023
+
+
+styrelse_jämställd2024 <- fe_2024 %>%  
+  filter(between((styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65)
+                 / (styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65 + 
+                      styrelse_m25 + styrelse_m45 + styrelse_m64 + styrelse_m65) , 
+                 0.4 , 0.6)) %>% 
+  group_by(kommun) %>% 
+  tally() %>%   # HANDPÅLÄGGNING DÅ DET SAKNAS IF I HEBY!
+  add_row(.before = 2 , kommun = "Heby" , n = 0) 
+
+
+fe_2024 %>% 
+  group_by(kommun) %>% 
+  summarize(antalif = n()) %>% 
+  mutate(antaljämställda = c(styrelse_jämställd2024$n)) %>% 
+  mutate(andeljämställda = as.numeric(format(antaljämställda / antalif) , 
+                                      digits = 1)) -> jämställdhetstyrelse_kommun_2024
+
+
+styrelse_jämställd2025 <- fe_2025 %>%  
+  filter(between((styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65)
+                 / (styrelse_k25 + styrelse_k45 + styrelse_k64 + styrelse_k65 + 
+                      styrelse_m25 + styrelse_m45 + styrelse_m64 + styrelse_m65) , 
+                 0.4 , 0.6)) %>% 
+  group_by(kommun) %>% 
+  tally()
+
+
+fe_2025 %>% 
+  group_by(kommun) %>% 
+  summarize(antalif = n()) %>% 
+  mutate(antaljämställda = c(styrelse_jämställd2025$n)) %>% 
+  mutate(andeljämställda = as.numeric(format(antaljämställda / antalif) , 
+                                      digits = 1)) -> jämställdhetstyrelse_kommun_2025
+
+
+jmf_år_7(jämställdhetstyrelse_kommun_2018, jämställdhetstyrelse_kommun_2019, jämställdhetstyrelse_kommun_2020, 
+         jämställdhetstyrelse_kommun_2022, jämställdhetstyrelse_kommun_2023, jämställdhetstyrelse_kommun_2024 ,
+         jämställdhetstyrelse_kommun_2025) -> jämställdhetstyrelse_kommun_årsjmf
+jämställdhetstyrelse_kommun_årsjmf$år =  c("2018" , "2018" , "2018" , "2018" , "2018" , "2018" , "2018" , "2018" , "2018" , "2018" , 
+                                  "2019" , "2019" , "2019" , "2019" , "2019" , "2019" , "2019" , "2019" , "2019" , "2019" , 
+                                  "2020" , "2020" , "2020" , "2020" , "2020" , "2020" , "2020" , "2020" , "2020" , "2020" , 
+                                  "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , 
+                                  "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , 
+                                  "2024" , "2024" , "2024" , "2024" , "2024" , "2024" , "2024" , "2024" , "2024" , "2024" ,
+                                  "2025" , "2025" , "2025" , "2025" , "2025" , "2025" , "2025" , "2025" , "2025" , "2025")
+jämställdhetstyrelse_kommun_årsjmf$andeljämställda <- as.numeric(format(jämställdhetstyrelse_kommun_årsjmf$andeljämställda, digits = 2))
+
+jämställdhetstyrelse_kommun_årsjmf %>% 
+  ggplot(aes(x = år , y = andeljämställda , group = kommun , colour = kommun , 
+             text = paste(år, "\n", kommun , "\nAndel:" , andeljämställda  * 100 , "%"))) +
+  geom_line(linewidth = 1.2) +
+  rfsisu_theme +
+  labs(x = NULL , y = "Andel jämställda IF" , color = "Kommun") +
+  scale_color_manual(values = c("Enköping" = "#00A7E0" , "Heby" = "#003559" , "Håbo" = "#1EAFA0" , 
+                                "Knivsta" = "#007B5E" , "Norrtälje" = "#E4352D" , "Sigtuna" = "#BE1219" ,  
+                                "Tierp" = "#8DE2FF" ,  "Uppsala" = "#63E4D7" , "Älvkarleby" = "#F4AEAB" , 
+                                "Östhammar" = "#5F090D")) +
+  scale_y_continuous(limits = c(0 , 1) , labels = scales::label_percent()) -> p_jämställdhetstyrelse_perkommun_årsjmf
+
+ggplotly(p_jämställdhetstyrelse_perkommun_årsjmf , tooltip = "text") %>% 
+  config(displayModeBar = FALSE)
+```
+
+
+### Tabell: Jämställdhet per kommun
+
+```{r}
+jämställdhetstyrelse_kommun_2025 <- jämställdhetstyrelse_kommun_årsjmf %>% 
+  filter(år == "2025")
+
+jämställdhetstyrelse_kommun_2025 %>% 
+  select(1:4) %>% 
+    datatable(rownames = FALSE ,
+              colnames = c("Kommun" , "Antal IF" , "Antal jämställda" , "Andel jämställda") ,
+              class = "display" , 
+              filter = "top" , 
+              options = list(
+                  pageLength = 25
+              )
+    ) %>% 
+  formatRound(columns = "andeljämställda" , digits = 3)
+```
+
+
+
+
+
+
+
+
+# Valberedning {data-navmenu="Föreningsledare" data-orientation="rows"}
+
+## Rad 1
+
+### Snittantal kvinnor i valberedningen/IF {data-width="1000"}
+
+```{r}
+meanvalberedning_k25 <- mean(fe_2025$valberedning_k25 , na.rm = TRUE)
+meanvalberedning_k45 <- mean(fe_2025$valberedning_k45 , na.rm = TRUE)
+meanvalberedning_k64 <- mean(fe_2025$valberedning_k64 , na.rm = TRUE)
+meanvalberedning_k65 <- mean(fe_2025$valberedning_k65 , na.rm = TRUE)
+meanvalberedning_m25 <- mean(fe_2025$valberedning_m25 , na.rm = TRUE)   
+meanvalberedning_m45 <- mean(fe_2025$valberedning_m45 , na.rm = TRUE)
+meanvalberedning_m64 <- mean(fe_2025$valberedning_m64 , na.rm = TRUE)
+meanvalberedning_m65 <- mean(fe_2025$valberedning_m65 , na.rm = TRUE)
+
+medelkvinnor_valberedning <- round(meanvalberedning_k25 + meanvalberedning_k45 + meanvalberedning_k64 + meanvalberedning_k65 , digits = 2)
+valueBox(medelkvinnor_valberedning, icon = "ion-female" , color = "#1e3479")
+```
+
+### 
+
+```{r}
+medelkvinnor_valberedning <- round(meanvalberedning_k25 + meanvalberedning_k45 + meanvalberedning_k64 + meanvalberedning_k65 , digits = 2)
+medelmän_valberedning <- round(meanvalberedning_m25 + meanvalberedning_m45 + meanvalberedning_m64 + meanvalberedning_m65 , digits = 2)
+
+andelkvinnor <- round(medelkvinnor_valberedning / (medelmän_valberedning + medelkvinnor_valberedning) * 100 , digits = 0)
+gauge(andelkvinnor, min = 0, max = 100, symbol = '%', gaugeSectors(success = c(40, 60), 
+                                                         warning = c(0 , 39), 
+                                                         danger = c(61 , 100) , 
+                                                         colors = c("#1e3479" , "#1e3479" , "#1e3479")
+))
+```
+
+### 
+
+```{r}
+medelkvinnor_valberedning <- round(meanvalberedning_k25 + meanvalberedning_k45 + meanvalberedning_k64 + meanvalberedning_k65 , digits = 2)
+medelmän_valberedning <- round(meanvalberedning_m25 + meanvalberedning_m45 + meanvalberedning_m64 + meanvalberedning_m65 , digits = 2)
+
+andelmän <- round(medelmän_valberedning / (medelmän_valberedning + medelkvinnor_valberedning) * 100 , digits = 0)
+gauge(andelmän, min = 0, max = 100, symbol = '%', gaugeSectors(success = c(40, 60), 
+                                                         warning = c(0 , 39), 
+                                                         danger = c(61 , 100) , 
+                                                         colors = c("#1e3479" , "#1e3479" , "#1e3479")
+))
+```
+
+### Snittantal män i valberedningen/IF {data-width="1000"}
+
+```{r}
+medelmän_valberedning <- round(meanvalberedning_m25 + meanvalberedning_m45 + meanvalberedning_m64 + meanvalberedning_m65 , digits = 2)
+valueBox(medelmän_valberedning, icon = "ion-male" , color = "#1e3479")
+```
+
+## Rad 2 {data-height="900"}
+
+### Valberedare utifrån målgrupp
+
+```{r}
+df <- data.frame(ålder = c(
+                           "-25 år", "26-45 år", "46-64 år", "65+ år" ,
+                           "-25 år" , "26-45 år" , "46-64 år" , "65+ år"
+                           ), 
+                 kön = c(
+                   "Kvinnor" , "Kvinnor" , "Kvinnor", "Kvinnor" ,
+                   "Män" , "Män" , "Män" , "Män"
+                 ) ,
+                 mean = c(
+                   meanvalberedning_k25 , 
+                   meanvalberedning_k45 , 
+                   meanvalberedning_k64 , 
+                   meanvalberedning_k65 , 
+                   meanvalberedning_m25 , 
+                   meanvalberedning_m45 , 
+                   meanvalberedning_m64 , 
+                   meanvalberedning_m65
+                   )
+                 )
+df$mean <- round(df$mean , digits = 2)
+
+ggplot(df, aes(x = ålder , y = mean , fill = kön ,
+               text = paste(kön , ålder , "\nGenomsnitt:" , mean))) +       
+       geom_col() +
+       scale_fill_manual(values = c(
+         "Män" = "#1EAFA0",
+         "Kvinnor" = "#994346"
+       )) +
+       rfsisu_theme +
+       xlab(NULL) + ylab ("Medelantal") + labs(fill = "Kön") +
+       ylim(0 , 1)   ->  p_valberedning2025
+
+ggplotly(p_valberedning2025 , tooltip = "text") %>% config(displayModeBar = FALSE)
+```
+
+### Genomsnittligt antal i valberedningen, årsjämförelse
+
+```{r}
+meanvalberedning_årsjmf <- data.frame(år = c("2018" , "2019" , "2020" , "2022" , "2023" , "2024" , "2025") ,
+                                      mean = c(round(mean(fe_2018$valberedning_tot , 
+                                                          na.rm = TRUE), digits = 2) , 
+                                               round(mean(fe_2019$valberedning_tot , 
+                                                          na.rm = TRUE) , digits = 2) , 
+                                               round(mean(fe_2020$valberedning_tot , 
+                                                          na.rm = TRUE) , digits = 2) , 
+                                               round(mean(fe_2022$valberedning_tot , 
+                                                          na.rm = TRUE) , digits = 2) , 
+                                               round(mean(fe_2023$valberedning_tot , 
+                                                          na.rm = TRUE) , digits = 2) , 
+                                               round(mean(fe_2024$valberedning_tot , 
+                                                          na.rm = TRUE) , digits = 2) ,
+                                               round(mean(fe_2025$valberedning_tot , 
+                                                          na.rm = TRUE) , digits = 2)))
+
+ggplot(meanvalberedning_årsjmf , aes(x = år , y = mean , 
+                                     text = paste(år , "\nGenomsnitt:" , mean))) +
+  geom_col(aes(fill = år)) +
+  rfsisu_theme +
+  labs(caption = "Genomsnittligt antal i valberedningen utifrån år." , fill = "År") +
+  xlab(NULL) + ylab ("Medelantal") +
+  scale_fill_manual(values = c("2018" = "#1EAFA0" , "2019" = "#1e3479" , "2020" = "#B51E17" , 
+                               "2022" = "#63E4D7" , "2023" = "#00A7E0" , "2024" = "#994346" , 
+                               "2025" = "#003559"))  ->  p_meanvalberedning_årsjmf
+
+ggplotly(p_meanvalberedning_årsjmf , tooltip = "text") %>% config(displayModeBar = FALSE)
+```
+
+### Andel föreningar utan valberedning, årsjämförelse
+
+```{r}
+ingenvalberedning2018 <- fe_2018 %>% 
+  filter(valberedning_tot == 0)
+
+ingenvalberedning2019 <- fe_2019 %>%   
+  filter(valberedning_tot == 0)
+
+ingenvalberedning2020 <- fe_2020 %>%   
+  filter(valberedning_tot == 0)
+
+ingenvalberedning2022 <- fe_2022 %>%   
+  filter(valberedning_tot == 0)
+
+ingenvalberedning2023 <- fe_2023 %>%   
+  filter(valberedning_tot == 0)
+
+ingenvalberedning2024 <- fe_2024 %>%   
+  filter(valberedning_tot == 0)
+
+ingenvalberedning2025 <- fe_2025 %>%   
+  filter(valberedning_tot == 0)
+
+df <- data.frame(år = c("2018" , "2019" , "2020" , "2022" , "2023" , "2024" , "2025") ,
+                                       andel = c(nrow(ingenvalberedning2018) / nrow(fe_2018) , 
+                                                 nrow(ingenvalberedning2019) / nrow(fe_2019) , 
+                                                 nrow(ingenvalberedning2020) / nrow(fe_2020) , 
+                                                 nrow(ingenvalberedning2022) / nrow(fe_2022) ,
+                                                 nrow(ingenvalberedning2023) / nrow(fe_2023) , 
+                                                 nrow(ingenvalberedning2024) / nrow(fe_2024) ,
+                                                 nrow(ingenvalberedning2024) / nrow(fe_2025))
+                                       )
+df$andel <- round(df$andel , digits = 2)
+
+ggplot(df , aes(x = år , y = andel , 
+       text = paste(år , "\nAndel:" , andel  * 100 , "%"))) +
+  geom_col(aes(fill = år)) +
+  rfsisu_theme +
+  labs(caption = "Andel föreningar som inte har någon valberedning utifrån år." , fill = "År") +
+  xlab(NULL) + ylab ("Andel, %") +
+  scale_y_continuous(limits = c(0 , 1) , breaks = seq(0.0 , 1 , 0.1) , labels = scales::label_percent()) +
+  scale_fill_manual(values = c("2018" = "#1EAFA0" , "2019" = "#1e3479" , "2020" = "#B51E17" , 
+                               "2022" = "#63E4D7" , "2023" = "#00A7E0" , "2024" = "#994346" , 
+                               "2025" = "#003559"))   ->  p_ingenvalberedning_årsjmf
+
+ggplotly(p_ingenvalberedning_årsjmf , tooltip = "text") %>% config(displayModeBar = FALSE)
+```
+
+
+
+
+
+
+
+
+
+
+
+# Föreningarnas skattningar {data-navmenu="Mående" data-orientation="columns"}
+
+
+## Kolumn 1 {.tabset .tabset-pills}
+
+### Föreningarnas mående
+
+```{r}
+df <- fe_2025 %>%
+  drop_na(mående) %>%
+  group_by(mående) %>%
+  tally () %>%
+  mutate(perc = round(n/sum(n) , digits = 2))
+
+ggplot(df, aes(x = mående, y = perc , 
+               text = paste("Skattat mående:" , mående,  "\nAndel:" , perc * 100 , "%"))) +
+  geom_bar(stat = "identity", fill = "#006BB1") +
+  rfsisu_theme +
+  labs(caption = "Genomsnittligt mående utifrån en skala från 1-7, där 1 = Mycket dåligt och 7 = Mycket bra.") +
+  scale_x_continuous(breaks = seq(1,7,1)) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  xlab("Mående") + ylab("Andel, %")  -> p_mående2025
+
+ggplotly(p_mående2025 , tooltip = "text") %>% config(displayModeBar = FALSE) %>% 
+  layout(  
+    annotations = list(
+      x = 'left',  
+      y = 'bottom',  
+      text = "Genomsnittligt mående från 1-7. 1 = Mycket dåligt, 7 = Mycket bra.", 
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',  
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+```
+
+### Föreningarnas mående, årsjämförelse
+
+```{r}
+fe_2022_mående <- fe_2022 %>% 
+  drop_na(mående)
+
+data.frame(kategori = c("Positiv" , "Neutral" , "Negativ"),
+           andel = c((sum(fe_2022_mående$mående == 5) + 
+                      sum(fe_2022_mående$mående == 6) + 
+                      sum(fe_2022_mående$mående == 7)) / 
+                      nrow(fe_2022_mående) ,
+                     sum(fe_2022_mående$mående == 4)  / nrow(fe_2022_mående) , 
+                     (sum(fe_2022_mående$mående == 1) + 
+                      sum(fe_2022_mående$mående == 2) + 
+                      sum(fe_2022_mående$mående == 3)) / nrow(fe_2022_mående))) -> måendefördelning_2022
+
+fe_2023_mående <- fe_2023 %>% 
+  drop_na(mående)
+
+data.frame(kategori = c("Positiv" , "Neutral" , "Negativ"),
+           andel = c((sum(fe_2023_mående$mående == 5) + 
+                      sum(fe_2023_mående$mående == 6) + 
+                      sum(fe_2023_mående$mående == 7)) / 
+                      nrow(fe_2023_mående) ,
+                     sum(fe_2023_mående$mående == 4)  / nrow(fe_2023_mående) , 
+                     (sum(fe_2023_mående$mående == 1) + 
+                      sum(fe_2023_mående$mående == 2) + 
+                      sum(fe_2023_mående$mående == 3)) / nrow(fe_2023_mående))) -> måendefördelning_2023
+
+fe_2024_mående <- fe_2024 %>% 
+  drop_na(mående)
+data.frame(kategori = c("Positiv" , "Neutral" , "Negativ"),
+           andel = c((sum(fe_2024_mående$mående == 5) + 
+                      sum(fe_2024_mående$mående == 6) + 
+                      sum(fe_2024_mående$mående == 7)) / 
+                      nrow(fe_2024_mående) ,
+                     sum(fe_2024_mående$mående == 4)  / nrow(fe_2024_mående) , 
+                     (sum(fe_2024_mående$mående == 1) + 
+                      sum(fe_2024_mående$mående == 2) + 
+                      sum(fe_2024_mående$mående == 3)) / nrow(fe_2024_mående))) -> måendefördelning_2024
+
+
+fe_2025_mående <- fe_2025 %>% 
+  drop_na(mående)
+
+data.frame(kategori = c("Positiv" , "Neutral" , "Negativ"),
+           andel = c((sum(fe_2025_mående$mående == 5) + 
+                      sum(fe_2025_mående$mående == 6) + 
+                      sum(fe_2025_mående$mående == 7)) / 
+                      nrow(fe_2025_mående) ,
+                     sum(fe_2025_mående$mående == 4)  / nrow(fe_2025_mående) , 
+                     (sum(fe_2025_mående$mående == 1) + 
+                      sum(fe_2025_mående$mående == 2) + 
+                      sum(fe_2025_mående$mående == 3)) / nrow(fe_2025_mående))) -> måendefördelning_2025
+
+måendefördelning_årsjmf <- jmf_år_4(måendefördelning_2022 , 
+                                    måendefördelning_2023 , 
+                                    måendefördelning_2024 , 
+                                    måendefördelning_2025)
+
+måendefördelning_årsjmf$kategori <- factor(måendefördelning_årsjmf$kategori , 
+                                           levels = c("Positiv" , "Neutral" , "Negativ"))
+måendefördelning_årsjmf$andel <- round(måendefördelning_årsjmf$andel , digits = 2)
+måendefördelning_årsjmf$år =  c(  "2022" , "2022" , "2022" , 
+                                  "2023" , "2023" , "2023" , 
+                                  "2024" , "2024" , "2024" ,
+                                  "2025" , "2025" , "2025")
+
+ggplot(måendefördelning_årsjmf , aes(x = kategori , y = andel , 
+                                     text = paste(år , "\nKategori:" , kategori, "\nAndel:" , andel * 100 , "%"))) +
+  geom_bar(aes(fill = år) , stat = "identity" , position = "dodge") +
+  rfsisu_theme +
+  labs(caption = "Andel positiva, neutrala och negativa svar på föreningars mående utifrån år." , 
+       fill = "År") +
+  scale_y_continuous(labels = scales::label_percent()) +
+  xlab("Mående") + ylab("Andel , %") +
+  scale_fill_manual(values = c("2022" = "#63E4D7" , "2023" = "#00A7E0" , "2024" = "#994346" ,
+                               "2025" = "#003559")) -> p_måendefördelning_årsjmf
+
+ggplotly(p_måendefördelning_årsjmf , tooltip = "text") %>% config(displayModeBar = FALSE) %>% 
+  layout(  
+    annotations = list(
+      x = 'left',  
+      y = 'bottom',  
+      text = "Andel positiva, neutrala och negativa svar för mående utifrån år.", 
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',  
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+```
+
+### Mående utifrån antal aktiva
+```{r}
+levels_x = c("Positiv" , "Neutral" , "Negativ")
+
+df <- fe_2025 %>% 
+  drop_na(storlek, mående)
+
+df <- df %>% 
+  group_by(storlek) %>% 
+  summarize(
+    kategori = c("Positiv" , "Neutral" , "Negativ") ,
+    andel = c(
+      round((sum(mående == 5) + 
+         sum(mående == 6) + 
+         sum(mående == 7)) / n(), 3) ,
+      round(sum(mående == 4)  / n(), 3) , 
+      round((sum(mående == 1) + 
+         sum(mående == 2) + 
+         sum(mående == 3)) / n(), 3))
+    )
+
+ggplot(df, aes(x = factor(kategori , levels = levels_x), y = andel , 
+               fill = factor(storlek),
+               text = paste("Antal aktiva: ", storlek, "\nKategori:" , kategori,  
+                            "\nAndel:" , andel * 100 , "%"))) +
+  geom_col(position = "dodge") +
+  rfsisu_theme +
+  labs(fill = "Antal aktiva") +
+  scale_fill_manual(values = c(
+    "Undre halvan" = "#1EAFA0" , 
+    "Övre halvan" = "#994346")) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  xlab("Mående") + ylab("Andel, %")  -> p_mående_storlek
+
+ggplotly(p_mående_storlek , tooltip = "text") %>% config(displayModeBar = FALSE) %>% 
+  layout(
+    annotations = list(
+      x = 'left',  
+      y = 'bottom',  
+      text = "Andel positiva, neutrala och negativa svar för mående utifrån antal aktiva i föreningen.", 
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',  
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+
+```
+
+
+
+
+
+
+## Kolumn 2 {.tabset .tabset-pills}
+
+### Mående per kommun, 2025
+```{r}
+kommuneruppland %>% 
+  filter(år == 2025) %>% 
+  ggplot(aes(text = paste(kommunnamn , "\nGenomsnitt:" , round(mående, digits = 2)))) +
+  geom_sf(aes(fill = mående)) +
+  rfsisu_theme +
+  scale_fill_gradient(low = "#8DE2FF" , high = "#1e3479") +
+  labs(fill = "Genomsnittligt mående") +
+  theme(panel.grid.major = NULL,
+        panel.grid.minor = NULL , 
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) -> p_map_mående2025
+
+ggplotly(p_map_mående2025 , tooltip = "text") %>% 
+  config(displayModeBar = FALSE) %>% 
+  layout(  
+    annotations = list(
+      x = 'left',  
+      y = 'bottom',  
+      text = "Genomsnittligt mående per kommun från 1-7." , 
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',  
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+```
+
+### Mående per kommun, årsjämförelse
+
+```{r}
+måendekommun2022 <- fe_2022 %>%                                        
+  aggregate(mående ~ kommun , mean , na.rm = TRUE)
+
+måendekommun2023 <- fe_2023 %>%                                        
+  aggregate(mående ~ kommun , mean , na.rm = TRUE)
+
+måendekommun2024 <- fe_2024 %>%                                        
+  aggregate(mående ~ kommun , mean , na.rm = TRUE)
+
+måendekommun2025 <- fe_2025 %>%                                        
+  aggregate(mående ~ kommun , mean , na.rm = TRUE)
+
+df <- jmf_år_4(måendekommun2022 , måendekommun2023 , måendekommun2024 , måendekommun2025)
+df$mående <- round(df$mående , digits = 2)
+df$år =  c( 
+            "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , "2022" , 
+            "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , "2023" , 
+            "2024" , "2024" , "2024" , "2024" , "2024" , "2024" , "2024" , "2024" , "2024" , "2024" ,
+            "2025" , "2025" , "2025" , "2025" , "2025" , "2025" , "2025" , "2025" , "2025" , "2025" 
+          )
+
+df %>% 
+  ggplot(aes(x = år , y = mående , group = kommun , colour = kommun , 
+             text = paste(år , "\nKommun:" , kommun , "\nGenomsnitt:" , mående))) +
+  geom_line(linewidth = 1.2) +
+  rfsisu_theme +
+  labs(x = NULL , y = "Mående" , color = "Kommun") +
+  scale_color_manual(values = c("Enköping" = "#00A7E0" , "Heby" = "#003559" , "Håbo" = "#1EAFA0" , 
+                                "Knivsta" = "#007B5E" , "Norrtälje" = "#E4352D" , "Sigtuna" = "#BE1219" ,  
+                                "Tierp" = "#8DE2FF" ,  "Uppsala" = "#63E4D7" , "Älvkarleby" = "#F4AEAB" , 
+                                "Östhammar" = "#5F090D")) +
+  scale_y_continuous(limits = c(1 , 7) , breaks = seq(1 , 7 , 1)) -> p_måendekommun_årsjmf
+
+ggplotly(p_måendekommun_årsjmf , tooltip = "text") %>% 
+  config(displayModeBar = FALSE) %>% 
+  config(displayModeBar = FALSE) %>% 
+  layout(  
+    annotations = list(
+      x = 'left',  
+      y = 'bottom',  
+      text = "Genomsnittligt mående per kommun från 1-7 utifrån år." , 
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',  
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+```
+
+
+
+
+
+
+
+# Sammanfattning av fritextsvar {data-navmenu="Mående" data-orientation="rows"}
+
+## Rad 1 {data-height="150".tabset .tabset-pills}
+
+### Sammanfattning av fritextsvar med AI
+
+Analys av föreningarnas fritextsvar om deras mående. Analysen har gjorts
+med hjälp av AI som fått uppgiften att kortfattat sammanfatta gemensamma
+nämnare i svaren.
+
+## Rad 2 {data-height="850" .tabset .tabset-pills}
+
+### Sammanfattning av enkätsvar från Upplands Idrottsföreningar
+
+**Positiva sidor**
+<br>
+<br>
+Många föreningar beskriver ett gott allmänt mående, där verksamheten fungerar väl och medlemmarna är nöjda. Ett återkommande tema är god ekonomi, vilket ger trygghet och möjligheter att utveckla verksamheten. Flera föreningar nämner att de har ökande medlemsantal, särskilt bland barn och ungdomar, vilket ses som ett tecken på att föreningen är attraktiv och relevant.
+<br>
+Engagerade ledare och medlemmar lyfts ofta fram som en nyckel till framgång. Det finns exempel på föreningar där styrelsen fungerar väl, där det finns en positiv anda och där samarbetet inom föreningen är gott. Gemenskap och trivsel är också återkommande teman – många upplever att det är roligt att vara en del av föreningen, vilket stärker sammanhållningen.
+<br>
+Flera föreningar är inne i en utvecklingsfas, där nya initiativ, projekt och satsningar på till exempel ungdomsverksamhet eller seniorverksamhet ger energi och framtidstro. Det finns också exempel på föreningar som lyckats vända en negativ trend och nu ser en tydlig förbättring.
+<br>
+<br>
+**Negativa sidor**
+<br>
+<br>
+Trots många positiva signaler finns det också återkommande utmaningar. Den mest frekventa är svårigheten att engagera ideella krafter – både till styrelsearbete och till att vara ledare eller funktionär. Många föreningar vittnar om att det är samma personer som gör det mesta, vilket leder till slitage och risk för utbrändhet.
+<br>
+Brist på resurser är ett annat vanligt tema. Det handlar både om ekonomiska resurser och om tillgång till lokaler, tider i idrottsanläggningar eller utrustning. Flera föreningar upplever att kommunens stöd är otillräckligt, eller att hyror och andra kostnader ökat kraftigt, vilket påverkar verksamheten negativt.
+<br>
+Engagemanget från medlemmar och föräldrar är ofta ojämnt – vissa föreningar har svårt att få medlemmarna att delta i aktiviteter eller ta ansvar. Det finns också exempel på bristande struktur i styrelsearbetet eller problem med återväxt, särskilt bland ungdomar och yngre ledare.
+<br>
+Slutligen nämns osäkerhet kring framtiden i flera svar – både vad gäller ekonomi, lokaler och medlemsutveckling. Föreningar som tidigare drabbats av pandemin kämpar fortfarande med att återhämta sig.
+
+
+
+
+
+
+
+
+# Fokusområden {data-navmenu="Behov och stöd" data-orientation="rows"}
+
+## Rad 1 {.tabset .tabset-pills}
+
+### Fokusområden
+
+```{r}
+df <- data.frame(
+  område = c("Anläggning" , "Barn och ungas\ndelaktighet" , "Hållbarhet" , 
+             "Ideellt engagemang" , "Inkludering" , "Jämställdhet" , 
+             "Rekrytera och\nbehåll aktiva" , "Skolsamverkan" , "Trivsel och\ngemenskap" , 
+             "Trygg idrott" , "Personer med \nfunktionsnedsättning") , 
+  fokus = c(sum(fe_2025$fokus_anläggning , na.rm = TRUE) , 
+           sum(fe_2025$fokus_boudelaktighet , na.rm = TRUE) , 
+           sum(fe_2025$fokus_hållbarhet , na.rm = TRUE) , 
+           sum(fe_2025$fokus_engagemang , na.rm = TRUE) , 
+           sum(fe_2025$fokus_inkludering , na.rm = TRUE) , 
+           sum(fe_2025$fokus_jämställdhet , na.rm = TRUE) , 
+           sum(fe_2025$fokus_rekryterabehålla , na.rm = TRUE) , 
+           sum(fe_2025$fokus_skolsamverkan , na.rm = TRUE) , 
+           sum(fe_2025$fokus_trivselgemenskap , na.rm = TRUE) , 
+           sum(fe_2025$fokus_tryggidrott , na.rm = TRUE) , 
+           sum(fe_2025$fokus_personermfn , na.rm = TRUE)) , 
+  stöd = c(sum(fe_2025$stöd_anläggning , na.rm = TRUE) , 
+          sum(fe_2025$stöd_boudelaktighet , na.rm = TRUE) , 
+          sum(fe_2025$stöd_hållbarhet , na.rm = TRUE) , 
+          sum(fe_2025$stöd_engagemang , na.rm = TRUE) , 
+          sum(fe_2025$stöd_inkludering , na.rm = TRUE) , 
+          sum(fe_2025$stöd_jämställdhet , na.rm = TRUE) , 
+          sum(fe_2025$stöd_rekryterabehålla , na.rm = TRUE) , 
+          sum(fe_2025$stöd_skolsamverkan , na.rm = TRUE) , 
+          sum(fe_2025$stöd_trivselgemenskap , na.rm = TRUE) , 
+          sum(fe_2025$stöd_tryggidrott , na.rm = TRUE) , 
+          sum(fe_2025$stöd_personermfn , na.rm = TRUE))
+)
+
+df <- df %>% 
+  mutate(andelfokus = as.numeric(round(fokus/sum(fokus) , digits = 2)) , 
+         andelstöd = as.numeric(round(stöd/sum(stöd) , digits = 2)))
+
+ggplot(df , aes(x = reorder(område , -fokus) , y = andelfokus , 
+                              text = paste(område, "\nAndel:" , andelfokus * 100 , "%"))) +  
+  geom_bar(stat = "identity" , fill = "#006BB1") +
+  rfsisu_theme +
+  labs(caption = "Andel svar på vilka områden föreningar kommer fokusera på framöver.") +
+  scale_y_continuous(labels = scales::label_percent()) +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
+  xlab(NULL) + ylab("Andel")   -> p_fokus2025
+
+ggplotly(p_fokus2025 , tooltip = "text") %>% config(displayModeBar = FALSE) %>% 
+  layout(  
+    annotations = list(
+      x = 'left',  
+      y = 'bottom',  
+      text = "Andel svar på vilka områden föreningar kommer fokusera på framöver.", 
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',  
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+```
+
+### Tabell: Fokusområden per kommun
+
+```{r}
+fe_2025 %>% 
+  group_by(kommun) %>% 
+  summarize(antalif = sum(!is.na(fokus_anläggning)) , 
+            anläggning = sum(fokus_anläggning , na.rm = TRUE) , 
+            boudelaktighet = sum(fokus_boudelaktighet , na.rm = TRUE), 
+            hållbarhet = sum(fokus_hållbarhet , na.rm = TRUE), 
+            engagemang = sum(fokus_engagemang , na.rm = TRUE) , 
+            inkludering = sum(fokus_inkludering , na.rm = TRUE) ,
+            jämställdhet = sum(fokus_jämställdhet , na.rm = TRUE) ,
+            rekryterabehållaktiva = sum(fokus_rekryterabehålla , na.rm = TRUE) , 
+            skolsamverkan = sum(fokus_skolsamverkan , na.rm = TRUE) , 
+            trivselochgemenskap = sum(fokus_trivselgemenskap , na.rm = TRUE) , 
+            tryggidrott = sum(fokus_tryggidrott , na.rm = TRUE) , 
+            personermedfn = sum(fokus_personermfn , na.rm = TRUE)) %>% 
+  datatable(rownames = FALSE ,
+            colnames = c("Kommun" , "Antal IF" , "Anläggning" , 
+                         "B&U-delaktighet" , "Hållbarhet" , "Engagemang" , 
+                         "Inkludering" , "Jämställdhet" , "Rekrytera & behåll aktiva" , 
+                         "Skolsamverkan" ,"Trivsel & gemenskap" , "Trygg idrott" ,
+                         "Personer med funktionsnedsättning") ,
+                         class = "display" , 
+                         filter = "top" , 
+                         options = list(
+                               pageLength = 25
+                                       )
+                 )
+```
+
+
+
+
+
+
+
+
+
+
+# Utbildning {data-navmenu="Behov och stöd" data-orientation="rows"}
+
+## Rad 1 {.tabset .tabset-pills}
+
+### Utbildningsbehov
+
+```{r}
+df <- data.frame(
+  utbildning = c("ANDTS" , "Föreningsekonomi" , "Idrottsföräldraskap" , 
+                 "Idrottspsykologi" , "Idrottsskador" , "Kost och näringslära" , 
+                 "Ledarskap och\ntränarskap" , "Styrelsearbete och\nföreningsledning" , "Träningslära") ,
+  n = c(sum(fe_2025$utbildning_andts , na.rm = TRUE) , 
+           sum(fe_2025$utbildning_föreningsekonomi , na.rm = TRUE) , 
+           sum(fe_2025$utbildning_idrottsföräldraskap , na.rm = TRUE) , 
+           sum(fe_2025$utbildning_idrottspsykologi , na.rm = TRUE) , 
+           sum(fe_2025$utbildning_idrottsskador , na.rm = TRUE) , 
+           sum(fe_2025$utbildning_kost , na.rm = TRUE) , 
+           sum(fe_2025$utbildning_tränare , na.rm = TRUE) , 
+           sum(fe_2025$utbildning_styrelsearbete , na.rm = TRUE) , 
+           sum(fe_2025$utbildning_träningslära , na.rm = TRUE))
+)
+
+df <- df %>% 
+  mutate(andel = as.numeric(round(n/sum(n) , digits = 2)))
+
+ggplot(df , aes(x = reorder(utbildning , -n) , y = andel , 
+                                  text = paste(utbildning, "\nAndel:" , andel * 100 , "%"))) +  
+  geom_bar(stat = "identity" , fill = "#006BB1") +
+  rfsisu_theme +
+  labs(caption = "Andel svar på vilka ämnen föreningar önskar stöd i att utbilda inom.") +
+  scale_y_continuous(labels = scales::label_percent()) +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
+  xlab(NULL) + ylab("Andel")  -> p_utbildningsbehov2025
+
+ggplotly(p_utbildningsbehov2025 , tooltip = "text") %>% config(displayModeBar = FALSE) %>% 
+  layout(  
+    annotations = list(
+      x = 'left',  
+      y = 'bottom',  
+      text = "Andel svar på ämnen föreningar önskar stöd i att utbilda inom framöver.", 
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',  
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+```
+
+### Tabell: Utbildningsbehov per kommun
+
+```{r}
+fe_2025 %>% 
+  group_by(kommun) %>% 
+  summarize(antalif = sum(!is.na(utbildning_andts)) , 
+            andts = sum(utbildning_andts , na.rm = TRUE) , 
+            föreningsekonomi = sum(utbildning_föreningsekonomi , na.rm = TRUE), 
+            idrottsföräldraskap = sum(utbildning_idrottsföräldraskap , na.rm = TRUE), 
+            idrottspsykologi = sum(utbildning_idrottspsykologi , na.rm = TRUE) , 
+            idrottsskador = sum(utbildning_idrottsskador , na.rm = TRUE) ,
+            kostochnäringslära = sum(utbildning_kost , na.rm = TRUE) ,
+            ledarskaptränarskap = sum(utbildning_tränare , na.rm = TRUE) , 
+            styrelsearbete = sum(utbildning_styrelsearbete , na.rm = TRUE) , 
+            träningslära = sum(utbildning_träningslära , na.rm = TRUE)) %>% 
+  datatable(rownames = FALSE , 
+            colnames = c("Kommun" , "Antal IF" , "ANDTS" , "Föreningsekonomi" ,"Idrottsföräldraskap" , 
+                         "Idrottspsykologi" , "Idrottsskador" , "Kost & näringslära" , "Ledarskap & tränarskap" , 
+                         "Styrelsearbete" , "Träningslära") ,
+                         class = "display" , 
+                         filter = "top" , 
+                         options = list(
+                               pageLength = 25
+                                       )
+                 )
+```
+
+
+
+
+
+
+
+
+
+# Verksamheten överlag {data-navmenu="Jämställdhet och inkludering" data-orientation=columns}
+## {.tabset .tabset-pills}
+### Förekomst av riktlinjer, styrdokument eller rutiner utifrån område
+```{r}
+df <- data.frame(
+     "År" = c("2025" , "2025" , "2025" , "2025"),
+     "Kategori" = c("Jämställdhet" , "Mångfald och inkludering" , 
+                    "Tillgänglighet för personer \nmed funktionsnedsättning" , 
+                    "Möjligheter att delta oavsett \nekonomiska förutsättningar"),
+     "Andel" = c(
+         sum(fe_2025$riktlinjer_jämställdhet, na.rm = TRUE) / 
+             nrow(fe_2025 %>% drop_na(riktlinjer_jämställdhet)) ,
+         sum(fe_2025$riktlinjer_mångfaldinkludering, na.rm = TRUE) / 
+             nrow(fe_2025 %>% drop_na(riktlinjer_mångfaldinkludering)) ,
+         sum(fe_2025$riktlinjer_personermfn, na.rm = TRUE) / 
+             nrow(fe_2025 %>% drop_na(riktlinjer_personermfn)) ,
+         sum(fe_2025$riktlinjer_ekonomi, na.rm = TRUE) / 
+             nrow(fe_2025 %>% drop_na(riktlinjer_ekonomi))
+     )
+ )
+
+df %>% 
+  ggplot(aes(x = Kategori , y = Andel , 
+             text = paste("\nOmråde:" , Kategori , "\nAndel:" , round(Andel , 3) * 100 , "%"))) + 
+  geom_col(fill = "#006BB1") +
+  rfsisu_theme +
+  scale_y_continuous(labels = scales::label_percent() ,
+                     limits = c(0,1)) +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
+  xlab(NULL) + ylab("Andel ja")  -> p_riktlinjerochrutiner
+
+ggplotly(p_riktlinjerochrutiner , tooltip = "text") %>% config(displayModeBar = FALSE)
+
+```
+
+### Förekomst av riktlinjer, styrdokument eller rutiner utifrån antal aktiva
+```{r}
+df <- fe_2025 %>% 
+  drop_na(storlek , riktlinjer_jämställdhet , 
+          riktlinjer_mångfaldinkludering , riktlinjer_personermfn , 
+          riktlinjer_ekonomi) %>% 
+  group_by(storlek) %>% 
+  summarize(
+    Kategori = c(
+      "Jämställdhet" , "Mångfald och inkludering" , 
+      "Tillgänglighet för personer \nmed funktionsnedsättning" , 
+      "Möjligheter att delta oavsett \nekonomiska förutsättningar"),
+    Andel = c(
+      sum(riktlinjer_jämställdhet, na.rm = TRUE) / 
+             n() ,
+      sum(riktlinjer_mångfaldinkludering, na.rm = TRUE) / n() ,
+      sum(riktlinjer_personermfn, na.rm = TRUE) /  n() ,
+      sum(riktlinjer_ekonomi, na.rm = TRUE) / n())
+    )
+
+df %>% 
+  ggplot(aes(x = Kategori , y = Andel , fill = factor(storlek) ,
+             text = paste("Antal aktiva:" , storlek , "\nOmråde:" , 
+                          Kategori , "\nAndel:" , round(Andel , 3) * 100 , "%"))) + 
+  geom_col(position = "dodge") +
+  rfsisu_theme +
+  scale_fill_manual(values = c(
+    "Undre halvan" = "#1EAFA0" , 
+    "Övre halvan" = "#994346")) +
+  scale_y_continuous(labels = scales::label_percent() ,
+                     limits = c(0,1)) +
+  labs(fill = "Antal aktiva") +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
+  xlab(NULL) + ylab("Andel ja")  -> p_riktlinjerochrutiner_storlek
+
+ggplotly(p_riktlinjerochrutiner_storlek , tooltip = "text") %>% config(displayModeBar = FALSE)
+
+```
+
+
+
+## {.tabset .tabset-pills}
+### Förekomst av verksamhet utifrån målgrupp
+```{r}
+df <- fe_2025 %>% 
+  reframe(
+    "Kategori" = c("Ja" , "Nej, men vill starta upp" , "Nej, och är inte intresserade \nav att starta upp" ,
+                   "Ja" , "Nej, men vill starta upp" , "Nej, och är inte intresserade \nav att starta upp" ,
+                   "Ja" , "Nej, men vill starta upp" , "Nej, och är inte intresserade \nav att starta upp"),
+    "Målgrupp" = c("65+" , "65+" , "65+" ,
+                   "Inkluderande träning" , "Inkluderande träning" , "Inkluderande träning" ,
+                   "Paraverksamhet" , "Paraverksamhet" , "Paraverksamhet") ,
+    "Andel" = c(
+      sum(str_count(fe_2025$`verksamhet_65+`, "Ja"), na.rm = TRUE) / 
+                 nrow(fe_2025 %>% drop_na(`verksamhet_65+`)) ,
+      sum(str_count(fe_2025$`verksamhet_65+`, "Nej, men vi är intresserade av att starta upp verksamhet för målgruppen"), na.rm = TRUE) / 
+                 nrow(fe_2025 %>% drop_na(`verksamhet_65+`)) ,
+      sum(str_count(fe_2025$`verksamhet_65+`, "Nej, och vi är inte intresserade av att starta upp verksamhet för målgruppen"), na.rm = TRUE) / 
+                 nrow(fe_2025 %>% drop_na(`verksamhet_65+`)),
+      
+      sum(str_count(fe_2025$verksamhet_inkluderandeträning, "Ja"), na.rm = TRUE) / 
+                 nrow(fe_2025 %>% drop_na(verksamhet_inkluderandeträning)) ,
+      sum(str_count(fe_2025$verksamhet_inkluderandeträning, "Nej, men vi är intresserade av att starta upp verksamhet för målgruppen"), na.rm = TRUE) / 
+                 nrow(fe_2025 %>% drop_na(verksamhet_inkluderandeträning)) ,
+      sum(str_count(fe_2025$verksamhet_inkluderandeträning, "Nej, och vi är inte intresserade av att starta upp verksamhet för målgruppen"), na.rm = TRUE) / 
+                 nrow(fe_2025 %>% drop_na(verksamhet_inkluderandeträning)), 
+      
+            sum(str_count(fe_2025$verksamhet_para, "Ja"), na.rm = TRUE) / 
+                 nrow(fe_2025 %>% drop_na(verksamhet_para)) ,
+      sum(str_count(fe_2025$verksamhet_para, "Nej, men vi är intresserade av att starta upp verksamhet för målgruppen"), na.rm = TRUE) / 
+                 nrow(fe_2025 %>% drop_na(verksamhet_para)) ,
+      sum(str_count(fe_2025$verksamhet_para, "Nej, och vi är inte intresserade av att starta upp verksamhet för målgruppen"), na.rm = TRUE) / 
+                 nrow(fe_2025 %>% drop_na(verksamhet_para))
+      
+    )
+  )
+
+df %>% 
+  ggplot(aes(x = Målgrupp , y = Andel , fill = Kategori,
+             text = paste(Målgrupp , "\nKategori:" , Kategori , "\nAndel:" , round(Andel , 3) * 100 , "%"))) + 
+  geom_col(position = "dodge") +
+  rfsisu_theme +
+  scale_y_continuous(labels = scales::label_percent() ,
+                     limits = c(0,1)) +
+  scale_fill_manual(values = c(
+    "Ja" = "#1EAFA0", 
+    "Nej, men vill starta upp" = "#1e3479" ,
+    "Nej, och är inte intresserade \nav att starta upp" = "#994346"
+  )) +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
+  xlab(NULL) + ylab("Andel")  -> p_verksamhet_inkludering
+
+ggplotly(p_verksamhet_inkludering , tooltip = "text") %>% config(displayModeBar = FALSE)
+```
+
+### Begreppsförklaringar
+Med **paraverksamhet** menas verksamhet som är **riktad specifikt** mot personer med synnedsättning, rörelsenedsättning och/eller intellektuell funktionsnedsättning. Ett exempel på detta är blindfotboll.
+<br>
+<br>
+Med **inkluderande träning** menas verksamhet som **inte riktas specifikt** mot denna målgrupp, men de är **inkluderade** i verksamheten. Ett exempel på detta är att en person som sitter i rullstol deltar i verksamhet tillsammans med personer som inte sitter i rullstol.
+
+
+
+# Inkluderande träning och paraverksamhet {data-navmenu="Jämställdhet och inkludering" data-orientation=columns}
+
+## {.tabset .tabset-pills}
+
+### Målgrupper som är inkluderade i idrottsverksamheten
+```{r}
+inkluderandeträning_målgrupp <- data.frame(
+  Ålderskategori = c(
+  "-15" , "16-25" , "26+" ,
+  "-15" , "16-25" , "26+" ,
+  "-15" , "16-25" , "26+" ,
+  "-15" , "16-25" , "26+" ,
+  "-15" , "16-25" , "26+"
+  ) ,                    
+  Kategori = c(
+    "Intellektuell funktionsnedsättning" , "Intellektuell funktionsnedsättning" , "Intellektuell funktionsnedsättning" ,
+    "Neuropsykiatrisk funktionsnedsättning" , "Neuropsykiatrisk funktionsnedsättning" , "Neuropsykiatrisk funktionsnedsättning" ,
+    "Synnedsättning" ,"Synnedsättning" , "Synnedsättning" ,
+    "Hörselnedsättning" , "Hörselnedsättning" , "Hörselnedsättning" ,
+    "Rörelsenedsättning" , "Rörelsenedsättning" , "Rörelsenedsättning") ,
+  Antal = c(sum(fe_2025$`inkluderandeträning_intellektuellfn_-15` , na.rm = TRUE) , 
+            sum(fe_2025$`inkluderandeträning_intellektuellfn_-16-25` , na.rm = TRUE) , 
+            sum(fe_2025$`inkluderandeträning_intellektuellfn_-26+` , na.rm = TRUE) ,
+            
+            sum(fe_2025$`inkluderandeträning_neuropsykiatriskfn_-15` , na.rm = TRUE) , 
+            sum(fe_2025$`inkluderandeträning_neuropsykiatriskfn_-16-25` , na.rm = TRUE) , 
+            sum(fe_2025$`inkluderandeträning_neuropsykiatriskfn_-26+` , na.rm = TRUE) ,
+            
+            sum(fe_2025$`inkluderandeträning_synnedsättning_-15` , na.rm = TRUE) , 
+            sum(fe_2025$`inkluderandeträning_synnedsättning_-16-25` , na.rm = TRUE) , 
+            sum(fe_2025$`inkluderandeträning_synnedsättning_-26+` , na.rm = TRUE) ,
+            
+            sum(fe_2025$`inkluderandeträning_hörselnedsättning_-15` , na.rm = TRUE) , 
+            sum(fe_2025$`inkluderandeträning_hörselnedsättning_-16-25` , na.rm = TRUE) , 
+            sum(fe_2025$`inkluderandeträning_hörselnedsättning_-26+` , na.rm = TRUE) ,
+            
+            sum(fe_2025$`inkluderandeträning_rörelsenedsättning_-15` , na.rm = TRUE) , 
+            sum(fe_2025$`inkluderandeträning_rörelsenedsättning_-16-25` , na.rm = TRUE) , 
+            sum(fe_2025$`inkluderandeträning_rörelsenedsättning_-26+` , na.rm = TRUE)
+
+            )
+)
+
+inkluderandeträning_målgrupp <- inkluderandeträning_målgrupp %>% 
+  mutate(
+    Andel = round(Antal/sum(fe_2025$verksamhet_inkluderandeträning == "Ja", na.rm = TRUE) , digits = 3
+                         )
+  )
+
+ggplot(inkluderandeträning_målgrupp , aes(x = Kategori , y = Andel , fill = Ålderskategori , 
+                                        text = paste(Kategori , "\nÅlderskategori:" , Ålderskategori ,
+                                                     "\nAndel:" , round(Andel , 3) * 100 , "%"))) +   
+        geom_col(position = "dodge") +
+        rfsisu_theme +
+        scale_y_continuous(labels = scales::label_percent()) +
+        scale_fill_manual(values = c(
+          "-15" = "#1EAFA0" ,
+          "16-25" = "#1e3479" ,
+          "26+" = "#994346" )
+          ) +
+        xlab(NULL) + ylab("Andel") +
+        theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) -> p_inkluderandeträning_målgrupp
+
+ggplotly(p_inkluderandeträning_målgrupp , tooltip = "text") %>% config(displayModeBar = FALSE) %>% 
+  layout(  
+    annotations = list(
+      x = 'left',  
+      y = 'bottom',  
+      text = "Andelarna är beräknade utifrån de som uppgett att de bedriver inkluderande träning.", 
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',  
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+
+```
+
+## {.tabset .tabset-pills}
+
+### Målgrupper som paraverksamheten riktas mot
+```{r}
+paraverksamhet_målgrupp <- data.frame(
+  Ålderskategori = c(
+  "-15" , "16-25" , "26+" ,
+  "-15" , "16-25" , "26+" ,
+  "-15" , "16-25" , "26+" ,
+  "-15" , "16-25" , "26+" ,
+  "-15" , "16-25" , "26+"
+  ) ,                    
+  Kategori = c(
+    "Intellektuell funktionsnedsättning" , "Intellektuell funktionsnedsättning" , "Intellektuell funktionsnedsättning" ,
+    "Neuropsykiatrisk funktionsnedsättning" , "Neuropsykiatrisk funktionsnedsättning" , "Neuropsykiatrisk funktionsnedsättning" ,
+    "Synnedsättning" ,"Synnedsättning" , "Synnedsättning" ,
+    "Hörselnedsättning" , "Hörselnedsättning" , "Hörselnedsättning" ,
+    "Rörelsenedsättning" , "Rörelsenedsättning" , "Rörelsenedsättning") ,
+  Antal = c(sum(fe_2025$`paraverksamhet_intellektuellfn_-15` , na.rm = TRUE) , 
+            sum(fe_2025$`paraverksamhet_intellektuellfn_-16-25` , na.rm = TRUE) , 
+            sum(fe_2025$`paraverksamhet_intellektuellfn_-26+` , na.rm = TRUE) ,
+            
+            sum(fe_2025$`paraverksamhet_neuropsykiatriskfn_-15` , na.rm = TRUE) , 
+            sum(fe_2025$`paraverksamhet_neuropsykiatriskfn_-16-25` , na.rm = TRUE) , 
+            sum(fe_2025$`paraverksamhet_neuropsykiatriskfn_-26+` , na.rm = TRUE) ,
+            
+            sum(fe_2025$`paraverksamhet_synnedsättning_-15` , na.rm = TRUE) , 
+            sum(fe_2025$`paraverksamhet_synnedsättning_-16-25` , na.rm = TRUE) , 
+            sum(fe_2025$`paraverksamhet_synnedsättning_-26+` , na.rm = TRUE) ,
+            
+            sum(fe_2025$`paraverksamhet_hörselnedsättning_-15` , na.rm = TRUE) , 
+            sum(fe_2025$`paraverksamhet_hörselnedsättning_-16-25` , na.rm = TRUE) , 
+            sum(fe_2025$`paraverksamhet_hörselnedsättning_-26+` , na.rm = TRUE) ,
+            
+            sum(fe_2025$`paraverksamhet_rörelsenedsättning_-15` , na.rm = TRUE) , 
+            sum(fe_2025$`paraverksamhet_rörelsenedsättning_-16-25` , na.rm = TRUE) , 
+            sum(fe_2025$`paraverksamhet_rörelsenedsättning_-26+` , na.rm = TRUE)
+
+            )
+)
+
+paraverksamhet_målgrupp <- paraverksamhet_målgrupp %>% 
+  mutate(
+    Andel = round(Antal/sum(fe_2025$verksamhet_para == "Ja", na.rm = TRUE) , digits = 3
+                         )
+  )
+
+ggplot(paraverksamhet_målgrupp , aes(x = Kategori , y = Andel , fill = Ålderskategori , 
+                                        text = paste(Kategori , "\nÅlderskategori:" , Ålderskategori ,
+                                                     "\nAndel:" , round(Andel , 3) * 100 , "%"))) +   
+        geom_col(position = "dodge") +
+        rfsisu_theme +
+        scale_y_continuous(labels = scales::label_percent()) +
+        scale_fill_manual(values = c(
+          "-15" = "#1EAFA0" ,
+          "16-25" = "#1e3479" ,
+          "26+" = "#994346" )
+          ) +
+        xlab(NULL) + ylab("Andel") +
+        theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) -> p_paraverksamhet_målgrupp
+
+ggplotly(p_paraverksamhet_målgrupp , tooltip = "text") %>% config(displayModeBar = FALSE) %>% 
+  layout(  
+    annotations = list(
+      x = 'left',  
+      y = 'bottom',  
+      text = "Andelarna är beräknade utifrån de som uppgett att de bedriver paraverksamhet.", 
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',  
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+
+```
+
+### Typer av paraverksamhet
+```{r}
+paraverksamhet_typ <- data.frame(
+  Kategori = c(
+    "Motionsidrott" , "Breddverksamhet" , "Elitverksamhet") ,
+  Antal = c(sum(fe_2025$`paraverksamhet_motionsidrott` , na.rm = TRUE) , 
+            sum(fe_2025$`paraverksamhet_bredd` , na.rm = TRUE) , 
+            sum(fe_2025$`paraverksamhet_elit` , na.rm = TRUE)
+            )
+)
+
+paraverksamhet_typ <- paraverksamhet_typ %>% 
+  mutate(
+    Andel = round(Antal/sum(fe_2025$verksamhet_para == "Ja", na.rm = TRUE) , digits = 3
+                         )
+  )
+
+ggplot(paraverksamhet_typ , aes(x = Kategori , y = Andel , 
+                                text = paste(Kategori , "\nAndel:" , round(Andel , 3) * 100 , "%"))) +   
+        geom_col(fill = "#006BB1") +
+        rfsisu_theme +
+        scale_y_continuous(labels = scales::label_percent()) +
+        xlab(NULL) + ylab("Andel") +
+        theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) -> p_paraverksamhet_typ
+
+ggplotly(p_paraverksamhet_typ , tooltip = "text") %>% config(displayModeBar = FALSE) %>% 
+  layout(  
+    annotations = list(
+      x = 'left',  
+      y = 'bottom',  
+      text = "Andelarna är beräknade utifrån de som uppgett att de bedriver paraverksamhet.", 
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      xanchor = 'left',  
+      yanchor = 'auto',
+      font = list(size = 12, color = "white", family = "Arial")
+    )
+  )
+
+```
+
