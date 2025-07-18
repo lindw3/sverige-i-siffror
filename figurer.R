@@ -984,7 +984,8 @@ saveWidget(img, "images/skatter_statligainkomster.html")
 df <- read.csv("https://ourworldindata.org/grapher/gender-wage-gap-oecd.csv?v=1&csvType=full&useColumnShortNames=true")
 colnames(df) <- c("Land" , "Kod", "År" , "Andel")
 lönegap_kön <- read_excel("data/lönegap_kön.xlsx")
-df <- union(df, lönegap_kön) # Komplettering med data från SCB efter 2013 
+lönegap_kön$Andel <- as.numeric(lönegap_kön$Andel)
+df <- union(df, lönegap_kön) # Komplettering med data från OECD efter 2013 
 
 p <- df %>% 
   filter(Land == "Sweden") %>% 

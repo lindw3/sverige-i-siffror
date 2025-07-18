@@ -255,29 +255,29 @@ const frågor = [
   },
   {
     kategori: "ARBETE",
-    fråga: "Hur mycket mer tjänar män än kvinnor i genomsnitt?",
-    korrekt: "10 procent",
+    fråga: "Hur mycket mer tjänar män än kvinnor, räknat i medianlön?",
+    korrekt: "Under tio procent mer",
     alternativ: [
-      "10 procent",
-      "20 procent",
-      "30 procent",
-      "40 procent"
+      "Under tio procent mer",
+      "Mellan 11-20 procent mer",
+      "Mellan 21-30 procent mer",
+      "Mellan 31-40 procent mer"
     ],
-    förklaring: "Sedan 90-talet har det ojusterade lönegapet mellan mäns och kvinnors genomsnittslöner minskat, där män tjänat 10% mer än kvinnor i genomsnitt sedan 2019. När man justerar för ålder, utbildning, arbetstid och sektor halveras lönegapet mellan män och kvinnor.",
+    förklaring: "Sedan 90-talet har det ojusterade lönegapet mellan mäns och kvinnors medianlöner minskat, där män haft en medianlön som är strax över sju procent mer än kvinnors sedan 2017. Skillnaden i genomsnittslöner har i stället varit cirka tio procent sedan 2019 enligt SCB. När man justerar för ålder, utbildning, arbetstid och sektor halveras det genomsnittliga lönegapet mellan män och kvinnor.",
     bild: '<iframe src="images/lönegap_sverige.html" class="iframe" frameborder="0"></iframe>',
-    källa: 'Källa: SCB:s statistikdatabas, Lönestrukturstatistik, hela ekonomin', 
+    källa: 'Källa: OECD - bearbetat av Our World in Data fram till 2016, därefter egen bearbetning', 
     förklaring2: "Vid jämförelse med andra länder (data finns fram till 2016) kan man se att det är många länder som 'kommit ikapp' Sverige och minskat lönegapet under andra halvan av 1900-talet.",
     bild2: '<iframe src="images/lönegap.html" class="iframe" frameborder="0"></iframe>',
-    källa2: 'Källa: OECD - bearbetat av Our World in Data & SCB:s statistikdatabas'
+    källa2: 'Källa: OECD - bearbetat av Our World in Data'
   },
   {
     kategori: "ARBETE",
     fråga: "Hur stor andel av chefspositioner innehas av kvinnor?",
-    korrekt: "Över 40 procent",
+    korrekt: "Mellan 41-50 procent",
     alternativ: [
-      "Över 20 procent",
-      "Över 30 procent",
-      "Över 40 procent",
+      "Mellan 21-30 procent",
+      "Mellan 31-40 procent",
+      "Mellan 41-50 procent",
       "Över 50 procent"
     ],
     förklaring: "Sedan millenieskiftet har andelen kvinnliga chefer (ledningspositioner och mellanchefer) ökat med nästan 15 procentenheter, och har legat på över 40 procent sedan 2019.",
@@ -387,7 +387,17 @@ let currentQuestion = 0;
     nästaFrågaBtn.style.display = "none";
   } else {
     frågaEl.textContent = "Testet är slut! Hoppas du lärde dig någonting nytt.";
-    förklaringEl.textContent = "Om du vill fördjupa dig ytterligare i de områden som togs upp i testet kan du börja med att kika på nedanstående länkar:";
+    förklaringEl.innerHTML = `
+Om du vill fördjupa dig ytterligare i de områden som togs upp i testet kan du börja med att kika på nedanstående länkar:<br><br>
+Our World in Data:<a href="https://ourworldindata.org" target="_blank">Klicka här</a><br>
+SCB:s statistikdatabas:<a href="https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/" target="_blank">Klicka här</a><br>
+Organisation for Economic Co-operation and Development:<a href="https://www.oecd.org/en/data" target="_blank">Klicka här</a><br>
+Eurostat:<a href="https://ec.europa.eu/eurostat/web/main/data/database" target="_blank">Klicka här</a><br>
+World Inequality Database:<a href="https://wid.world/data/" target="_blank">Klicka här</a><br>
+International Labour Organization:<a href="https://www.ilo.org/data-and-statistics" target="_blank">Klicka här</a><br>
+PISA:<a href="https://www.oecd.org/en/about/programmes/pisa" target="_blank">Klicka här</a><br>
+Global Carbon Budget:<a href="https://globalcarbonbudget.org" target="_blank">Klicka här</a>
+`;
     förklaringEl.classList.add("active");
     alternativKnappar.forEach(btn => {
       btn.style.display = "none";
