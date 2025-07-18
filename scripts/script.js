@@ -387,7 +387,7 @@ let currentQuestion = 0;
     nästaFrågaBtn.style.display = "none";
   } else {
     frågaEl.textContent = "Testet är slut! Hoppas du lärde dig någonting nytt.";
-    förklaringEl.textContent = "Testing testing";
+    förklaringEl.textContent = "Om du vill fördjupa dig ytterligare i de områden som togs upp i testet kan du börja med att kika på nedanstående länkar:";
     förklaringEl.classList.add("active");
     alternativKnappar.forEach(btn => {
       btn.style.display = "none";
