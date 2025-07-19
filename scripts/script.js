@@ -17,7 +17,7 @@ const frågor = [
       "Sverigedemokraterna",
       "Miljöpartiet"
     ],
-    förklaring: "Socialdemokraterna är det dominerande partiet utifrån de flesta indikatorer, även om det 2025 var en något högre andel i den allra högsta inkomstgruppen som sympatiserade med Moderaterna.",
+    förklaring: "Socialdemokraterna är det dominerande partiet utifrån de flesta indikatorer, även om det var en något högre andel i den allra högsta inkomstgruppen som sympatiserade med Moderaterna i den senaste mätningen.",
     bild: '<iframe src="images/partisympatier_inkomst.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: SCB:s statistikdatabas, Partisympatiundersökningen (PSU)'
   },
@@ -150,19 +150,18 @@ const frågor = [
     förklaring: "Enligt estimeringar från Madisson Project var Sveriges GDP per capita i stort sett oförändrad fram till industrialiseringen på 1870-talet, då den ökade dramatiskt. Ökningen har varit särskilt kraftig sedan efterkrigstiden.",
     bild: '<iframe src="images/gdp_sverige.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: Maddison Project Database - bearbetat av Our World in Data',
-    förklaring2: "Denna trend har vi sett i stora drag globalt, även om det finns länder som inte har noterat denna uppåtgående trend.",
+    förklaring2: "Den generella globala trenden har varit att länder ökat i GDP, även om det finns länder som inte har noterat denna uppåtgående trend.",
     bild2: '<iframe src="images/gdp.html" class="iframe" frameborder="0"></iframe>',
     källa2: 'Källa: Eurostat, OECD & Världsbanken - bearbetat av Our World in Data'
   },
  {
     kategori: "EKONOMI",
     fråga: "Gini-koefficienten är ett mått på ojämlikhet i inkomstfördelning på en skala mellan 0 och 1, där en högre siffra innebär större ojämlikhet. Hur har Gini-koefficienten i Sverige förändrats sedan 1975?",
-    korrekt: "Den har ökat med över 20 procent",
+    korrekt: "Den har ökat",
     alternativ: [
-      "Den är i stort sett oförändrat",
-      "Den har ökat med över 20 procent",
-      "Den har ökat med över 40 procent",
-      "Den har ökat med över 60 procent"
+      "Den har minskat",
+      "Den är i stort sett oförändrad",
+      "Den har ökat"
     ],
     förklaring: "Gini-koefficienten har ökat i stadig takt sedan 1975, vilket innebär att de totala inkomsterna koncentrerats till en mindre andel av befolkningen.",
     bild: '<iframe src="images/gini_sverige.html" class="iframe" frameborder="0"></iframe>',
@@ -249,9 +248,9 @@ const frågor = [
       "70 procent",
       "90 procent"
     ],
-    förklaring: "Totalt sett är 70 procent av alla anställda inom näringslivet. Det finns dock stora skillnader mellan män och kvinnor, där kvinnor är överrepresenterade inom kommun och region medan män är överrepresenterade inom privat sektor.",
+    förklaring: "Totalt sett är 70 procent av alla anställda inom näringslivet. Det finns stora skillnader mellan män och kvinnor, där kvinnor är överrepresenterade inom kommun och region medan män är överrepresenterade inom privat sektor.",
     bild: '<iframe src="images/anställning_sektor_kön.html" class="iframe" frameborder="0"></iframe>',
-    källa: 'SCB:s statistikdatabas, Anställningar'
+    källa: 'Källa: SCB:s statistikdatabas, Anställningar'
   },
   {
     kategori: "ARBETE",
@@ -292,7 +291,7 @@ const frågor = [
     fråga: "Hur mycket mer tjänar i genomsnitt de med eftergymnasial utbildning 3+ år jämfört med de med 3-årig gymnasial utbildning?",
     korrekt: "25 procent mer",
     alternativ: [
-      "De tjänar lika",
+      "De tjänar lika mycket",
       "10 procent mer",
       "25 procent mer",
       "50 procent mer"
@@ -330,10 +329,10 @@ const frågor = [
     ],
     förklaring: "Sveriges koldioxidutsläpp har minskat drastiskt sedan 1970 då landet började förlita sig mindre på fossila bränslen för sin elproduktion. Detta behöver dock vägas mot hur mycket koldioxidutsläpp som kommer från import från andra länder. Även om importerade koldioxidutsläpp har ökat så har det inte alls skett i samma takt som minskningen av inrikes koldioxidutsläpp.",
     bild: '<iframe src="images/co2_sverige.html" class="iframe" frameborder="0"></iframe>',
-    källa: 'Global Carbon Budget - bearbetat av Our World in Data',
+    källa: 'Källa: Global Carbon Budget - bearbetat av Our World in Data',
     förklaring2: "Internationellt sett har Europa, Oceanien och Nordamerika haft liknande trender som Sverige, medan Asien haft en stadig ökning av sina per capita-utsläpp. Två stora anledningar till att koldioxidutsläppen ändå ökar totalt sett i världen är att befolkningsmängden ökar, samt att Kinas utsläpp fortsätter att öka. Sverige står för ca. 0.1% av världens koldioxidutsläpp.",
     bild2: '<iframe src="images/co2.html" class="iframe" frameborder="0"></iframe>',
-    källa2: 'Global Carbon Budget - bearbetat av Our World in Data'
+    källa2: 'Källa: Global Carbon Budget - bearbetat av Our World in Data'
   }
 ]
 
@@ -376,8 +375,13 @@ let currentQuestion = 0;
         alternativKnappar[i].textContent = alternativ;
         alternativKnappar[i].disabled = false;
         alternativKnappar[i].style.backgroundColor = "";
+        alternativKnappar[i].style.display = "inline-block"; // Visa knappen
       }
     });
+    // Dölj eventuella överflödiga knappar
+    for (let i = frågor[index].alternativ.length; i < alternativKnappar.length; i++) {
+      alternativKnappar[i].style.display = "none";
+    }
     // Ändra knapptext om det är sista frågan
     if (index === frågor.length - 1) {
       nästaFrågaBtn.textContent = "Avsluta testet";
@@ -387,16 +391,20 @@ let currentQuestion = 0;
     nästaFrågaBtn.style.display = "none";
   } else {
     frågaEl.textContent = "Testet är slut! Hoppas du lärde dig någonting nytt.";
-    förklaringEl.innerHTML = `
-Om du vill fördjupa dig ytterligare i de områden som togs upp i testet kan du börja med att kika på nedanstående länkar:<br><br>
-Our World in Data:<a href="https://ourworldindata.org" target="_blank">Klicka här</a><br>
-SCB:s statistikdatabas:<a href="https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/" target="_blank">Klicka här</a><br>
-Organisation for Economic Co-operation and Development:<a href="https://www.oecd.org/en/data" target="_blank">Klicka här</a><br>
-Eurostat:<a href="https://ec.europa.eu/eurostat/web/main/data/database" target="_blank">Klicka här</a><br>
-World Inequality Database:<a href="https://wid.world/data/" target="_blank">Klicka här</a><br>
-International Labour Organization:<a href="https://www.ilo.org/data-and-statistics" target="_blank">Klicka här</a><br>
-PISA:<a href="https://www.oecd.org/en/about/programmes/pisa" target="_blank">Klicka här</a><br>
-Global Carbon Budget:<a href="https://globalcarbonbudget.org" target="_blank">Klicka här</a>
+förklaringEl.innerHTML = `
+  <div style="text-align:left;">
+    Om du vill fördjupa dig ytterligare i de områden som togs upp i testet kan du börja med att kika på nedanstående länkar:
+    <ul style="margin-top:1em;">
+      <li>Our World in Data: <a href="https://ourworldindata.org" target="_blank">Klicka här</a></li>
+      <li>SCB:s statistikdatabas: <a href="https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/" target="_blank">Klicka här</a></li>
+      <li>Organisation for Economic Co-operation and Development: <a href="https://www.oecd.org/en/data" target="_blank">Klicka här</a></li>
+      <li>Eurostat: <a href="https://ec.europa.eu/eurostat/web/main/data/database" target="_blank">Klicka här</a></li>
+      <li>World Inequality Database: <a href="https://wid.world/data/" target="_blank">Klicka här</a></li>
+      <li>International Labour Organization: <a href="https://www.ilo.org/data-and-statistics" target="_blank">Klicka här</a></li>
+      <li>PISA: <a href="https://www.oecd.org/en/about/programmes/pisa" target="_blank">Klicka här</a></li>
+      <li>Global Carbon Budget: <a href="https://globalcarbonbudget.org" target="_blank">Klicka här</a></li>
+    </ul>
+  </div>
 `;
     förklaringEl.classList.add("active");
     alternativKnappar.forEach(btn => {
