@@ -296,7 +296,7 @@ const frågor = [
       "25 procent mer",
       "50 procent mer"
     ],
-    förklaring: "Genomsnittslönen ökar med ökad utbildningsnivå, med undantag för när man jämför de med gymnasial utbildning under 3 år med de som har 3-årig gymnasial utbildning. ",
+    förklaring: "Genomsnittslönen ökar med ökad utbildningsnivå, med undantag för när man jämför de med gymnasial utbildning under 3 år med de som har 3-årig gymnasial utbildning. Det finns fler faktorer än utbildningsnivå som påverkar genomsnittslönen, såsom ålder, kön och vilken sektor man arbetar inom.",
     bild: '<iframe src="images/lön_utbildning_kön.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: SCB:s statistikdatabas, Lönestrukturstatistik, hela ekonomin'
 },
@@ -327,7 +327,7 @@ const frågor = [
       "De har minskat med en tredjedel",
       "De har minskat med två tredjedelar"
     ],
-    förklaring: "Sveriges koldioxidutsläpp har minskat drastiskt sedan 1970 då landet började förlita sig mindre på fossila bränslen för sin elproduktion. Detta behöver dock vägas mot hur mycket koldioxidutsläpp som kommer från import från andra länder. Även om importerade koldioxidutsläpp har ökat så har det inte alls skett i samma takt som minskningen av inrikes koldioxidutsläpp.",
+    förklaring: "Sveriges koldioxidutsläpp har minskat drastiskt sedan 1970 då landet började förlita sig mindre på fossila bränslen för sin elproduktion. Detta behöver dock vägas mot koldioxidutsläpp från import från andra länder. Även om importerade koldioxidutsläpp har ökat något så har det inte alls skett i samma takt som minskningen av inrikes koldioxidutsläpp.",
     bild: '<iframe src="images/co2_sverige.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: Global Carbon Budget - bearbetat av Our World in Data',
     förklaring2: "Internationellt sett har Europa, Oceanien och Nordamerika haft liknande trender som Sverige, medan Asien haft en stadig ökning av sina per capita-utsläpp. Två stora anledningar till att koldioxidutsläppen ändå ökar totalt sett i världen är att befolkningsmängden ökar, samt att Kinas utsläpp fortsätter att öka. Sverige står för ca. 0.1% av världens koldioxidutsläpp.",
@@ -576,8 +576,8 @@ if (förklaring2 || bildData2) {
   });
 
   nästaFrågaBtn.addEventListener("click", () => {
-    currentQuestion++;
-    window.scrollTo({ top: 0, behavior: "smooth" }); // Scrolla upp till toppen av sidan
-    visaFråga(currentQuestion);
-  });
+  currentQuestion++;
+  document.querySelector('.test-page-container').scrollIntoView({ behavior: "smooth" }); // Scrolla upp till toppen av testet
+  visaFråga(currentQuestion);
+});
 });

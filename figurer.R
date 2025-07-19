@@ -997,7 +997,7 @@ p <- df %>%
   scale_x_continuous(breaks = c(1975, max(df$År))) +
   scale_y_continuous(limits = c(0 , 30) ,
                      breaks =  seq(0, 30, 10)) +
-  xlab(NULL) + ylab("Skillnad i genomsnittslön, %")
+  xlab(NULL) + ylab("Skillnad i medianlön, %")
 
 img <- ggplotly(p, tooltip = "text") %>% 
   config(displayModeBar = F)
@@ -1025,7 +1025,7 @@ p <- df %>%
                      breaks =  seq(0, 60, 10)) +
   guides(alpha = "none", linewidth = "none" ,colour = "none") +
   xlab(NULL) +
-  ylab("Skillnad i genomsnittslön, %")
+  ylab("Skillnad i medianlön, %")
 
 img <- ggplotly(p, tooltip = "text") %>% 
   config(displayModeBar = F)
