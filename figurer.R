@@ -94,10 +94,6 @@ colnames(partisympati_kön_inkomst) <- c("År" , "Kön" , "Inkomst" , "Moderater
                                         "Kristdemokraterna" , "Miljöpartiet" , "Socialdemokraterna" , "Vänsterpartiet" , 
                                         "Sverigedemokraterna" , "Övriga partier")
 
-# Förtroendevalda efter kön och ålder
-förtroendevalda_kommun_ålder <- read_excel("data/förtroendevalda_kommun_ålder.xlsx")
-förtroendevalda_kommun_ålder <- förtroendevalda_kommun_ålder %>% 
-  pivot_longer(!c(Parti, Kön, Kategori, Mätvariabel) , names_to = "År" , values_to = "Andel")
 
 # Anställning utifrån sektor
 anställning_sektor <- read_excel("data/anställning_sektor.xlsx")
@@ -108,8 +104,157 @@ lön_utbildningsnivå <- read_excel("data/lön_utbildningsnivå.xlsx")
 
 
 
-
    ### FIGURERNA ###
+
+ # Befolkning utifrån ålder
+df <- read.csv("https://ourworldindata.org/grapher/population-by-age-group.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod" , "År" , "65+" , "25-64" , "15-24" , "5-14" , "0-4")
+
+df <-  df %>% 
+  filter(Land == "Sweden") %>% 
+  pivot_longer(!c(1:3) , names_to = "Kategori" , values_to = "Antal")
+
+df %>% 
+  filter(År == 1950) %>% 
+  summarize(Antal = sum(Antal))
+
+levels = c("65+" , "25-64" , "15-24" , "5-14" , "0-4")
+
+p <- df %>% 
+  ggplot(aes(x = År, y = Antal, fill = factor(Kategori , levels = levels)) ,
+         text = paste("År:" , År , "\nAntal:" , Antal)) +
+  geom_area() +
+  xlab(NULL) + ylab("Antal") +
+  labs(fill = "Ålderskategori") +
+  sis_theme + 
+  scale_fill_manual(values = c("0-4" = "#5991E5",
+                               "5-14" = "#D7E559" ,
+                               "15-24" = "#E56759",
+                               "25-64" = "#AD59E5" ,
+                               "65+" = "#59E5AD")) +
+  scale_y_continuous(breaks = seq(0 , 10000000 , 1000000) ,
+                     labels = comma) +
+  scale_x_continuous(breaks = c(min(df$År) , max(df$År)))
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/befolkning_sverige.html")
+
+
+
+  # ... jämfört med andra länder
+df <- read.csv("https://ourworldindata.org/grapher/median-age.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod" , "År" , "Median" , "Predicerad median")
+
+p <- df %>%
+  filter(År < 2024 ,
+         Kod != "") %>% 
+  ggplot(aes(x = År, y = Median, group = Land ,
+             alpha = Land == "Sweden",
+             linewidth = Land == "Sweden",
+             colour = Land == "Sweden",
+             text = paste(
+               "År:" , År,
+               "\nLand:" , Land,
+               "\nMedianålder:" , Median
+             )
+  )) +
+  geom_line() +
+  scale_colour_manual(values = c("TRUE" = "#D7E559", "FALSE" = "#5991E5")) +
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0.25)) +
+  scale_linewidth_manual(values = c("TRUE" = 1.35, "FALSE" = 0.5)) +
+  sis_theme +
+  scale_x_continuous(breaks = c(min(df$År), 2023)) +
+  scale_y_continuous(limits = c(10, max(df$Median, na.rm = TRUE) + 1),
+                     breaks = seq(10, 60, 10)) +
+  guides(alpha = "none", linewidth = "none" , colour = "none") +
+  xlab(NULL) +
+  ylab("Medianålder")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/medianålder.html")
+
+
+
+
+
+
+  # Befolkning utifrån bakgrund
+df <- read_excel("data/bakgrund.xlsx")
+
+df <- df %>%
+  pivot_longer(cols = -c(1:3), names_to = "År", values_to = "Antal") %>%
+  group_by(bakgrund, År) %>%
+  summarize(Antal = sum(Antal), .groups = "drop") %>%
+  pivot_wider(names_from = bakgrund, values_from = Antal) %>% 
+  mutate(Andel = round(`utländsk bakgrund` / (`svensk bakgrund` + `utländsk bakgrund`), 3))
+df$År <- as.numeric(df$År)
+
+p <- df %>% 
+  ggplot(aes(x = År, y = Andel  , group = 2,
+             text = paste("År:" , År , 
+                          "\nAndel:" , Andel * 100, "%"))) +
+  geom_line(linewidth = 1 , colour = "#5991E5") +
+  sis_theme +
+  scale_x_continuous(breaks = c(min(df$År) , max(df$År))) +
+  scale_y_continuous(limits = c(0 , 0.5) , 
+                     breaks = seq(0, 0.5, 0.1) ,
+                     labels = scales::percent_format(accuracy = 1)) +
+  xlab(NULL) + ylab("Andel med utländsk bakgrund")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/utländskbakgrund_sverige.html")
+
+
+
+  # Andel utlandsfödda, jämfört med andra länder
+df <- read.csv("https://ourworldindata.org/grapher/migrant-stock-share.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod" , "År" , "Andel")
+
+p <- df %>%
+  filter(Kod != "") %>% 
+  ggplot(aes(x = År, y = Andel, group = Land ,
+             alpha = Land == "Sweden",
+             linewidth = Land == "Sweden",
+             colour = Land == "Sweden",
+             text = paste(
+               "År:" , År,
+               "\nLand:" , Land,
+               "\nAndel utlandsfödda:" , Andel, "%"
+             )
+  )) +
+  geom_line() +
+  scale_colour_manual(values = c("TRUE" = "#D7E559", "FALSE" = "#5991E5")) +
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0.25)) +
+  scale_linewidth_manual(values = c("TRUE" = 1.35, "FALSE" = 0.5)) +
+  sis_theme +
+  scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
+  scale_y_continuous(limits = c(0, max(df$Andel, na.rm = TRUE) + 0.1),
+                     breaks = seq(0, 100, 10)) +
+  guides(alpha = "none", linewidth = "none" , colour = "none") +
+  xlab(NULL) +
+  ylab("Andel utlandsfödda, %")
+
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/utlandsfödda.html")
+
+
+
+
+
+
+
+
+
+
 
   # Partisympatier efter inkomst
 levels = c("81-100 %" , "61-80 %" ,  "41-60 %" , "21-40 %" , "0-20 %")
@@ -138,28 +283,6 @@ saveWidget(img, "images/partisympatier_inkomst.html")
 
 
 
-  # Andel förtroendevalda i kommun efter kön
-df <- förtroendevalda_kommun_ålder %>% 
-  filter(Kön == "Män",
-         Mätvariabel == "Könsfördelning" ,
-         Kategori == "Totalt"
-  )
-
-p <- df %>% 
-  ggplot(aes(x = År , y = Andel/100 , group = Parti , color = Parti,
-             text = paste(År, "\nParti: " , Parti, "\nAndel män: " , Andel , "%"))) +
-  geom_line(linewidth = 1) +  
-  scale_y_continuous(limits = c(0 , 1), 
-                     breaks = c(0.5), 
-                     labels = scales::percent_format(accuracy = 1)) +
-  ylab("Andel, %") + xlab(NULL) +
-  theme(axis.text.x = element_text(angle = 70, hjust = 1 , vjust = 1)) + 
-  partifärger_colour +
-  sis_theme
-
-img <- ggplotly(p, tooltip = "text")
-
-saveWidget(img, "images/förtroendevalda_kön.html")
 
 
   # Anställning utifrån sektor och kön
@@ -337,6 +460,129 @@ img <- ggplotly(p, tooltip = "text") %>%
   config(displayModeBar = F)
 
 saveWidget(img, "images/ålder_giftermål.html")
+
+
+
+
+
+
+
+ # Medellivslängd i Sverige
+df <- read.csv("https://ourworldindata.org/grapher/life-expectancy.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod" , "År" , "Medel")
+
+p <- df %>% 
+  filter(Land == "Sweden") %>% 
+  ggplot(aes(x = År, y = Medel  , group = 2,
+             text = paste("År:" , År , 
+                          "\nMedellivslängd:" , round(Medel, 1)))) +
+  geom_line(linewidth = 1 , colour = "#5991E5") +
+  sis_theme +
+  scale_x_continuous(breaks = c(1751, max(df$År))) +
+  scale_y_continuous(limits = c(0 , 85) ,
+                     breaks =  seq(0, 80, 20)) +
+  xlab(NULL) + ylab("Medellivslängd")
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/medellivslängd_sverige.html")
+
+
+
+# ... jämfört med andra länder
+levels = c("Sverige" ,
+           "Låginkomstländer" , 
+           "Undre medelinkomstländer" , 
+           "Övre medelinkomstländer" , 
+           "Höginkomstländer")
+
+p <- df %>%
+  filter(Land %in% c("Sweden", 
+                       "High-income countries",
+                       "Low-income countries",
+                       "Lower-middle-income countries",
+                       "Upper-middle-income countries")) %>%
+  mutate(
+    Land = case_when(
+      Land == "Sweden" ~ "Sverige",
+      Land == "High-income countries" ~ "Höginkomstländer",
+      Land == "Low-income countries" ~ "Låginkomstländer",
+      Land == "Lower-middle-income countries" ~ "Undre medelinkomstländer",
+      Land == "Upper-middle-income countries" ~ "Övre medelinkomstländer",
+      TRUE ~ Land
+    )
+  ) %>% 
+  ggplot(aes(x = År, y = Medel, 
+             group = Land, colour = factor(Land, levels = levels),
+             text = paste("År:" , År , 
+                          "\nLand:" , Land,
+                          "\nMedellivslängd:" , round(Medel, 1)))) +
+  geom_line(linewidth = 1) +
+  scale_colour_manual(values = c(
+                        "Sverige" = "#5991E5",
+                        "Låginkomstländer" = "#D7E559",
+                        "Undre medelinkomstländer" = "#E56759",
+                        "Övre medelinkomstländer" = "#AD59E5",
+                        "Höginkomstländer" = "#59E5AD"
+                      )) +
+  sis_theme +
+  scale_x_continuous(limits = c(1950, max(df$År)),
+                                breaks = c(1950, max(df$År))) +
+  scale_y_continuous(limits = c(0, max(df$Medel, na.rm = TRUE) + 1)) +
+  xlab(NULL) + ylab("Medellivslängd") + labs(colour = "Land/region")
+
+
+levels <- c("Sverige",
+            "Låginkomstländer",
+            "Undre medelinkomstländer",
+            "Övre medelinkomstländer",
+            "Höginkomstländer")
+
+df %>%
+  filter(Land %in% c("Sweden",
+                     "High-income countries",
+                     "Low-income countries",
+                     "Lower-middle-income countries",
+                     "Upper-middle-income countries")) %>%
+  mutate(
+    Land = case_when(
+      Land == "Sweden" ~ "Sverige",
+      Land == "High-income countries" ~ "Höginkomstländer",
+      Land == "Low-income countries" ~ "Låginkomstländer",
+      Land == "Lower-middle-income countries" ~ "Undre medelinkomstländer",
+      Land == "Upper-middle-income countries" ~ "Övre medelinkomstländer",
+      TRUE ~ Land
+    ),
+    Land = factor(Land, levels = levels)
+  ) %>%
+  ggplot(aes(x = År, y = Medel, colour = Land, group = Land,
+             text = paste("År:", År,
+                          "\nLand:", Land,
+                          "\nMedellivslängd:", round(Medel, 1)))) +
+  geom_line(linewidth = 1) +
+  scale_colour_manual(values = c(
+    "Sverige" = "#5991E5",
+    "Låginkomstländer" = "#D7E559",
+    "Undre medelinkomstländer" = "#E56759",
+    "Övre medelinkomstländer" = "#AD59E5",
+    "Höginkomstländer" = "#59E5AD"
+  )) +
+  sis_theme +
+  scale_x_continuous(limits = c(1950, max(df$År)),
+                     breaks = c(1950, max(df$År))) +
+  scale_y_continuous(limits = c(0, max(df$Medel, na.rm = TRUE) + 1) ,
+                     breaks = seq(0 , 80 , 20)) +
+  xlab(NULL) + ylab("Medellivslängd") +
+  labs(colour = "Land/kategori")
+
+
+img <- ggplotly(p, tooltip = "text") %>% 
+  config(displayModeBar = F)
+
+saveWidget(img, "images/medellivslängd.html")
+
+
 
 
 

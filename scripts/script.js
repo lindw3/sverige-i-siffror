@@ -8,6 +8,40 @@ document.getElementById("last-updated").textContent = document.lastModified.spli
 
 const frågor = [
   {
+    kategori: "BEFOLKNING",
+    fråga: "Hur har andelen äldre (65+) i Sverige förändrats sedan 1950?",
+    korrekt: "Den har fördubblats",
+    alternativ: [
+      "Den har halverats",
+      "Den är oförändrad",
+      "Den har fördubblats",
+      "Den har tredubblats"
+    ],
+    förklaring: "En större och större andel av befolkningen i Sverige är över 65 år, där andelen gått från cirka 10 procent till ungefär 20 procent under de senaste 75 åren.",
+    bild: '<iframe src="images/befolkning_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: FN - bearbetat av Our World in Data',
+    förklaring2: 'Globalt sett ser vi en trend av en allt äldre befolkning, vilket visas i form av medianålder i nedanstående figur.',
+    bild2: '<iframe src="images/medianålder.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: FN - bearbetat av Our World in Data'
+  },
+  {
+    kategori: "BEFOLKNING",
+    fråga: "Hur stor andel av Sveriges befolkning har utländsk bakgrund (utrikes född eller inrikes född med två utrikes födda föräldrar)?",
+    korrekt: "Knappt 30 procent",
+    alternativ: [
+      "Knappt 10 procent",
+      "Knappt 20 procent",
+      "Knappt 30 procent",
+      "Knappt 40 procent"
+    ],
+    förklaring: "Andelen med utländsk bakgrund har nästan fördubblats under de senaste 20 åren. Det är även värt att nämna att en familj som flyttar till Sverige från ett annat land ur ett statistiskt hänseende endast har utrikes bakgrund i max två generationer, eftersom barnet därefter inte längre har minst två utrikes födda föräldrar.",
+    bild: '<iframe src="images/utländskbakgrund_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: SCB:s statistikdatabas, Befolkningsstatistik',
+    förklaring2: 'Ur ett internationellt perspektiv kan man notera den koncentration av länder som har mellan 0-5 procent med utländsk bakgrund, varefter det blir en större spridning mellan länder över den procentgraden.',
+    bild2: '<iframe src="images/utlandsfödda.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: FN - bearbetat av Our World in Data'
+  },
+  {
     kategori: "POLITIK",
     fråga: "Vilket parti är störst bland de inkomstgrupper som tjänar över genomsnittet?",
     korrekt: "Socialdemokraterna",
@@ -20,20 +54,6 @@ const frågor = [
     förklaring: "Socialdemokraterna är det dominerande partiet utifrån de flesta indikatorer, även om det var en något högre andel i den allra högsta inkomstgruppen som sympatiserade med Moderaterna i den senaste mätningen.",
     bild: '<iframe src="images/partisympatier_inkomst.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: SCB:s statistikdatabas, Partisympatiundersökningen (PSU)'
-  },
-  {
-    kategori: "POLITIK",
-    fråga: "Hur många av riksdagspartierna har fler kvinnliga än manliga kommunalt förtroendevalda?",
-    korrekt: "Två",
-    alternativ: [
-      "Ett",
-      "Två",
-      "Tre",
-      "Fyra"
-    ],
-    förklaring: "Två partier, Miljöpartiet och Vänsterpartiet, har fler kvinnliga än manliga kommunalt förtroendevalda under mandatperioden 2023-2026, vilket är de enda partier där detta hänt sedan statistik började föras 2007. Totalt sett har andelen kvinnliga kommunalt förtroendevalda legat stabilt på strax över 40 procent.",
-    bild: '<iframe src="images/förtroendevalda_kön.html" class="iframe" frameborder="0"></iframe>',
-    källa: 'Källa: SCB:s statistikdatabas, Undersökning av förtroendevalda i kommuner och regioner'
   },
 {
     kategori: "FAMILJ",
