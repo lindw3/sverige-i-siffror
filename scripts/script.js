@@ -107,7 +107,24 @@ const frågor = [
     källa2: 'Källa: FN - bearbetat av Our World in Data'
   },
   {
-    kategori: "MÅENDE",
+    kategori: "HÄLSA & MÅENDE",
+    fråga: "Hur har medellivslängden i Sverige förändrats de senaste 100 åren?",
+    korrekt: "Den har ökat med 20 år",
+    alternativ: [
+      "Den har ökat med 5 år",
+      "Den har ökat med 10 år",
+      "Den har ökat med 15 år",
+      "Den har ökat med 20 år"
+    ],
+    förklaring: "Mellan 1923 och 2023 ökade medellivslängden från 63 till 83 år. Denna ökade medellivslängd är en starkt bidragande faktor till att andelen äldre i befolkningen ökat så mycket.",
+    bild: '<iframe src="images/medellivslängd_sverige.html" class="iframe" frameborder="0"></iframe>',
+    källa: 'Källa: UN WPP; HMD; Zijdeman et al. (2015); Riley (2005) - bearbetat av Our World in Data',
+    förklaring2: "Länders ekonomiska förutsättningar korrelerar med medellivslängd, men man kan se att Sverige har en hög medellivslängd även i jämförelse med andra höginkomstländer.",
+    bild2: '<iframe src="images/medellivslängd.html" class="iframe" frameborder="0"></iframe>',
+    källa2: 'Källa: UN WPP; HMD; Zijdeman et al. (2015); Riley (2005) - bearbetat av Our World in Data'
+  },
+  {
+    kategori: "HÄLSA & MÅENDE",
     fråga: "Vart befinner sig Sverige globalt sett gällande livstillfredsställelse?",
     korrekt: "Mellan plats 1-5",
     alternativ: [
@@ -124,7 +141,7 @@ const frågor = [
     källa2: 'Källa: Wellbeing Research Centre, Eurostat, OECD & Världsbanken - bearbetat av Our World in Data'
   },
   {
-    kategori: "MÅENDE",
+    kategori: "HÄLSA & MÅENDE",
     fråga: "Hur har antalet suicidfall i Sverige förändrats sedan 1950?",
     korrekt: "Det har minskat med en tredjedel",
     alternativ: [
@@ -141,7 +158,7 @@ const frågor = [
     källa2: 'Källa: WHO - bearbetat av Our World in Data'
   },
   {
-    kategori: "MÅENDE",
+    kategori: "HÄLSA & MÅENDE",
     fråga: "Vilka är de två klart vanligaste uppskattade orsakerna till dödsfall i Sverige?",
     korrekt: "Kardiovaskulära sjukdomar och cancer",
     alternativ: [
