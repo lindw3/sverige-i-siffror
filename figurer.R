@@ -157,7 +157,7 @@ p <- df %>%
              text = paste(
                "År:" , År,
                "\nLand:" , Land,
-               "\nMedianålder:" , Median
+               "\nMedianålder:" , round(Median , 1)
              )
   )) +
   geom_line() +
@@ -225,7 +225,7 @@ p <- df %>%
              text = paste(
                "År:" , År,
                "\nLand:" , Land,
-               "\nAndel utlandsfödda:" , Andel, "%"
+               "\nAndel utlandsfödda:" , round(Andel , 1) , "%"
              )
   )) +
   geom_line() +
