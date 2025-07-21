@@ -114,9 +114,6 @@ df <-  df %>%
   filter(Land == "Sweden") %>% 
   pivot_longer(!c(1:3) , names_to = "Kategori" , values_to = "Antal")
 
-df %>% 
-  filter(År == 1950) %>% 
-  summarize(Antal = sum(Antal))
 
 levels = c("65+" , "25-64" , "15-24" , "5-14" , "0-4")
 
@@ -277,9 +274,10 @@ p <- df %>%
                                "61-80 %" = "#AD59E5" ,
                                "81-100 %" = "#59E5AD"))
 
-img <- ggplotly(p, tooltip = "text")
+img <- ggplotly(p, tooltip = "text") %>%
+  config(displayModeBar = F)
 
-saveWidget(img, "images/partisympatier_inkomst.html")
+saveWidget(img, "images/partisympatier_inkomst.html") 
 
 
 
@@ -304,7 +302,8 @@ p <- anställning_sektor %>%
 img <- ggplotly(p, tooltip = "text") %>%
   config(displayModeBar = F)
 
-saveWidget(img, "images/anställning_sektor_kön.html")
+saveWidget(img, "images/anställning_sektor_kön.html") %>%
+  config(displayModeBar = F)
 
 
 
@@ -492,10 +491,11 @@ saveWidget(img, "images/medellivslängd_sverige.html")
 
 # ... jämfört med andra länder
 levels = c("Sverige" ,
-           "Låginkomstländer" , 
-           "Undre medelinkomstländer" , 
-           "Övre medelinkomstländer" , 
-           "Höginkomstländer")
+           "Höginkomstländer",
+           "Övre medelinkomstländer" ,
+           "Undre medelinkomstländer" ,
+           "Låginkomstländer" 
+           )
 
 p <- df %>%
   filter(Land %in% c("Sweden", 
@@ -533,49 +533,6 @@ p <- df %>%
   xlab(NULL) + ylab("Medellivslängd") + labs(colour = "Land/region")
 
 
-levels <- c("Sverige",
-            "Låginkomstländer",
-            "Undre medelinkomstländer",
-            "Övre medelinkomstländer",
-            "Höginkomstländer")
-
-df %>%
-  filter(Land %in% c("Sweden",
-                     "High-income countries",
-                     "Low-income countries",
-                     "Lower-middle-income countries",
-                     "Upper-middle-income countries")) %>%
-  mutate(
-    Land = case_when(
-      Land == "Sweden" ~ "Sverige",
-      Land == "High-income countries" ~ "Höginkomstländer",
-      Land == "Low-income countries" ~ "Låginkomstländer",
-      Land == "Lower-middle-income countries" ~ "Undre medelinkomstländer",
-      Land == "Upper-middle-income countries" ~ "Övre medelinkomstländer",
-      TRUE ~ Land
-    ),
-    Land = factor(Land, levels = levels)
-  ) %>%
-  ggplot(aes(x = År, y = Medel, colour = Land, group = Land,
-             text = paste("År:", År,
-                          "\nLand:", Land,
-                          "\nMedellivslängd:", round(Medel, 1)))) +
-  geom_line(linewidth = 1) +
-  scale_colour_manual(values = c(
-    "Sverige" = "#5991E5",
-    "Låginkomstländer" = "#D7E559",
-    "Undre medelinkomstländer" = "#E56759",
-    "Övre medelinkomstländer" = "#AD59E5",
-    "Höginkomstländer" = "#59E5AD"
-  )) +
-  sis_theme +
-  scale_x_continuous(limits = c(1950, max(df$År)),
-                     breaks = c(1950, max(df$År))) +
-  scale_y_continuous(limits = c(0, max(df$Medel, na.rm = TRUE) + 1) ,
-                     breaks = seq(0 , 80 , 20)) +
-  xlab(NULL) + ylab("Medellivslängd") +
-  labs(colour = "Land/kategori")
-
 
 img <- ggplotly(p, tooltip = "text") %>% 
   config(displayModeBar = F)
@@ -604,7 +561,7 @@ p <- df %>%
              text = paste(
                "År:" , År,
                "\nLand:" , Land,
-               "\nLivstillfredsställelse:" , Tillfredsställelse
+               "\nLivstillfredsställelse:" , round(Tillfredsställelse, 1)
              ))) +
   geom_line() +
   scale_colour_manual(values = c("TRUE" = "#D7E559", "FALSE" = "#5991E5")) +
@@ -638,7 +595,7 @@ df <- df %>%
 p <- df %>% 
   ggplot(aes(x = GDP, y = Livstillfredsställelse ,
              text = paste(Land, 
-                          "\nLivstillfredsställelse:", round(Livstillfredsställelse,2),
+                          "\nLivstillfredsställelse:", round(Livstillfredsställelse,1),
                           "\nGDP: ", comma(round(GDP))))) +
   geom_point(aes(colour = Region)) +
   sis_theme +
@@ -810,10 +767,6 @@ df <- read_excel("data/dödsorsaker.xlsx")
 colnames(df) <- c("Land" , "Anledning" , "År" , "Antal")
 df$Antal <- as.numeric(df$Antal)
 
-df %>% 
-  filter(Land == "Sweden" ,
-         År == 2021) %>% 
-  summarize(Antal = sum(Antal))
 
 df <- df %>% 
   filter(Land == "Sweden",
@@ -1382,7 +1335,7 @@ p <- df %>%
              colour = Land == "Sweden",
              text = paste("År:" , År , 
                           "\nLand:" , Land,
-                          "\nArbetstimmar/år:" , comma(round(Antal, 2))))) +
+                          "\nArbetstimmar/år:" , comma(round(Antal))))) +
   geom_line() +
   scale_colour_manual(values = c("TRUE" = "#D7E559", "FALSE" = "#5991E5")) +
   scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0.25)) +
@@ -1520,7 +1473,7 @@ p <- df %>%
   scale_x_continuous(breaks = c(1834, 1970, 2023)) +
   scale_y_continuous(limits = c(0 , 12.5) ,
                      breaks =  seq(0, 12.5, 2.5)) +
-  xlab(NULL) + ylab("Koldioxidutsläpp (ton)")
+  xlab(NULL) + ylab("Koldioxidutsläpp per capita (ton)")
 
 img <- ggplotly(p, tooltip = "text") %>% 
   config(displayModeBar = F)
@@ -1557,7 +1510,7 @@ p <- df %>%
   sis_theme +
   scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
   xlab(NULL) +
-  ylab("Koldioxidutsläpp (ton)")
+  ylab("Koldioxidutsläpp per capita (ton)")
 
 img <- ggplotly(p, tooltip = "text") %>% 
   config(displayModeBar = F)

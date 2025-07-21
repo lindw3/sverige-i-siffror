@@ -67,19 +67,19 @@ const frågor = [
     ],
     förklaring: "Även om barnafödandet minskat över hela denna tidsperiod ser man att trenden från år till år kan fluktuera kraftigt. Det är även värt att notera att spädbarnsdödligheten och död under de första levnadsåren har minskat kraftigt under samma tidsperiod.",
     bild: '<iframe src="images/barnafödande_sverige.html" class="iframe" frameborder="0"></iframe>',
-    källa: "Källa: UN WPP (2024); HFD (2024) – bearbetat av Our World in Data",
-    förklaring2: "Detta är en trend som man kan se globalt sett också, där rikare länder tenderar ha lägre barnafödande. Den globala populationstillväxten har mer än halverats under de senaste 60 åren.",
+    källa: "Källa: FN & Human Fertility Databse – bearbetat av Our World in Data",
+    förklaring2: "Detta är en trend som man kan se globalt också, där rikare länder tenderar ha lägre barnafödande. Den globala populationstillväxten har mer än halverats under de senaste 60 åren, och innan milleniets slut projiceras den globala populationen att börja minska enligt FN.",
     bild2: '<iframe src="images/barnafödande.html" class="iframe" frameborder="0"></iframe>',
-    källa2: "Källa: UN WPP (2024); HFD (2024) – bearbetat av Our World in Data"
+    källa2: "Källa: FN & Human Fertility Databse – bearbetat av Our World in Data"
   },
   {
     kategori: "FAMILJ",
     fråga: "Hur har medelåldern för kvinnors första giftermål förändrats under de senaste 30 åren?",
     korrekt: "Den har ökat med sju år",
     alternativ: [
-      "Den har minskat med tre år",
+      "Den har minskat med tre och ett halvt år",
       "Den har inte förändrats",
-      "Den har ökat med tre år",
+      "Den har ökat med tre och ett halvt år",
       "Den har ökat med sju år"
     ],
     förklaring: "Mellan 1990 och 2021 ökade genomsnittsåldern för kvinnors första giftermål med 25 procent, vilket uppgår till ca. 7 år.",
@@ -116,12 +116,12 @@ const frågor = [
       "Den har ökat med 15 år",
       "Den har ökat med 20 år"
     ],
-    förklaring: "Mellan 1923 och 2023 ökade medellivslängden från 63 till 83 år. Denna ökade medellivslängd är en starkt bidragande faktor till att andelen äldre i befolkningen ökat så mycket.",
+    förklaring: "Mellan 1923 och 2023 ökade medellivslängden från 63 till 83 år. Denna ökade medellivslängd är en starkt bidragande faktor till att andelen äldre i befolkningen ökat så mycket. Jämför man med den estimerade medellivslängden 1750 har medellivslängden mer än fördubblats.",
     bild: '<iframe src="images/medellivslängd_sverige.html" class="iframe" frameborder="0"></iframe>',
-    källa: 'Källa: UN WPP; HMD; Zijdeman et al. (2015); Riley (2005) - bearbetat av Our World in Data',
+    källa: 'Källa: FN, Human Mortality Database, Zijdeman et al. (2015) & Riley (2005) - bearbetat av Our World in Data',
     förklaring2: "Länders ekonomiska förutsättningar korrelerar med medellivslängd, men man kan se att Sverige har en hög medellivslängd även i jämförelse med andra höginkomstländer.",
     bild2: '<iframe src="images/medellivslängd.html" class="iframe" frameborder="0"></iframe>',
-    källa2: 'Källa: UN WPP; HMD; Zijdeman et al. (2015); Riley (2005) - bearbetat av Our World in Data'
+    källa2: 'Källa: FN, Human Mortality Database, Zijdeman et al. (2015) & Riley (2005) - bearbetat av Our World in Data'
   },
   {
     kategori: "HÄLSA & MÅENDE",
@@ -135,7 +135,7 @@ const frågor = [
     ],
     förklaring: "2024 var Finland, Danmark, Island, Sverige och Nederländerna de fem länder som hade högst livstillfredsställelse. Sverige har befunnit sig i toppen sedan den första mätningen 2011.",
     bild: '<iframe src="images/satisfaction.html" class="iframe" frameborder="0"></iframe>',
-    källa: 'Källa: Wellbeing Research Centre - bearbetet av Our World in Data',
+    källa: 'Källa: Wellbeing Research Centre - bearbetat av Our World in Data',
     förklaring2: "Att Sverige är ett rikt land är sannolikt en starkt bidragande faktor till detta, då det finns en tydlig korrelation mellan länders GDP och livstillfredsställelse. Vid analys av sambandet mellan GDP och livstillfredsställelse kan man se att en ökning med 10,000 i GDP korrelerar med en ökad livstillfredsställelse med 0.31.",
     bild2: '<iframe src="images/gdp_satisfaction.html" class="iframe" frameborder="0"></iframe>',
     källa2: 'Källa: Wellbeing Research Centre, Eurostat, OECD & Världsbanken - bearbetat av Our World in Data'
@@ -145,10 +145,10 @@ const frågor = [
     fråga: "Hur har antalet suicidfall i Sverige förändrats sedan 1950?",
     korrekt: "Det har minskat med en tredjedel",
     alternativ: [
-      "Det har ökat med två tredjedelar",
-      "Det har ökat med en tredjedel",
-      "Det har minskat med en tredjedel",
-      "Det har minskat med två tredjedelar"
+      "De har ökat med två tredjedelar",
+      "De har ökat med en tredjedel",
+      "De har minskat med en tredjedel",
+      "De har minskat med två tredjedelar"
     ],
     förklaring: "Sedan 1950 har antalet suicidfall minskat från ca. 15 fall per 100 000 invånare till ca. 10 fall per 100 000 invånare. Denna trend noteras i alla åldersgrupper, även om den inte är lika tydlig i åldersgruppen 15-24 år.",
     bild: '<iframe src="images/suicid_sverige.html" class="iframe" frameborder="0"></iframe>',
@@ -159,7 +159,7 @@ const frågor = [
   },
   {
     kategori: "HÄLSA & MÅENDE",
-    fråga: "Vilka är de två klart vanligaste uppskattade orsakerna till dödsfall i Sverige?",
+    fråga: "Vilka är de två klart vanligaste orsakerna till dödsfall i Sverige?",
     korrekt: "Kardiovaskulära sjukdomar och cancer",
     alternativ: [
       "Neurologiska sjukdomar och luftvägsinfektioner/tuberkulos",
@@ -170,7 +170,7 @@ const frågor = [
     förklaring: "Utifrån 21 olika kategoriseringar uppskattades dessa två stå för nästan 60 procent av dödsfallen i Sverige under 2021. Nedan visas de fem vanligaste kategoriseringarna.",
     bild: '<iframe src="images/dödsorsaker_sverige.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: IHME, Global Burden of Disease',
-    förklaring2: "Vilka dödsorsaker som är vanligast, och till vilken magnitud dessa sjukdomar leder till död, skiljer sig mycket åt beroende på länders välstånd. Kardiovaskulära sjukdomar och cancer är bland de vanligaste dödsorsakerna även i länder med lägre välstånd (mätt i Social Development Index, SDI), men luftvägsinfektioner och tuberkulos är vanligast.",
+    förklaring2: "Vilka dödsorsaker som är vanligast, och i vilken magnitud dessa sjukdomar leder till död, skiljer sig mycket åt beroende på länders välstånd. Kardiovaskulära sjukdomar och cancer är bland de vanligaste dödsorsakerna även i länder med lägre välstånd (mätt i Social Development Index, SDI), men luftvägsinfektioner och tuberkulos är vanligast.",
     bild2: '<iframe src="images/dödsorsaker_sverige_lowsdi.html" class="iframe" frameborder="0"></iframe>',
     källa2: 'Källa: IHME, Global Burden of Disease'
   },
@@ -184,7 +184,7 @@ const frågor = [
       "Den har nästan sexdubblats",
       "Den har nästan niodubblats"
     ],
-    förklaring: "Enligt estimeringar från Madisson Project var Sveriges GDP per capita i stort sett oförändrad fram till industrialiseringen på 1870-talet, då den ökade dramatiskt. Ökningen har varit särskilt kraftig sedan efterkrigstiden.",
+    förklaring: "Enligt estimeringar från Madisson Project var Sveriges GDP per capita i stort sett oförändrad fram till industrialiseringen på 1870-talet då den ökade dramatiskt. Ökningen har varit särskilt kraftig sedan efterkrigstiden.",
     bild: '<iframe src="images/gdp_sverige.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: Maddison Project Database - bearbetat av Our World in Data',
     förklaring2: "Den generella globala trenden har varit att länder ökat i GDP, även om det finns länder som inte har noterat denna uppåtgående trend.",
@@ -200,10 +200,10 @@ const frågor = [
       "Den är i stort sett oförändrad",
       "Den har ökat"
     ],
-    förklaring: "Gini-koefficienten har ökat i stadig takt sedan 1975, vilket innebär att de totala inkomsterna koncentrerats till en mindre andel av befolkningen.",
+    förklaring: "Gini-koefficienten har ökat sedan 1975, vilket innebär att de totala inkomsterna koncentrerats till en mindre andel av befolkningen.",
     bild: '<iframe src="images/gini_sverige.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: World Inequality Database - bearbetat av Our World in Data',
-    förklaring2: "Ur ett internationellt hänseende har Sverige förhållandevis jämlika inkomster. Värt att tillägga är att Gini-koefficienten inte tar hänsyn till de omfördelande effekter som offentligt finansierad välfärd innebär, där det finns stora skillnader mellan länder. Den tar inte heller hänsyn till förmögenheter, vilket innebär att Sveriges omfattande pensionssystem faller bort från siffrorna.",
+    förklaring2: "Ur ett internationellt hänseende har Sverige förhållandevis jämlika inkomster. Värt att tillägga är att Gini-koefficienten inte tar hänsyn till de omfördelande effekter som offentligt finansierad välfärd innebär, där det finns stora skillnader mellan länder. Den tar inte heller hänsyn till förmögenheter, vilket innebär att Sveriges omfattande pensionssystem inte tas med i kalkylen.",
     bild2: '<iframe src="images/gini.html" class="iframe" frameborder="0"></iframe>',
     källa2: 'Källa: World Inequality Database - bearbetat av Our World in Data'
   },
@@ -234,7 +234,7 @@ const frågor = [
       "Ungefär 50 procent",
       "Ungefär 70 procent"
     ],
-    förklaring: "Sveriges skatteintäkter har ökat stadigt sedan 1930-talet samtidigt som de statliga utgifterna ökat i samma takt, för att plana ut runt 50 procent från 90-talet och framåt.",
+    förklaring: "Sveriges skatteintäkter har ökat stadigt sedan 1930-talet samtidigt som de statliga utgifterna ökat i liknande takt, för att plana ut runt 50 procent från 90-talet och framåt.",
     bild: '<iframe src="images/skatter_statligainkomster_sverige.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: Piketty, T. (2014). Capital in the 21st Century - bearbetat av Our World in Data',
     förklaring2: "För att kunna jämföra med andra länder tittar vi på annan data som i stället gäller skatter som andel av BNP. Denna data finns tillgänglig sedan 1980, och sedan dess har Sverige befunnit sig i toppskiktet.",
@@ -243,7 +243,7 @@ const frågor = [
   },
 {
     kategori: "EKONOMI",
-    fråga: "Hur har andelen av Sveriges bruttonationalinkomst som går till bistånd förändrats sedan 25 år sedan?",
+    fråga: "Hur har andelen av Sveriges bruttonationalinkomst som går till bistånd förändrats de senaste 25 åren?",
     korrekt: "Den har inte förändrats",
     alternativ: [
       "Den har minskat med 30 procent",
@@ -254,7 +254,7 @@ const frågor = [
     förklaring: "Sverige har under de senaste 50 åren gett ett bistånd som överskrider FN:s mål på 0.7 procent av bruttonationalinkomsten. Biståndet nådde sin topp under flyktingkrisen 2015.",
     bild: '<iframe src="images/bistånd_sverige.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: OECD - bearbetat av Our World in Data',
-    förklaring2: "Sedan 1975 har Sverige varit ett av få länder som överskridit FN:s mål, och 2023 var Sverige det land som gav tredje högst bistånd i relation till bruttonationalinkomsten.",
+    förklaring2: "Sverige är ett av få länder som överskridit FN:s mål, och 2023 var Sverige det land som gav tredje högst bistånd i relation till bruttonationalinkomsten.",
     bild2: '<iframe src="images/bistånd.html" class="iframe" frameborder="0"></iframe>',
     källa2: 'Källa: OECD - bearbetat av Our World in Data'
 },
@@ -263,10 +263,10 @@ const frågor = [
     fråga: "Hur har antalet arbetstimmar per år (räknat per person i arbete) förändrats sedan slutet på 1800-talet?",
     korrekt: "Det har halverats",
     alternativ: [
-      "Det är oförändrat",
-      "Det har minskat med en fjärdedel",
-      "Det har minskat med en tredjedel",
-      "Det har halverats"
+      "De är oförändrade",
+      "De har minskat med en fjärdedel",
+      "De har minskat med en tredjedel",
+      "De har halverats"
     ],
     förklaring: "1870 uppskattades en genomsnittlig arbetare arbeta i nästan 3500 timmar per år. Sedan dess minskade antalet arbetstimmar drastiskt, för att planas ut på ca. 15-1600 timmar per år sedan 1980.",
     bild: '<iframe src="images/arbetstimmar_sverige.html" class="iframe" frameborder="0"></iframe>',
@@ -302,7 +302,7 @@ const frågor = [
     förklaring: "Sedan 90-talet har det ojusterade lönegapet mellan mäns och kvinnors medianlöner minskat, där män haft en medianlön som är strax över sju procent mer än kvinnors sedan 2017. Skillnaden i genomsnittslöner har i stället varit cirka tio procent sedan 2019 enligt SCB. När man justerar för ålder, utbildning, arbetstid och sektor halveras det genomsnittliga lönegapet mellan män och kvinnor.",
     bild: '<iframe src="images/lönegap_sverige.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: OECD - bearbetat av Our World in Data fram till 2016, därefter egen bearbetning', 
-    förklaring2: "Vid jämförelse med andra länder (data finns fram till 2016) kan man se att det är många länder som 'kommit ikapp' Sverige och minskat lönegapet under andra halvan av 1900-talet.",
+    förklaring2: "I jämförelse med andra länder (data finns fram till 2016) är lönegapet relativt lågt i Sverige. Den generella trenden är att lönegapet mellan könen minskat sedan andra halvan av 1900-talet.",
     bild2: '<iframe src="images/lönegap.html" class="iframe" frameborder="0"></iframe>',
     källa2: 'Källa: OECD - bearbetat av Our World in Data'
   },
@@ -339,7 +339,7 @@ const frågor = [
 },
 {
     kategori: "UTBILDNING", 
-    fråga: "Sedan den första PISA-mätningen Sverige deltog i 2003, vilket år presterade Sverige bäst?",
+    fråga: "Sedan den första PISA-mätningen Sverige deltog i 2003, vilket år presterade man bäst?",
     korrekt: "2003",
     alternativ: [
       "2003",
