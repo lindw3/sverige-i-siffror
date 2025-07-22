@@ -37,7 +37,7 @@ const frågor = [
     förklaring: "Andelen med utländsk bakgrund har nästan fördubblats under de senaste 20 åren. Det är även värt att nämna att en familj som flyttar till Sverige från ett annat land ur ett statistiskt hänseende endast har utrikes bakgrund i max två generationer, eftersom barnet därefter inte längre har två utrikes födda föräldrar.",
     bild: '<iframe src="images/utländskbakgrund_sverige.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: SCB:s statistikdatabas, Befolkningsstatistik',
-    förklaring2: 'Ur ett internationellt perspektiv kan man notera den koncentration av länder som har mellan 0-5 procent med utländsk bakgrund. Ovanför den gränsen är spridningen större mellan länder.',
+    förklaring2: 'I nedanstående figur visas i stället andelen som är födda i ett annat land, vilket innebär att andelen blir lägre än för utländsk bakgrund. Ur ett internationellt perspektiv kan man notera den koncentration av länder som har mellan 0-5 procent utlandsfödda. Ovanför den gränsen är spridningen större mellan länder.',
     bild2: '<iframe src="images/utlandsfödda.html" class="iframe" frameborder="0"></iframe>',
     källa2: 'Källa: FN - bearbetat av Our World in Data'
   },
