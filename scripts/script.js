@@ -143,7 +143,7 @@ const frågor = [
   {
     kategori: "HÄLSA & MÅENDE",
     fråga: "Hur har antalet suicidfall i Sverige förändrats sedan 1950?",
-    korrekt: "Det har minskat med en tredjedel",
+    korrekt: "De har minskat med en tredjedel",
     alternativ: [
       "De har ökat med två tredjedelar",
       "De har ökat med en tredjedel",
@@ -261,7 +261,7 @@ const frågor = [
   {
     kategori: "ARBETE",
     fråga: "Hur har antalet arbetstimmar per år (räknat per person i arbete) förändrats sedan slutet på 1800-talet?",
-    korrekt: "Det har halverats",
+    korrekt: "De har halverats",
     alternativ: [
       "De är oförändrade",
       "De har minskat med en fjärdedel",
