@@ -359,6 +359,11 @@ saveWidget(img, "images/barnafödande_sverige.html")
 
 
  # ... jämfört med andra länder
+levels = c("Låginkomstländer", 
+           "Undre medelinkomstländer" ,
+           "Övre medelinkomstländer" ,
+           "Höginkomstländer" ,
+           "Sverige")
 
 p <- df %>%
   filter(Entity %in% c("Sweden", 
@@ -377,7 +382,7 @@ p <- df %>%
     )
   ) %>% 
   ggplot(aes(x = Year, y = fertility_rate_hist  , 
-             group = Entity, colour = Entity,
+             group = Entity, colour = factor(Entity, levels = levels),
              text = paste("År:" , Year , 
                           "\nLand/region:" , Entity,
                           "\nBarn:" , fertility_rate_hist))) +
