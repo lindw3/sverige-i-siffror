@@ -289,7 +289,7 @@ h2{
 
 
 
-           /* GÖR TESTET-SIDAN */
+           /* TESTSIDAN */
 
 button,
 input,
@@ -314,6 +314,10 @@ textarea {
 @media (max-width: 768px) {
   .test-body {
     font-size: 1.2rem; /* Adjust font size for smaller screens */
+  }
+
+  #fråga {
+    font-size: 1.5rem;
   }
 }
 
@@ -351,6 +355,18 @@ textarea {
   letter-spacing: 5px;
 }
 
+@media (max-width: 768px) {
+  .kategori {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  font-size: 2rem;
+  color: rgb(229, 173, 89);
+  letter-spacing: 3px;
+  }
+}
 
 
     /* Frågorna */
@@ -372,6 +388,14 @@ textarea {
   font-size: 2rem;
   border: none;
 }
+
+@media (max-width: 768px) {
+  #nästa-fråga {
+    font-size: 1.2rem; 
+    padding: 8px 16px; 
+  }
+}
+
 
 button:hover {
   transform: scale(1.05);
@@ -478,16 +502,12 @@ button:hover {
 }
 
 @media (max-width: 768px) {
-  #fullscreen-link {
-    display:none; /* Döljer länken på mindre skärmar, då mobiltelefoner inte stödjer den funktionen */
+  #fullscreen-link,
+  .fullscreen-link-2 {
+    display: none;   
   }
 }
 
-@media (max-width: 768px) {
-  .fullscreen-link-2 {
-    display:none; /* Döljer länken på mindre skärmar, då mobiltelefoner inte stödjer den funktionen */
-  }
-}
 
 
 .förklaring-bild-container.active {
