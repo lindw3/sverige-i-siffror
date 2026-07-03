@@ -51,7 +51,7 @@ const frågor = [
       "Sverigedemokraterna",
       "Miljöpartiet"
     ],
-    förklaring: "Socialdemokraterna är det dominerande partiet utifrån de flesta indikatorer, även om det var en något högre andel i den allra högsta inkomstgruppen som sympatiserade med Moderaterna i den senaste mätningen.",
+    förklaring: "Socialdemokraterna är det dominerande partiet utifrån de flesta indikatorer, och var det parti som flest sympatiserade med i samtliga inkomstgrupper vid den senaste undersökningen.",
     bild: '<iframe src="images/partisympatier_inkomst.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: SCB:s statistikdatabas, Partisympatiundersökningen (PSU)'
   },
@@ -133,7 +133,7 @@ const frågor = [
       "Mellan plats 11-15",
       "Mellan plats 16-20"
     ],
-    förklaring: "2024 var Finland, Danmark, Island, Sverige och Nederländerna de fem länder som hade högst livstillfredsställelse. Sverige har befunnit sig i toppen sedan den första mätningen 2011.",
+    förklaring: "2025 var Finland, Danmark, Island, Costa Rica och Sverige de fem länder som hade högst livstillfredsställelse. Sverige har befunnit sig i toppen sedan den första mätningen 2011.",
     bild: '<iframe src="images/satisfaction.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: Wellbeing Research Centre - bearbetat av Our World in Data',
     förklaring2: "Att Sverige är ett rikt land är sannolikt en starkt bidragande faktor till detta, då det finns en tydlig korrelation mellan länders GDP och livstillfredsställelse. Vid analys av sambandet mellan GDP och livstillfredsställelse kan man se att en ökning med 10,000 i GDP per capita korrelerar med en ökad livstillfredsställelse med 0.29 på en tiogradig skala.",
@@ -254,7 +254,7 @@ const frågor = [
     förklaring: "Sverige har under de senaste 50 åren gett ett bistånd som överskrider FN:s mål på 0.7 procent av bruttonationalinkomsten. Biståndet nådde sin topp under flyktingkrisen 2015.",
     bild: '<iframe src="images/bistånd_sverige.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: OECD - bearbetat av Our World in Data',
-    förklaring2: "Sverige är ett av få länder som överskridit FN:s mål, och 2023 var Sverige det land som gav tredje högst bistånd i relation till bruttonationalinkomsten.",
+    förklaring2: "Sverige är ett av få länder som överskridit FN:s mål, och 2024 var Sverige det land som gav tredje högst bistånd i relation till bruttonationalinkomsten.",
     bild2: '<iframe src="images/bistånd.html" class="iframe" frameborder="0"></iframe>',
     källa2: 'Källa: OECD - bearbetat av Our World in Data'
 },
@@ -334,7 +334,7 @@ const frågor = [
       "50 procent mer"
     ],
     förklaring: "Genomsnittslönen ökar med ökad utbildningsnivå, med undantag för när man jämför de med gymnasial utbildning under 3 år med de som har 3-årig gymnasial utbildning. Det finns fler faktorer än utbildningsnivå som påverkar genomsnittslönen, såsom ålder, kön och vilken sektor man arbetar inom.",
-    bild: '<iframe src="images/lön_utbildning_kön.html" class="iframe" frameborder="0"></iframe>',
+    bild: '<iframe src="images/lön_utbildning.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: SCB:s statistikdatabas, Lönestrukturstatistik, hela ekonomin'
 },
 {
