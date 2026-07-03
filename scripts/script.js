@@ -136,7 +136,7 @@ const frågor = [
     förklaring: "2024 var Finland, Danmark, Island, Sverige och Nederländerna de fem länder som hade högst livstillfredsställelse. Sverige har befunnit sig i toppen sedan den första mätningen 2011.",
     bild: '<iframe src="images/satisfaction.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: Wellbeing Research Centre - bearbetat av Our World in Data',
-    förklaring2: "Att Sverige är ett rikt land är sannolikt en starkt bidragande faktor till detta, då det finns en tydlig korrelation mellan länders GDP och livstillfredsställelse. Vid analys av sambandet mellan GDP och livstillfredsställelse kan man se att en ökning med 10,000 i GDP per capita korrelerar med en ökad livstillfredsställelse med 0.31 på en tiogradig skala.",
+    förklaring2: "Att Sverige är ett rikt land är sannolikt en starkt bidragande faktor till detta, då det finns en tydlig korrelation mellan länders GDP och livstillfredsställelse. Vid analys av sambandet mellan GDP och livstillfredsställelse kan man se att en ökning med 10,000 i GDP per capita korrelerar med en ökad livstillfredsställelse med 0.29 på en tiogradig skala.",
     bild2: '<iframe src="images/gdp_satisfaction.html" class="iframe" frameborder="0"></iframe>',
     källa2: 'Källa: Wellbeing Research Centre, Eurostat, OECD & Världsbanken - bearbetat av Our World in Data'
   },
@@ -299,7 +299,7 @@ const frågor = [
       "Mellan 21-30 procent mer",
       "Mellan 31-40 procent mer"
     ],
-    förklaring: "Sedan 90-talet har det ojusterade lönegapet mellan mäns och kvinnors medianlöner minskat, där män haft en medianlön som är strax över sju procent mer än kvinnors sedan 2017. Skillnaden i <em>genomsnittslöner</em> har i stället varit cirka tio procent sedan 2019 enligt SCB. När man justerar för ålder, utbildning, arbetstid och sektor halveras det genomsnittliga lönegapet mellan män och kvinnor.",
+    förklaring: "Sedan 90-talet har det ojusterade lönegapet mellan mäns och kvinnors medianlöner minskat, där män haft en medianlön som är lite över sju procent mer än kvinnors sedan 2017. Skillnaden i <em>genomsnittslöner</em> har i stället varit cirka tio procent sedan 2019 enligt SCB. När man justerar för ålder, utbildning, arbetstid och sektor halveras det genomsnittliga lönegapet mellan män och kvinnor.",
     bild: '<iframe src="images/lönegap_sverige.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: OECD - bearbetat av Our World in Data fram till 2016, därefter egen bearbetning', 
     förklaring2: "I jämförelse med andra länder (data finns fram till 2016) är lönegapet relativt lågt i Sverige. Den generella trenden är att lönegapet mellan könen minskat sedan andra halvan av 1900-talet.",

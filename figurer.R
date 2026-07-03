@@ -94,7 +94,6 @@ colnames(partisympati_kön_inkomst) <- c("År" , "Kön" , "Inkomst" , "Moderater
                                         "Kristdemokraterna" , "Miljöpartiet" , "Socialdemokraterna" , "Vänsterpartiet" , 
                                         "Sverigedemokraterna" , "Övriga partier")
 
-
 # Anställning utifrån sektor
 anställning_sektor <- read_excel("data/anställning_sektor.xlsx")
 
@@ -118,8 +117,8 @@ df <-  df %>%
 levels = c("65+" , "25-64" , "15-24" , "5-14" , "0-4")
 
 p <- df %>% 
-  ggplot(aes(x = År, y = Antal, fill = factor(Kategori , levels = levels)) ,
-         text = paste("År:" , År , "\nAntal:" , Antal)) +
+  ggplot(aes(x = År, y = Antal, fill = factor(Kategori , levels = levels) ,
+         text = paste("År:" , År , "\nAntal:" , Antal))) +
   geom_area() +
   xlab(NULL) + ylab("Antal") +
   labs(fill = "Ålderskategori") +
@@ -211,7 +210,7 @@ saveWidget(img, "images/utländskbakgrund_sverige.html")
 
   # Andel utlandsfödda, jämfört med andra länder
 df <- read.csv("https://ourworldindata.org/grapher/migrant-stock-share.csv?v=1&csvType=full&useColumnShortNames=true")
-colnames(df) <- c("Land" , "Kod" , "År" , "Andel")
+colnames(df) <- c("Land" , "Kod" , "År" , "Andel", "Världsdel")
 
 p <- df %>%
   filter(Kod != "") %>% 
@@ -257,7 +256,7 @@ saveWidget(img, "images/utlandsfödda.html")
 levels = c("81-100 %" , "61-80 %" ,  "41-60 %" , "21-40 %" , "0-20 %")
 
 df <- partisympati_kön_inkomst %>% 
-  filter(År == 2025 ,
+  filter(År == max(År) ,
          Kön == "Båda") %>%
   pivot_longer(!c(År, Kön, Inkomst) , names_to = "Parti" , values_to = "Andel")
 
@@ -308,12 +307,11 @@ saveWidget(img, "images/anställning_sektor_kön.html") %>%
 
 
 
-  # Genomsnittslöner utifrån utbildningsnivå och kön
+  # Genomsnittslöner utifrån utbildningsnivå
 levels = c("Förgymnasial -9 år" , "Förgymnasial 9+ år" , "Gymnasial -3 år", "Gymnasial 3 år", 
            "Eftergymnasial -3 år", "Eftergymnasial 3+ år", "Forskarutbildning")
 
 p <- lön_utbildningsnivå %>% 
-  filter(Sektor == "Samtliga" , Kön == "Totalt" , Utbildning != "Alla") %>% 
   ggplot(aes(x = factor(Utbildning, levels = levels) , y = Lön,
              text = paste("Utbildningsnivå: ", Utbildning , "\nGenomsnittslön: ", comma(Lön)))) +
   geom_col(fill = "#5991E5") +
@@ -326,7 +324,7 @@ p <- lön_utbildningsnivå %>%
 img <- ggplotly(p, tooltip = "text") %>%
   config(displayModeBar = FALSE)
 
-saveWidget(img, "images/lön_utbildning_kön.html")
+saveWidget(img, "images/lön_utbildning.html")
 
 
 
@@ -341,13 +339,13 @@ df <- df %>%
   mutate(fertility_rate_hist = round(fertility_rate_hist, 2))
 
 p <- df %>% 
-  filter(Entity == "Sweden") %>% 
-  ggplot(aes(x = Year, y = fertility_rate_hist  , group = 2,
-             text = paste("År:" , Year , 
+  filter(entity == "Sweden") %>% 
+  ggplot(aes(x = year, y = fertility_rate_hist  , group = 2,
+             text = paste("År:" , year , 
                           "\nBarn:" , fertility_rate_hist))) +
   geom_line(linewidth = 1 , colour = "#5991E5") +
   sis_theme +
-  scale_x_continuous(breaks = c(1891, 1935, max(df$Year))) +
+  scale_x_continuous(breaks = c(1891, 1935, max(df$year))) +
   scale_y_continuous(limits = c(0 , 4.2) , 
                      breaks = 0:4) +
   xlab(NULL) + ylab("Barn per kvinna")
@@ -366,25 +364,25 @@ levels = c("Låginkomstländer",
            "Sverige")
 
 p <- df %>%
-  filter(Entity %in% c("Sweden", 
+  filter(entity %in% c("Sweden", 
                        "High-income countries",
                        "Low-income countries",
                        "Lower-middle-income countries",
                        "Upper-middle-income countries")) %>%
   mutate(
-    Entity = case_when(
-      Entity == "Sweden" ~ "Sverige",
-      Entity == "High-income countries" ~ "Höginkomstländer",
-      Entity == "Low-income countries" ~ "Låginkomstländer",
-      Entity == "Lower-middle-income countries" ~ "Undre medelinkomstländer",
-      Entity == "Upper-middle-income countries" ~ "Övre medelinkomstländer",
-      TRUE ~ Entity
+    entity = case_when(
+      entity == "Sweden" ~ "Sverige",
+      entity == "High-income countries" ~ "Höginkomstländer",
+      entity == "Low-income countries" ~ "Låginkomstländer",
+      entity == "Lower-middle-income countries" ~ "Undre medelinkomstländer",
+      entity == "Upper-middle-income countries" ~ "Övre medelinkomstländer",
+      TRUE ~ entity
     )
   ) %>% 
-  ggplot(aes(x = Year, y = fertility_rate_hist  , 
-             group = Entity, colour = factor(Entity, levels = levels),
-             text = paste("År:" , Year , 
-                          "\nLand/region:" , Entity,
+  ggplot(aes(x = year, y = fertility_rate_hist  , 
+             group = entity, colour = factor(entity, levels = levels),
+             text = paste("År:" , year , 
+                          "\nLand/region:" , entity,
                           "\nBarn:" , fertility_rate_hist))) +
   geom_line(linewidth = 1) +
   scale_colour_manual(name = "Land/region" ,
@@ -396,7 +394,7 @@ p <- df %>%
     "Höginkomstländer" = "#59E5AD"
   )) +
   sis_theme +
-  scale_x_continuous(breaks = c(1891, max(df$Year))) +
+  scale_x_continuous(breaks = c(1891, max(df$year))) +
   scale_y_continuous(limits = c(0 , 7) , 
                      breaks = 0:7) +
   xlab(NULL) + ylab("Barn per kvinna")
@@ -415,7 +413,7 @@ saveWidget(img, "images/barnafödande.html")
 
   # Medelålder för kvinnors första giftermål
 df <- read.csv("https://ourworldindata.org/grapher/age-at-marriage-women.csv?v=1&csvType=full&useColumnShortNames=true")
-colnames(df) <- c("Land" , "Kod" , "År" , "Medelålder" , "median")
+colnames(df) <- c("Land" , "Kod" , "År" , "Medelålder")
 
 p <- df %>% 
   filter(Land == "Sweden") %>% 
@@ -424,7 +422,7 @@ p <- df %>%
                           "\nGenomsnittsålder:" , Medelålder))) +
   geom_line(linewidth = 1 , colour = "#5991E5") +
   sis_theme +
-  scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
+  scale_x_continuous(breaks = c(min(df$År), 2020)) +
   scale_y_continuous(limits = c(0 , max(df$Medelålder) + 1) ,
                      breaks =  seq(0, 35, 5)) +
   xlab(NULL) + ylab("Genomsnittsålder vid giftermål bland kvinnor")
@@ -594,7 +592,7 @@ df <- read.csv("https://ourworldindata.org/grapher/gdp-vs-happiness.csv?v=1&csvT
 colnames(df) <- c("Land" , "Kod" , "År" , "Livstillfredsställelse" , "GDP", "Region")
 
 df <- df %>% 
-  filter(År == 2023,
+  filter(År == 2024,
          Region != "")
 
 p <- df %>% 
@@ -925,8 +923,9 @@ saveWidget(img, "images/gdp.html")
 
 
   # Gini-koefficient (mått på inkomstskillnader)
-df <- read_excel("data/gini.xlsx")
-colnames(df) <- c("Land" , "År" , "Gini")
+
+df <- read.csv("https://ourworldindata.org/grapher/economic-inequality-gini-index.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod" , "År" , "Gini", "Region")
 df$Gini <- as.numeric(df$Gini)
 df <- df %>% 
   drop_na(Gini)
@@ -938,7 +937,7 @@ p <- df %>%
                           "\nGini-koefficient:" , round(Gini, 3)))) +
   geom_line(linewidth = 1 , colour = "#5991E5") +
   sis_theme +
-  scale_x_continuous(breaks = c(1975, 2021)) +
+  scale_x_continuous(breaks = c(1975, 2023)) +
   scale_y_continuous(limits = c(0 , 0.5) ,
                      breaks =  seq(0, 0.5, 0.1)) +
   xlab(NULL) + ylab("Gini-koefficient")
@@ -978,18 +977,18 @@ saveWidget(img, "images/gini.html")
 
 
     # Analys: Koppling mellan Gini och livstillfredsställelse
-gini <- read_excel("data/gini.xlsx")
-colnames(gini) <- c("Land" , "År" , "Gini")
+gini <- read.csv("https://ourworldindata.org/grapher/economic-inequality-gini-index.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(gini) <- c("Land" , "Kod" , "År" , "Gini", "Region")
 gini$Gini <- as.numeric(gini$Gini)
 gini <- gini %>% 
   drop_na(Gini) %>% 
-  filter(År == 2021)
+  filter(År == 2022)
 
 df <- read.csv("https://ourworldindata.org/grapher/gdp-vs-happiness.csv?v=1&csvType=full&useColumnShortNames=true")
 colnames(df) <- c("Land" , "Kod" , "År" , "Livstillfredsställelse" , "GDP", "Region")
 
 df <- df %>% 
-  filter(År == 2021)
+  filter(År == 2022)
 
 df <- left_join(df, gini, by = "Land") %>% 
   drop_na(Gini)
@@ -1003,7 +1002,7 @@ p <- df %>%
   sis_theme +
   xlab("Gini-koefficient") + ylab("Livstillfredsställelse, skala 1-10") +
   scale_x_continuous(limits = c(0.2 , 0.6),
-                     breaks = seq(0.2, 0.6, 0.1))
+                     breaks = seq(0.2, 0.6, 0.1)) +
   scale_y_continuous(limits = c(1, 10) ,
                      breaks = seq(2 , 10 , 2))
 
@@ -1260,7 +1259,7 @@ p <- df %>%
                           "\nAndel kvinnor:" , round(Andel, 2) , "%"))) +
   geom_line(linewidth = 1 , colour = "#5991E5") +
   sis_theme +
-  scale_x_continuous(breaks = c(2000, 2022)) +
+  scale_x_continuous(breaks = c(2000, 2023)) +
   scale_y_continuous(limits = c(0 , 50) ,
                      breaks =  seq(0, 50, 10)) +
   xlab(NULL) + ylab("Andel kvinnor i chefsposition, %")
@@ -1319,7 +1318,7 @@ p <- df %>%
                           "\nArbetstimmar/år:" , comma(round(Antal))))) +
   geom_line(linewidth = 1 , colour = "#5991E5") +
   sis_theme +
-  scale_x_continuous(breaks = c(1870, 1980, 2017)) +
+  scale_x_continuous(breaks = c(1870, 1980, max(df$År))) +
   scale_y_continuous(limits = c(0 , 3500) ,
                      breaks =  seq(0, 3500, 500) ,
                      labels = comma) +
@@ -1464,18 +1463,18 @@ saveWidget(img, "images/pisa.html")
 
   # CO2-utsläpp (ton) per capita
      # Noterbart: Sverige är netimportörer av CO2-utsläpp, så minskningen behöver vägas mot import av CO2 så att den inte "göms" bakom dumpning av co2-utsläpp på andra länder. Dock är minskningen av betydligt större grad än ökningen i importerade utsläpp, vilket ökat något (befolkningen har dock vuxit något också under denna period, vilket driver på utsläppen)
-df <- read_excel("data/co2_percapita.xlsx")
-colnames(df) <- c("Land" , "År" , "Antal")
-df$Antal <- as.numeric(df$Antal)
+df <- read.csv("https://ourworldindata.org/grapher/co-emissions-per-capita.csv?v=1&csvType=full&useColumnShortNames=true")
+colnames(df) <- c("Land" , "Kod", "År" , "Utsläpp")
+df$Utsläpp <- as.numeric(df$Utsläpp)
 
 p <- df %>% 
   filter(Land == "Sweden") %>% 
-  ggplot(aes(x = År, y = Antal  , group = 2,
+  ggplot(aes(x = År, y = Utsläpp  , group = 2,
              text = paste("År:" , År , 
-                          "\nKoldioxidutsläpp/person (ton):" , round(Antal, 1)))) +
+                          "\nKoldioxidutsläpp/person (ton):" , round(Utsläpp, 1)))) +
   geom_line(linewidth = 1 , colour = "#5991E5") +
   sis_theme +
-  scale_x_continuous(breaks = c(1834, 1970, 2023)) +
+  scale_x_continuous(breaks = c(1834, 1970, max(df$År))) +
   scale_y_continuous(limits = c(0 , 12.5) ,
                      breaks =  seq(0, 12.5, 2.5)) +
   xlab(NULL) + ylab("Koldioxidutsläpp per capita (ton)")
@@ -1498,10 +1497,10 @@ p <- df %>%
     "South America"
   )
   ) %>% 
-  ggplot(aes(x = År, y = Antal, group = Land, colour = Land,
+  ggplot(aes(x = År, y = Utsläpp, group = Land, colour = Land,
              text = paste("År:" , År , 
                           "\nLand:" , Land,
-                          "\nKoldioxidutsläpp/person (ton):" , round(Antal, 1)))) +
+                          "\nKoldioxidutsläpp/person (ton):" , round(Utsläpp, 1)))) +
   geom_line() +
   scale_colour_manual(values = c(
     "Africa" = "#5991E5",
@@ -1537,13 +1536,12 @@ colnames(df) <- c("Land" , "Kod", "År" , "Andel", "Annotering")
 
 p <- df %>% 
   filter(Land == "Sweden") %>% 
-  add_row(Land = "Sweden", Kod = "SWE" , År = 2024, Andel = 0.84, Annotering = "") %>% 
   ggplot(aes(x = År, y = Andel  , group = 2,
              text = paste("År:" , År , 
                           "\nAndel av GNI:" , round(Andel, 2) , "%"))) +
   geom_line(linewidth = 1 , colour = "#5991E5") +
   sis_theme +
-  scale_x_continuous(breaks = c(min(df$År), 2024)) +
+  scale_x_continuous(breaks = c(min(df$År), max(df$År))) +
   scale_y_continuous(limits = c(0 , 1.5) ,
                      breaks =  0.7) +
   xlab(NULL) + ylab("Andel av bruttonationalinkomst (GNI), %")
