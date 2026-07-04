@@ -67,10 +67,10 @@ const frågor = [
     ],
     förklaring: "Även om barnafödandet minskat över hela denna tidsperiod ser man att trenden från år till år kan fluktuera kraftigt. Det är även värt att notera att spädbarnsdödligheten och död under de första levnadsåren har minskat kraftigt under samma tidsperiod.",
     bild: '<iframe src="images/barnafödande_sverige.html" class="iframe" frameborder="0"></iframe>',
-    källa: "Källa: FN & Human Fertility Databse – bearbetat av Our World in Data",
+    källa: "Källa: FN & Human Fertility Database – bearbetat av Our World in Data",
     förklaring2: "Detta är en trend som man kan se globalt också, där rikare länder tenderar ha lägre barnafödande. Den globala populationstillväxten har mer än halverats under de senaste 60 åren, och innan milleniets slut projiceras den globala populationen att börja minska enligt FN.",
     bild2: '<iframe src="images/barnafödande.html" class="iframe" frameborder="0"></iframe>',
-    källa2: "Källa: FN & Human Fertility Databse – bearbetat av Our World in Data"
+    källa2: "Källa: FN & Human Fertility Database – bearbetat av Our World in Data"
   },
   {
     kategori: "FAMILJ",
@@ -179,7 +179,7 @@ const frågor = [
     fråga: "Hur står sig Sveriges GDP per capita jämfört med för 100 år sedan?",
     korrekt: "Den har nästan niodubblats",
     alternativ: [
-      "Den är i stort sett oförändrat",
+      "Den är i stort sett oförändrad",
       "Den har nästan tredubblats",
       "Den har nästan sexdubblats",
       "Den har nästan niodubblats"
@@ -299,7 +299,7 @@ const frågor = [
       "Mellan 21-30 procent mer",
       "Mellan 31-40 procent mer"
     ],
-    förklaring: "Sedan 90-talet har det ojusterade lönegapet mellan mäns och kvinnors medianlöner minskat, där män haft en medianlön som är lite över sju procent mer än kvinnors sedan 2017. Skillnaden i <em>genomsnittslöner</em> har i stället varit cirka tio procent sedan 2019 enligt SCB. När man justerar för ålder, utbildning, arbetstid och sektor halveras det genomsnittliga lönegapet mellan män och kvinnor.",
+    förklaring: "Sedan 90-talet har det ojusterade lönegapet mellan mäns och kvinnors medianlöner minskat, där män haft en medianlön som är lite över sju procent mer än kvinnors sedan 2017. Skillnaden i genomsnittslöner har i stället varit cirka tio procent sedan 2019 enligt SCB. När man justerar för ålder, utbildning, arbetstid och sektor halveras det genomsnittliga lönegapet mellan män och kvinnor.",
     bild: '<iframe src="images/lönegap_sverige.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: OECD - bearbetat av Our World in Data fram till 2016, därefter egen bearbetning', 
     förklaring2: "I jämförelse med andra länder (data finns fram till 2016) är lönegapet relativt lågt i Sverige. Den generella trenden är att lönegapet mellan könen minskat sedan andra halvan av 1900-talet.",
@@ -333,7 +333,7 @@ const frågor = [
       "25 procent mer",
       "50 procent mer"
     ],
-    förklaring: "Genomsnittslönen ökar med ökad utbildningsnivå, med undantag för när man jämför de med gymnasial utbildning under 3 år med de som har 3-årig gymnasial utbildning. Det finns fler faktorer än utbildningsnivå som påverkar genomsnittslönen, såsom ålder, kön och vilken sektor man arbetar inom.",
+    förklaring: "Genomsnittslönen ökar för varje kategori av utbildningsnivå, även om skillnaden är marginell när man jämför de med gymnasial utbildning under 3 år med de som har 3-årig gymnasial utbildning. Det finns fler faktorer än utbildningsnivå som påverkar genomsnittslönen, såsom ålder, kön och vilken sektor man arbetar inom.",
     bild: '<iframe src="images/lön_utbildning.html" class="iframe" frameborder="0"></iframe>',
     källa: 'Källa: SCB:s statistikdatabas, Lönestrukturstatistik, hela ekonomin'
 },
